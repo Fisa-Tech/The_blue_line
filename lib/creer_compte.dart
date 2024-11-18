@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/api_service.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -12,6 +13,40 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String? _email;
   String? _password;
   String? _gender;
+  final apiService = ApiService(); // Crée une instance de la classe ApiService
+
+  Future<void> _createAccount() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      try {
+        // Préparer les données utilisateur
+        final userData = {
+          'nom': _lastName,
+          'prenom': _firstName,
+          'email': _email,
+          'mot_de_passe': _password,
+          'sexe': _gender,
+        };
+
+        // Envoyer les données à l'API
+        final response = await apiService.post('creer_compte', userData);
+
+        // Gérer la réponse
+        if (response != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Compte créé avec succès !')),
+          );
+          // Navigate to another page if needed
+        }
+      } catch (e) {
+        print("Erreur lors de la création du compte");
+        print(e);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur lors de la création du compte, réessayer plus tard')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +156,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     print('Email: $_email');
                     print('Mot de passe: $_password');
                     print('Sexe: $_gender');
+                    _createAccount();
                   }
                 },
                 child: Text('Créer un compte'),
