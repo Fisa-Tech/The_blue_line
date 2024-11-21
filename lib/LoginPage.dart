@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ForgotPasswordPage.dart';
 import 'api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -14,6 +15,12 @@ class _LoginPageState extends State<LoginPage> {
   String? _email;
   String? _password;
   final apiService = ApiService(); // Crée une instance de la classe ApiService
+
+  Future<void> _saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('auth_token', token);
+    print("Token sauvegardé dans SharedPreferences : $token");
+  }
 
    Future<void> _loginAccount() async {
     if (_formKey.currentState!.validate()) {
@@ -29,17 +36,19 @@ class _LoginPageState extends State<LoginPage> {
           String url = 'api/users/login?email=$_email&password=$_password';
           url = url.replaceAll('@', '%40');
           final response = await apiService.post(url, userData);
-          print(response);
+          final token = response.body; // Récupérer directement la réponse brute
+          await _saveToken(token); // Sauvegarde dans SharedPreferences
+          print(token);
 
-        }
-      } catch (e) {
-        if(e is FormatException){
+          if (response != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Connexion réussie')),
           );
           // Navigate to another page if needed
           Navigator.pushNamed(context, '/');
-        }else{
+        }
+        }
+      } catch (e) {
         print("Erreur lors de la connexion");
         print(e);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -47,7 +56,6 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     }
-  }
   }
 
   void _forgotPassword() {
