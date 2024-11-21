@@ -29,20 +29,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
         };
 
         // Envoyer les données à l'API
-        final response = await apiService.post('https://blue-line-preprod.fisadle.fr/api/users/register', userData);
+        final response = await apiService.post(
+            'https://blue-line-preprod.fisadle.fr/api/users/register',
+            userData);
 
         // Gérer la réponse
         if (response != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Compte créé avec succès !')),
           );
+          Navigator.pushNamed(context, '/login');
           // Navigate to another page if needed
         }
       } catch (e) {
         print("Erreur lors de la création du compte");
         print(e);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur lors de la création du compte, réessayer plus tard')),
+          SnackBar(
+              content: Text(
+                  'Erreur lors de la création du compte, réessayer plus tard')),
         );
       }
     }
