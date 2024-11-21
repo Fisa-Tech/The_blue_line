@@ -32,11 +32,23 @@ class HomePage extends StatelessWidget {
         title: Text('Accueil'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/login'); // Navigation vers le formulaire
-          },
-          child: Text('Authentification'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/login'); // Navigation vers le formulaire
+              },
+              child: Text('Authentification'),
+            ),
+            SizedBox(height: 16), // Add some space between the buttons
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/register'); // Navigation vers le formulaire
+              },
+              child: Text('Créer un compte'),
+            ),
+          ],
         ),
       ),
     );

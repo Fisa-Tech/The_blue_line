@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'ForgotPasswordPage.dart';
+import 'api_service.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -10,6 +11,39 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String? _email;
+  String? _password;
+  final apiService = ApiService(); // Crée une instance de la classe ApiService
+
+   Future<void> _loginAccount() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      try {
+        // Préparer les données utilisateur
+        final userData = {
+          'email': _email,
+          'mot_de_passe': _password,
+        };
+
+        // Envoyer les données à l'API
+        final response = await apiService.post('https://blue-line-preprod.fisadle.fr/api/users/login', userData);
+
+        // Gérer la réponse
+        if (response != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Connexion réussie')),
+          );
+          // Navigate to another page if needed
+        }
+      } catch (e) {
+        print("Erreur lors de la connexion");
+        print(e);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur lors de la connexion, réessayer plus tard')),
+        );
+      }
+    }
+  }
 
   void _login() {
     if (_formKey.currentState!.validate()) {
