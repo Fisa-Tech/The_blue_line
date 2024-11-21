@@ -22,20 +22,24 @@ class _LoginPageState extends State<LoginPage> {
         // Préparer les données utilisateur
         final userData = {
           'email': _email,
-          'mot_de_passe': _password,
+          'password': _password,
         };
 
-        // Envoyer les données à l'API
-        final response = await apiService.post('https://blue-line-preprod.fisadle.fr/api/users/login', userData);
+        if (_password != null && _email != null) {
+          String url = 'api/users/login?email=$_email&password=$_password';
+          url = url.replaceAll('@', '%40');
+          final response = await apiService.post(url, userData);
+          print(response);
 
-        // Gérer la réponse
-        if (response != null) {
+        }
+      } catch (e) {
+        if(e is FormatException){
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Connexion réussie')),
           );
           // Navigate to another page if needed
-        }
-      } catch (e) {
+          Navigator.pushNamed(context, '/');
+        }else{
         print("Erreur lors de la connexion");
         print(e);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -44,25 +48,6 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
   }
-
-  void _login() {
-    if (_formKey.currentState!.validate()) {
-      // Récupérer les valeurs des champs
-      String email = _emailController.text.trim();
-      String password = _passwordController.text.trim();
-
-      // Simuler une connexion (remplacer par votre logique d'authentification)
-      print("E-mail : $email");
-      print("Mot de passe : $password");
-
-      // Exemple : Redirection après la connexion
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Connexion réussie pour $email')),
-      );
-
-      // Exemple : Redirection après la connexion
-      Navigator.pushNamed(context, '/'); // Redirection vers la page d'accueil
-    }
   }
 
   void _forgotPassword() {
@@ -93,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.emailAddress,
+                onSaved: (value) => _email = value,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Veuillez entrer une adresse e-mail';
@@ -111,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                   border: OutlineInputBorder(),
                 ),
                 obscureText: true,
+                onSaved: (value) => _password = value,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Veuillez entrer un mot de passe';
@@ -131,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 24.0),
               ElevatedButton(
-                onPressed: _login,
+                onPressed: _loginAccount,
                 child: Text('Se connecter'),
               ),
             ],

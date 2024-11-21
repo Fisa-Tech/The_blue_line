@@ -21,18 +21,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
       try {
         // Préparer les données utilisateur
         final userData = {
-          'nom': _lastName,
-          'prenom': _firstName,
+          'lastName': _lastName,
+          'firstName': _firstName,
           'email': _email,
-          'mot_de_passe': _password,
+          'password': _password,
           'sexe': _gender,
         };
 
-        // Envoyer les données à l'API
-        final response = await apiService.post(
-            'https://blue-line-preprod.fisadle.fr/api/users/register',
-            userData);
-
+        // Envoyer les données à l'API avec la valeur password dans le corps de la requête
+        if (_password != null) {
+          final url = 'api/users/register?password=$_password';
+          final response = await apiService.post(url, userData);
+        
         // Gérer la réponse
         if (response != null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -40,6 +40,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           );
           Navigator.pushNamed(context, '/login');
           // Navigate to another page if needed
+        }
         }
       } catch (e) {
         print("Erreur lors de la création du compte");
