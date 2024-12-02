@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myapp/Theme/theme.dart';
 
-class SigninPage extends StatelessWidget {
-  const SigninPage({super.key});
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class SigninPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Text(
-                          "Heureux de te revoir ! 👋",
+                          "Bienvenue ! 👋",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -61,6 +61,23 @@ class SigninPage extends StatelessWidget {
                         const SizedBox(height: 24),
                         // Champ Email
                         TextField(
+                          decoration: InputDecoration(
+                            hintText: "Nom d'utilisateur",
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            filled: true,
+                            fillColor: grey,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 4.0, horizontal: 12.0),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // Champ Mot de passe
+                        TextField(
+                          obscureText: true,
                           decoration: InputDecoration(
                             hintText: "Email",
                             hintStyle: TextStyle(color: Colors.grey[400]),
@@ -91,37 +108,24 @@ class SigninPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // Checkbox et Lien
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: false,
-                                  onChanged: (value) {
-                                    // Action sur checkbox
-                                  },
-                                  activeColor: primary,
-                                ),
-                                const Text(
-                                  "Se souvenir",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                // Action pour "Mot de passe oublié ?"
-                              },
-                              child: const Text(
-                                "Mot de passe oublié ?",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
                         const SizedBox(height: 8),
+                        // Champ Mot de passe
+                        TextField(
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            hintText: "Confirmation mot de passe",
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            filled: true,
+                            fillColor: grey,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 4.0, horizontal: 12.0),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
                         // Bouton Connexion
                         ElevatedButton(
                           onPressed: () {
@@ -170,7 +174,7 @@ class SigninPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "Pas de compte ?",
+                        "Déjà inscrit ?",
                         style: TextStyle(color: Colors.white),
                       ),
                       TextButton(
@@ -178,7 +182,7 @@ class SigninPage extends StatelessWidget {
                           // Action pour s'inscrire
                         },
                         child: const Text(
-                          "S'inscrire",
+                          "connect toi",
                           style: TextStyle(
                             color: primary,
                           ),
