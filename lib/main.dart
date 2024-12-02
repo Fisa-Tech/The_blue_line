@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/ForgotPasswordPage.dart';
 import '/creer_compte.dart';
 import '/LoginPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'ForgotPasswordPage.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,7 +27,31 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+     @override
+  void initState() {
+    super.initState();
+    _checkSession(); // Vérifie la session au démarrage de la page
+  }
+
+  // Méthode pour vérifier si un token est présent dans SharedPreferences
+  Future<void> _checkSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    if (token == null || token.isEmpty) {
+      // Si aucun token, rediriger vers la page de connexion
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()), // Redirection vers la page de connexion
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
