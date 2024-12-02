@@ -3,6 +3,8 @@ import 'ForgotPasswordPage.dart';
 import 'api_service.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -43,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
         print("Erreur lors de la connexion");
         print(e);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur lors de la connexion, réessayer plus tard')),
+          const SnackBar(content: Text('Erreur lors de la connexion, réessayer plus tard')),
         );
       }
     }
@@ -61,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Authentification'),
+        title: const Text('Authentification'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -73,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Adresse e-mail',
                   border: OutlineInputBorder(),
                 ),
@@ -89,10 +91,10 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Mot de passe',
                   border: OutlineInputBorder(),
                 ),
@@ -108,18 +110,18 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: _forgotPassword,
-                  child: Text('Mot de passe oublié ?'),
+                  child: const Text('Mot de passe oublié ?'),
                 ),
               ),
-              SizedBox(height: 24.0),
+              const SizedBox(height: 24.0),
               ElevatedButton(
                 onPressed: _loginAccount,
-                child: Text('Se connecter'),
+                child: const Text('Se connecter'),
               ),
             ],
           ),

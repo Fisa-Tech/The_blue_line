@@ -1,35 +1,42 @@
 import 'package:flutter/material.dart';
 import '/creer_compte.dart';
 import '/LoginPage.dart';
+import 'package:myapp/Pages/welcome_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Mon App Flutter',
+      title: 'BlueLine',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(), // Page d'accueil
+      home: const HomePage(), // Page d'accueil
       routes: {
-        '/register': (context) => RegistrationPage(), // Route vers la page de création de compte
-        '/login': (context) => LoginPage(), // Route vers la page de connexion
+        '/register': (context) =>
+            const RegistrationPage(), // Route vers la page de création de compte
+        '/login': (context) => const LoginPage(),
+        '/welcome': (context) => const WelcomePage(),
       },
     );
   }
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Accueil'),
+        title: const Text('Accueil'),
       ),
       body: Center(
         child: Column(
@@ -37,16 +44,26 @@ class HomePage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/login'); // Navigation vers le formulaire
+                Navigator.pushNamed(
+                    context, '/login'); // Navigation vers le formulaire
               },
-              child: Text('Authentification'),
+              child: const Text('Authentification'),
             ),
-            SizedBox(height: 16), // Add some space between the buttons
+            const SizedBox(height: 16), // Add some space between the buttons
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/register'); // Navigation vers le formulaire
+                Navigator.pushNamed(
+                    context, '/register'); // Navigation vers le formulaire
               },
-              child: Text('Créer un compte'),
+              child: const Text('Créer un compte'),
+            ),
+            const SizedBox(height: 16), // Add some space between the buttons
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                    context, '/welcome'); // Navigation vers le formulaire
+              },
+              child: const Text('welcome demo'),
             ),
           ],
         ),

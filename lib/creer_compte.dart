@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:myapp/api_service.dart';
 
 class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({super.key});
+
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
 }
@@ -46,7 +48,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         print("Erreur lors de la création du compte");
         print(e);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
               content: Text(
                   'Erreur lors de la création du compte, réessayer plus tard')),
         );
@@ -58,7 +60,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Créer un compte'),
+        title: const Text('Créer un compte'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -67,7 +69,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Nom',
                   border: OutlineInputBorder(),
                 ),
@@ -79,9 +81,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Prénom',
                   border: OutlineInputBorder(),
                 ),
@@ -93,9 +95,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
@@ -111,9 +113,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Mot de passe',
                   border: OutlineInputBorder(),
                 ),
@@ -129,9 +131,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Sexe',
                   border: OutlineInputBorder(),
                 ),
@@ -151,7 +153,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -165,7 +167,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     _createAccount();
                   }
                 },
-                child: Text('Créer un compte'),
+                child: const Text('Créer un compte'),
               ),
             ],
           ),
