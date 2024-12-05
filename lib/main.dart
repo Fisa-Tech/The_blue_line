@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/ForgotPasswordPage.dart';
 import 'package:myapp/theme/theme_provider.dart';
 import '/creer_compte.dart';
 import '/LoginPage.dart';
