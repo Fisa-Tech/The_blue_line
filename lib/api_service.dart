@@ -5,16 +5,17 @@ class ApiService {
   static const String _baseUrl = 'https://blue-line-preprod.fisadle.fr';
 
   // Méthode GET
-  Future<dynamic> get(String endpoint) async {
-    final url = Uri.parse('$_baseUrl/$endpoint');
-    final response = await http.get(url);
+  Future<dynamic> get(String endpoint, {Map<String, String>? headers}) async {
+  final url = Uri.parse('$_baseUrl/$endpoint');
+  final response = await http.get(url, headers: headers);
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body); // Retourne les données JSON
-    } else {
-      throw Exception('Erreur ${response.statusCode}: ${response.body}');
-    }
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body); // Retourne les données JSON
+  } else {
+    throw Exception('Erreur ${response.statusCode}: ${response.body}');
   }
+}
+
 
   // Méthode POST
   Future<dynamic> post(String endpoint, Map<String, dynamic> data) async {
@@ -43,4 +44,21 @@ class ApiService {
       throw Exception('Erreur ${response.statusCode}: ${response.body}');
     }
   }
+
+  // Méthode PUT
+Future<dynamic> put(String endpoint, Map<String, dynamic> data) async {
+  final url = Uri.parse('$_baseUrl/$endpoint');
+  final response = await http.put(
+    url,
+    body: jsonEncode(data),
+  );
+
+  if (response.statusCode == 200 || response.statusCode == 204) {
+    return response.body.isNotEmpty ? jsonDecode(response.body) : null; // Vérifie si le corps de la réponse n'est pas vide
+  } else {
+    throw Exception('Erreur ${response.statusCode}: ${response.body}');
+  }
+}
+
+
 }
