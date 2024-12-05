@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'LoginPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ForgotPasswordPage extends StatelessWidget {
+class ForgotPasswordPage extends StatefulWidget {
+  @override
+  _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
+}
+
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
 
   ForgotPasswordPage({super.key});
