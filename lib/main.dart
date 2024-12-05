@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '/creer_compte.dart';
 import '/LoginPage.dart';
 import 'package:myapp/Pages/welcome_page.dart';
+import '../Pages/register_page.dart';
+import '../Pages/signin_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,12 +20,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(), // Page d'accueil
+      home: const WelcomePage(), // Page d'accueil
       routes: {
         '/register': (context) =>
-            const RegistrationPage(), // Route vers la page de création de compte
-        '/login': (context) => const LoginPage(),
-        '/welcome': (context) => const WelcomePage(),
+            const RegisterPage(), // Route vers la page de création de compte
+        '/login': (context) => const SigninPage(),
       },
     );
   }

@@ -1,9 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myapp/Pages/register_page.dart';
+import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/Theme/theme.dart';
+import '../api_service.dart';
 
-class SigninPage extends StatelessWidget {
+class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
+
+  @override
+  _SigninPageState createState() => _SigninPageState();
+}
+
+class _SigninPageState extends State<SigninPage> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String? _email;
+  String? _password;
+  final apiService = ApiService(); // Crée une instance de la classe ApiService
+
+  Future<void> _loginAccount() async {
+      if (_formKey.currentState == null) {
+    // Ajouter un log ou un gestionnaire d'erreurs si nécessaire
+        print('Le formulaire n\'est pas initialisé correctement');
+        return;
+      }
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        try {
+          // Préparer les données utilisateur
+          final userData = {
+            'email': _email,
+            'password': _password,
+          };
+
+          if (_password != null && _email != null) {
+            String url = 'api/users/login?email=$_email&password=$_password';
+            url = url.replaceAll('@', '%40');
+            final response = await apiService.post(url, userData);
+            print(response);
+
+          }
+        } catch (e) {
+          if(e is FormatException){
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Connexion réussie')),
+            );
+            // Navigate to another page if needed
+            Navigator.pushNamed(context, '/');
+          }else{
+          print("Erreur lors de la connexion");
+          print(e);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Erreur lors de la connexion, réessayer plus tard')),
+          );
+        }
+      }
+    }
+    }
+    void _forgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ResetpasswordPage()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +108,8 @@ class SigninPage extends StatelessWidget {
                       color: lightDark,
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    child: Form(
+                    key: _formKey, // Associe le formulaire à votre GlobalKey
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -60,7 +123,8 @@ class SigninPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
                         // Champ Email
-                        TextField(
+                        TextFormField(
+                          controller: _emailController,
                           decoration: InputDecoration(
                             hintText: "Email",
                             hintStyle: TextStyle(color: Colors.grey[400]),
@@ -73,10 +137,22 @@ class SigninPage extends StatelessWidget {
                               borderSide: BorderSide.none,
                             ),
                           ),
+                          keyboardType: TextInputType.emailAddress,
+                          onSaved: (value) => _email = value,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Veuillez entrer une adresse e-mail';
+                            }
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                              return 'Veuillez entrer une adresse e-mail valide';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 8),
                         // Champ Mot de passe
-                        TextField(
+                        TextFormField(
+                          controller: _passwordController,
                           obscureText: true,
                           decoration: InputDecoration(
                             hintText: "Mot de passe",
@@ -90,6 +166,16 @@ class SigninPage extends StatelessWidget {
                               borderSide: BorderSide.none,
                             ),
                           ),
+                          onSaved: (value) => _password = value,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Veuillez entrer un mot de passe';
+                            }
+                            if (value.length < 6) {
+                              return 'Le mot de passe doit contenir au moins 6 caractères';
+                            }
+                            return null;
+                          },
                         ),
                         // Checkbox et Lien
                         Row(
@@ -111,9 +197,7 @@ class SigninPage extends StatelessWidget {
                               ],
                             ),
                             TextButton(
-                              onPressed: () {
-                                // Action pour "Mot de passe oublié ?"
-                              },
+                              onPressed: _forgotPassword,
                               child: const Text(
                                 "Mot de passe oublié ?",
                                 style: TextStyle(color: Colors.white),
@@ -124,9 +208,7 @@ class SigninPage extends StatelessWidget {
                         const SizedBox(height: 8),
                         // Bouton Connexion
                         ElevatedButton(
-                          onPressed: () {
-                            // Action pour se connecter
-                          },
+                          onPressed: _loginAccount,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: primary,
                             minimumSize: const Size(double.infinity, 42),
@@ -165,6 +247,7 @@ class SigninPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  ),
                   // Footer : Lien pour s'inscrire
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -175,7 +258,10 @@ class SigninPage extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          // Action pour s'inscrire
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const RegisterPage()),
+                          );
                         },
                         child: const Text(
                           "S'inscrire",
