@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
-
   @override
   _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
 }

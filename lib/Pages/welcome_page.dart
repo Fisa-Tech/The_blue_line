@@ -76,7 +76,8 @@ class WelcomePage extends StatelessWidget {
                               // Bouton "Se connecter"
                               ElevatedButton(
                                 onPressed: () {
-                                  // Action pour se connecter
+                                  Navigator.pushNamed(
+                                      context, '/login'); // Navigation vers le formulaire
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: primary, // Couleur de fond
@@ -101,7 +102,8 @@ class WelcomePage extends StatelessWidget {
                               // Bouton "Se connecter"
                               ElevatedButton(
                                 onPressed: () {
-                                  // Action pour se connecter
+                                  Navigator.pushNamed(
+                                      context, '/register'); // Navigation vers le formulaire
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: grey, // Couleur de fond

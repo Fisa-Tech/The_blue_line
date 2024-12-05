@@ -3,7 +3,23 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myapp/Theme/theme.dart';
 
 class ResetpasswordPage extends StatelessWidget {
-  const ResetpasswordPage({super.key});
+  ResetpasswordPage({super.key});
+  final TextEditingController _emailController = TextEditingController();
+
+  void _sendResetLink(BuildContext context) {
+    String email = _emailController.text.trim();
+
+    if (email.isEmpty || !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Veuillez entrer une adresse e-mail valide')),
+      );
+    } else {
+      // Simuler l'envoi d'un e-mail de réinitialisation
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lien de réinitialisation envoyé à $email')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +80,8 @@ class ResetpasswordPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 24),
                             // Champ Email
-                            TextField(
+                            TextFormField(
+                              controller: _emailController,
                               decoration: InputDecoration(
                                 hintText: "Email",
                                 hintStyle: TextStyle(color: Colors.grey[400]),
@@ -77,6 +94,7 @@ class ResetpasswordPage extends StatelessWidget {
                                   borderSide: BorderSide.none,
                                 ),
                               ),
+                              keyboardType: TextInputType.emailAddress,
                             ),
 
                             const SizedBox(height: 16),
@@ -103,9 +121,7 @@ class ResetpasswordPage extends StatelessWidget {
                             const SizedBox(height: 4),
                             // Bouton Connexion
                             ElevatedButton(
-                              onPressed: () {
-                                // Action pour se connecter
-                              },
+                              onPressed: () => _sendResetLink(context),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: grey,
                                 minimumSize: const Size(double.infinity, 42),

@@ -3,7 +3,8 @@ import 'package:myapp/theme/theme_provider.dart';
 import '/creer_compte.dart';
 import '/LoginPage.dart';
 import 'package:myapp/Pages/welcome_page.dart';
-
+import '../Pages/register_page.dart';
+import '../Pages/signin_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,13 +18,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'BlueLine',
-      theme: ThemeProvider.myTheme,
-      home: const HomePage(), // Page d'accueil
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const WelcomePage(), // Page d'accueil
       routes: {
         '/register': (context) =>
-            const RegistrationPage(), // Route vers la page de création de compte
-        '/login': (context) => const LoginPage(),
-        '/welcome': (context) => const WelcomePage(),
+            const RegisterPage(), // Route vers la page de création de compte
+        '/login': (context) => const SigninPage(),
       },
     );
   }
