@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/ForgotPasswordPage.dart';
+import 'package:myapp/theme/theme_provider.dart';
 import '/creer_compte.dart';
 import '/LoginPage.dart';
 import 'package:myapp/Pages/welcome_page.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -15,9 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'BlueLine',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeProvider.myTheme,
       home: const HomePage(), // Page d'accueil
       routes: {
         '/register': (context) =>
