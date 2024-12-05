@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/ForgotPasswordPage.dart';
+import 'package:myapp/theme/theme_provider.dart';
 import '/creer_compte.dart';
 import '/LoginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,9 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Mon App Flutter',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeProvider.myTheme,
       home: HomePage(), // Page d'accueil
       routes: {
         '/register': (context) => RegistrationPage(), // Route vers la page de création de compte
