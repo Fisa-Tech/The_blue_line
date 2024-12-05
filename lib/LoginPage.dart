@@ -4,6 +4,8 @@ import 'api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -52,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
         print("Erreur lors de la connexion");
         print(e);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur lors de la connexion, réessayer plus tard')),
+          const SnackBar(content: Text('Erreur lors de la connexion, réessayer plus tard')),
         );
       }
     }
@@ -65,79 +67,72 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text('Authentification'),
-    ),
-    body: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Adresse e-mail',
-                border: OutlineInputBorder(),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Authentification'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Adresse e-mail',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.emailAddress,
+                onSaved: (value) => _email = value,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Veuillez entrer une adresse e-mail';
+                  }
+                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                    return 'Veuillez entrer une adresse e-mail valide';
+                  }
+                  return null;
+                },
               ),
-              keyboardType: TextInputType.emailAddress,
-              onSaved: (value) => _email = value,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Veuillez entrer une adresse e-mail';
-                }
-                if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                  return 'Veuillez entrer une adresse e-mail valide';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 16.0),
-            TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: 'Mot de passe',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                controller: _passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'Mot de passe',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+                onSaved: (value) => _password = value,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Veuillez entrer un mot de passe';
+                  }
+                  if (value.length < 6) {
+                    return 'Le mot de passe doit contenir au moins 6 caractères';
+                  }
+                  return null;
+                },
               ),
-              obscureText: true,
-              onSaved: (value) => _password = value,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Veuillez entrer un mot de passe';
-                }
-                if (value.length < 6) {
-                  return 'Le mot de passe doit contenir au moins 6 caractères';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 8.0),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: _forgotPassword,
-                child: Text('Mot de passe oublié ?'),
+              const SizedBox(height: 8.0),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: _forgotPassword,
+                  child: const Text('Mot de passe oublié ?'),
+                ),
               ),
-            ),
-            SizedBox(height: 24.0),
-            ElevatedButton(
-              onPressed: _loginAccount,
-              child: Text('Se connecter'),
-            ),
-            SizedBox(height: 16.0),
-            // Nouveau bouton pour rediriger vers la page de création de compte
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/register'); // Redirection vers la page de création de compte
-              },
-              child: Text('Créer un compte'),
-            ),
-          ],
+              const SizedBox(height: 24.0),
+              ElevatedButton(
+                onPressed: _loginAccount,
+                child: const Text('Se connecter'),
+              ),
+            ],
+          ),
         ),
       ),
     ),
