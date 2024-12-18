@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myapp/Components/button_widget.dart';
 import 'package:myapp/Pages/signin_page.dart';
 import 'package:myapp/Theme/theme.dart';
 import '../api_service.dart';
@@ -232,27 +233,15 @@ Widget build(BuildContext context) {
                           ),
                           SizedBox(height: height * 0.03),
                           // Bouton Inscription
-                          ElevatedButton(
+                          BLElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 _createAccount();
                               }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: primary,
-                              minimumSize: Size(double.infinity, height * 0.06),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Text(
-                              "S'inscrire",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: width * 0.045,
-                              ),
-                            ),
+                            }, 
+                            text: "S'inscrire", 
+                            variant: ButtonVariant.primary
                           ),
                         ],
                       ),
