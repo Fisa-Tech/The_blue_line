@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myapp/Theme/theme.dart';
+import 'package:myapp/Theme/app_colors.dart';
 
 class ResetpasswordPage extends StatelessWidget {
   ResetpasswordPage({super.key});
@@ -11,7 +11,8 @@ class ResetpasswordPage extends StatelessWidget {
 
     if (email.isEmpty || !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez entrer une adresse e-mail valide')),
+        const SnackBar(
+            content: Text('Veuillez entrer une adresse e-mail valide')),
       );
     } else {
       // Simuler l'envoi d'un e-mail de réinitialisation
@@ -39,7 +40,7 @@ class ResetpasswordPage extends StatelessWidget {
             Container(
               width: double.infinity,
               height: double.infinity,
-              color: dark.withOpacity(0.9),
+              color: AppColors.dark.withOpacity(0.9),
             ),
             // Contenu de la page
             Padding(
@@ -64,7 +65,7 @@ class ResetpasswordPage extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal: 12),
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: lightDark,
+                          color: AppColors.lightDark,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -86,7 +87,7 @@ class ResetpasswordPage extends StatelessWidget {
                                 hintText: "Email",
                                 hintStyle: TextStyle(color: Colors.grey[400]),
                                 filled: true,
-                                fillColor: grey,
+                                fillColor: AppColors.grey,
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 4.0, horizontal: 12.0),
                                 border: OutlineInputBorder(
@@ -104,7 +105,7 @@ class ResetpasswordPage extends StatelessWidget {
                                 // Action pour se connecter
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: primary,
+                                backgroundColor: AppColors.primary,
                                 minimumSize: const Size(double.infinity, 42),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -123,7 +124,7 @@ class ResetpasswordPage extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () => _sendResetLink(context),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: grey,
+                                backgroundColor: AppColors.grey,
                                 minimumSize: const Size(double.infinity, 42),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),

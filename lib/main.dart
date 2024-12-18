@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/theme/theme_provider.dart';
+import 'package:myapp/Theme/theme_provider.dart';
 import 'package:myapp/Pages/profile_steup_page.dart';
 import '/creer_compte.dart';
 import '/LoginPage.dart';
