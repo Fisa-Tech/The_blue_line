@@ -13,6 +13,7 @@ class _ProfilpageState extends State<Profilpage> {
   String? _lastName;
   String? _email;
   String? _gender;
+  String? _status;
   final apiService = ApiService(); // Crée une instance de la classe ApiService
 
   // Créer une variable pour stocker les données de profil
@@ -50,6 +51,8 @@ class _ProfilpageState extends State<Profilpage> {
   Future<void> _updateAccount(snapshotData) async {
     print("snapshot data");
     print(snapshotData);
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString("auth_token");
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       try {
@@ -58,19 +61,23 @@ class _ProfilpageState extends State<Profilpage> {
           'lastname': _lastName,
           'firstname': _firstName,
           'email': _email,
-          'sexe': _gender,
+          'sex': _gender,
+          'status': _status,
+          'avatar': "TODO",
         };
 
         print(userData);
         if (_email != null) {
           final url = 'api/users/me';
-          final response = await apiService.put(url, userData);
+          final response = await apiService
+              .put(url, userData, headers: {"Authorization": "Bearer $token"});
         }
 
         // Envoyer les données à l'API avec la valeur password dans le corps de la requête
-      }catch(e){
-          throw("Erreur lors de la mise à jour du profil");
-        }
+      } catch (e) {
+        print("Erreur PUT : $e");
+        throw ("Erreur lors de la mise à jour du profil");
+      }
     }
   }
 
@@ -153,8 +160,8 @@ class _ProfilpageState extends State<Profilpage> {
                           labelText: 'Sexe',
                           border: OutlineInputBorder(),
                         ),
-                        value: _gender ?? _profileData!['sexe'],
-                        items: ['Homme', 'Femme', 'Autre']
+                        value: _gender ?? _profileData!['sex'],
+                        items: ['MALE', 'FEMALE', 'OTHER']
                             .map((gender) => DropdownMenuItem(
                                   value: gender,
                                   child: Text(gender),
@@ -168,6 +175,37 @@ class _ProfilpageState extends State<Profilpage> {
                         validator: (value) {
                           if (value == null) {
                             return 'Veuillez sélectionner votre sexe';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 16),
+                      DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          labelText: 'Status',
+                          border: OutlineInputBorder(),
+                        ),
+                        value: _status ?? _profileData!['status'],
+                        items: [
+                          'LYCEE',
+                          'COLLEGE',
+                          'ETUDIANT',
+                          'PERSONNEL',
+                          'AUTRES'
+                        ]
+                            .map((gender) => DropdownMenuItem(
+                                  value: gender,
+                                  child: Text(gender),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _status = value;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Veuillez sélectionner votre status';
                           }
                           return null;
                         },

@@ -27,11 +27,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
       try {
         // Préparer les données utilisateur
         final userData = {
-          'lastName': _lastName,
-          'firstName': _firstName,
+          'lastname': _lastName,
+          'firstname': _firstName,
           'email': _email,
           'password': _password,
-          'sexe': _gender,
+          'sex': _gender,
         };
 
         // Envoyer les données à l'API avec la valeur password dans le corps de la requête
