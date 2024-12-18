@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myapp/Components/button_widget.dart';
 import 'package:myapp/Pages/register_page.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/Theme/theme.dart';
@@ -203,23 +204,7 @@ class _SigninPageState extends State<SigninPage> {
                             ),
                             SizedBox(height: screenHeight * 0.02),
                             // Bouton Connexion
-                            ElevatedButton(
-                              onPressed: _loginAccount,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: primary,
-                                minimumSize: Size(double.infinity, screenHeight * 0.06),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: const Text(
-                                "Connexion",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
+                            BLElevatedButton(onPressed: _loginAccount, text: "Connexion", variant: ButtonVariant.primary),
                             SizedBox(height: screenHeight * 0.04),
                             // Icônes de connexion
                             Wrap(
