@@ -84,7 +84,11 @@ Widget build(BuildContext context) {
             color: dark.withOpacity(0.9),
           ),
           // Contenu de la page avec défilement
-          SingleChildScrollView(
+          SizedBox(
+            height: height,
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: height,
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: width * 0.05, // 5% de marge horizontale
@@ -231,6 +235,8 @@ Widget build(BuildContext context) {
                   ),
                 ],
               ),
+            ),
+          ),
             ),
           ),
         ],

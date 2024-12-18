@@ -72,8 +72,12 @@ class _SigninPageState extends State<SigninPage> {
               color: dark.withOpacity(0.9),
             ),
             // Contenu principal
-            SingleChildScrollView(
-              child: Padding(
+            SizedBox(
+              height: double.infinity,
+              child: SingleChildScrollView(
+              child: SizedBox(
+                height: screenHeight,
+                child :Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * 0.05,
                   vertical: screenHeight * 0.05,
@@ -264,6 +268,8 @@ class _SigninPageState extends State<SigninPage> {
                   ],
                 ),
               ),
+            ),
+            ),
             ),
           ],
         ),
