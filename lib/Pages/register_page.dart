@@ -13,11 +13,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  String? _firstName;
-  String? _lastName;
   String? _email;
   String? _password;
-  String? _gender;
   final apiService = ApiService(); // Crée une instance de la classe ApiService
 
   Future<void> _createAccount() async {
@@ -26,11 +23,8 @@ class _RegisterPageState extends State<RegisterPage> {
       try {
         // Préparer les données utilisateur
         final userData = {
-          'lastname': _lastName,
-          'firstname': _firstName,
           'email': _email,
           'password': _password,
-          'sex': _gender,
         };
 
         // Envoyer les données à l'API avec la valeur password dans le corps de la requête
@@ -43,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Compte créé avec succès !')),
             );
-            Navigator.pushNamed(context, '/login');
+            Navigator.pushNamed(context, '/profil');
             // Navigate to another page if needed
           }
         }
@@ -116,53 +110,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 24),
                           // Champ Email
-                          TextFormField(
-                            style: TextStyle(color: Colors.grey[400]),
-                            decoration: InputDecoration(
-                              hintText: "Nom",
-                              hintStyle: TextStyle(color: Colors.grey[400]),
-                              filled: true,
-                              fillColor: AppColors.grey,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 4.0, horizontal: 12.0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            onSaved: (value) => _lastName = value,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Veuillez entrer votre nom';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            style: TextStyle(color: Colors.grey[400]),
-                            decoration: InputDecoration(
-                              hintText: "Prénom",
-                              hintStyle: TextStyle(color: Colors.grey[400]),
-                              filled: true,
-                              fillColor: AppColors.grey,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 4.0, horizontal: 12.0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            onSaved: (value) => _firstName = value,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Veuillez entrer votre prénom';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 8),
-                          // Champ Mot de passe
                           TextFormField(
                             style: TextStyle(color: Colors.grey[400]),
                             decoration: InputDecoration(
@@ -245,40 +192,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 8),
-                          // Dropdown pour sélectionner le sexe
-                          DropdownButtonFormField<String>(
-                            style: TextStyle(color: Colors.grey[400]),
-                            decoration: InputDecoration(
-                              hintText:
-                                  'Sexe', // Équivalent à labelText pour cohérence
-                              hintStyle: TextStyle(color: Colors.grey[400]),
-                              filled: true,
-                              fillColor: AppColors.grey,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 4.0, horizontal: 12.0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            items: ['MALE', 'FEMALE', 'OTHER']
-                                .map((gender) => DropdownMenuItem(
-                                      value: gender,
-                                      child: Text(gender),
-                                    ))
-                                .toList(),
-                            onChanged: (value) => setState(() {
-                              _gender =
-                                  value; // Assurez-vous que `_gender` est défini dans votre classe
-                            }),
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Veuillez sélectionner votre sexe';
-                              }
-                              return null;
-                            },
-                          ),
                           const SizedBox(height: 16),
                           // Bouton Connexion
                           ElevatedButton(
@@ -286,11 +199,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 // Traitez les données du formulaire
-                                print('Nom: $_lastName');
-                                print('Prénom: $_firstName');
                                 print('Email: $_email');
                                 print('Mot de passe: $_password');
-                                print('Sexe: $_gender');
                                 _createAccount();
                               }
                             },

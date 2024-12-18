@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Theme/theme_provider.dart';
-import 'package:myapp/Pages/profile_steup_page.dart';
+import 'package:myapp/Pages/profile_setup_page.dart';
 import '/creer_compte.dart';
 import '/LoginPage.dart';
 import 'package:myapp/Pages/welcome_page.dart';
