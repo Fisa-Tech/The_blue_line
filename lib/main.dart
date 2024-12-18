@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/theme/theme_provider.dart';
 import '/creer_compte.dart';
 import '/LoginPage.dart';
@@ -23,9 +24,10 @@ class MyApp extends StatelessWidget {
       ),
       home: const WelcomePage(), // Page d'accueil
       routes: {
-        '/register': (context) =>
-            const RegisterPage(), // Route vers la page de création de compte
+        '/home': (context) => const WelcomePage(),
+        '/register': (context) => const RegisterPage(), // Route vers la page de création de compte
         '/login': (context) => const SigninPage(),
+        '/forgotpassword': (context) => ResetpasswordPage(),
       },
     );
   }

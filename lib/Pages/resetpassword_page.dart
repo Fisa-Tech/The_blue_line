@@ -100,9 +100,7 @@ class ResetpasswordPage extends StatelessWidget {
                             const SizedBox(height: 16),
                             // Bouton Connexion
                             ElevatedButton(
-                              onPressed: () {
-                                // Action pour se connecter
-                              },
+                               onPressed: () => _sendResetLink(context),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: primary,
                                 minimumSize: const Size(double.infinity, 42),
@@ -121,7 +119,9 @@ class ResetpasswordPage extends StatelessWidget {
                             const SizedBox(height: 4),
                             // Bouton Connexion
                             ElevatedButton(
-                              onPressed: () => _sendResetLink(context),
+                              onPressed: () {
+                                // Action pour se connecter
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: grey,
                                 minimumSize: const Size(double.infinity, 42),

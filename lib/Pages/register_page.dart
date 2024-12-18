@@ -19,6 +19,8 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _password;
   String? _gender;
   final apiService = ApiService(); // Crée une instance de la classe ApiService
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
     Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
@@ -192,6 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         const SizedBox(height: 8),
                         // Champ Mot de passe
                         TextFormField(
+                          controller: _passwordController,
                           style: TextStyle(color: Colors.grey[400]),
                           obscureText: true,
                           decoration: InputDecoration(
@@ -217,9 +220,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             return null;
                           },
                         ),
+
                         const SizedBox(height: 8),
-                        // Champ Mot de passe
+
+                        // Champ Confirmation du mot de passe
                         TextFormField(
+                          controller: _confirmPasswordController,
                           style: TextStyle(color: Colors.grey[400]),
                           obscureText: true,
                           decoration: InputDecoration(
@@ -238,9 +244,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             if (value == null || value.isEmpty) {
                               return 'Veuillez confirmer votre mot de passe';
                             }
-                            // if (value != _password) {
-                            //   return 'Les mots de passe ne correspondent pas';
-                            // }
+                            if (value != _passwordController.text) {
+                              return 'Les mots de passe ne correspondent pas';
+                            }
                             return null;
                           },
                         ),
