@@ -16,8 +16,8 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _email;
   String? _password;
   final apiService = ApiService(); // Crée une instance de la classe ApiService
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
@@ -56,234 +56,200 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   @override
-Widget build(BuildContext context) {
-  final size = MediaQuery.of(context).size;
-  final width = size.width;
-  final height = size.height;
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
 
-  return Scaffold(
-    body: Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/img/RunGirl.jpg"),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Stack(
-        children: [
-          // Overlay pour assombrir l'image
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: AppColors.dark.withOpacity(0.9),
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/img/RunGirl.jpg"),
+            fit: BoxFit.cover,
           ),
-          // Contenu de la page avec défilement
-          SizedBox(
-            height: height,
-            child: SingleChildScrollView(
-              child: SizedBox(
-                height: height,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05, // 5% de marge horizontale
-                vertical: height * 0.02, // 2% de marge verticale
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Logo Container
-                  SizedBox(height: height * 0.05), // Espacement dynamique
-                  SvgPicture.asset(
-                    "assets/img/logo.svg",
-                    height: height * 0.12, // Taille relative à la hauteur
-                  ),
-                  SizedBox(height: height * 0.05), // Espacement dynamique
-                  // Formulaire de connexion
-                  Container(
-                    padding: EdgeInsets.all(width * 0.05), // 5% de padding
-                    decoration: BoxDecoration(
-                      color: AppColors.lightDark,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Bienvenue ! 👋",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: width * 0.06, // 6% de la largeur
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: height * 0.02),
-                          // Champs de formulaire (généralisation possible)
-                          _buildTextField("Nom", (value) => _lastName = value),
-                          SizedBox(height: height * 0.01),
-                          _buildTextField(
-                              "Prénom", (value) => _firstName = value),
-                          SizedBox(height: height * 0.01),
-                          _buildTextField("Email", (value) => _email = value,
-                              isEmail: true),
-                          SizedBox(height: height * 0.01),
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              hintText: "Mot de passe",
-                              hintStyle: TextStyle(color: Colors.grey[400]),
-                              filled: true,
-                              fillColor: AppColors.grey,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 4.0, horizontal: 12.0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            onSaved: (value) => _password = value,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Veuillez entrer un mot de passe';
-                              }
-                              if (value.length < 6) {
-                                return 'Le mot de passe doit contenir au moins 6 caractères';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: height * 0.01),
-                         TextFormField(
-                          controller: _confirmPasswordController,
-                          style: TextStyle(color: Colors.grey[400]),
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: "Confirmation mot de passe",
-                            hintStyle: TextStyle(color: Colors.grey[400]),
-                            filled: true,
-                            fillColor: AppColors.grey,
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 4.0, horizontal: 12.0),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Veuillez confirmer votre mot de passe';
-                            }
-                            if (value != _passwordController.text) {
-                              return 'Les mots de passe ne correspondent pas';
-                            }
-                            return null;
-                          },
-                        ),
-                          SizedBox(height: height * 0.02),
-                          // Dropdown Sexe
-                          DropdownButtonFormField<String>(
-                            style: TextStyle(color: Colors.grey[400]),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: grey,
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: height * 0.01, // Ajustez si besoin
-                                horizontal: width * 0.02,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            hint: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Sexe',
-                                style: TextStyle(color: Colors.grey[400]),
-                              ),
-                            ),
-                            items: ['MALE', 'FEMALE', 'OTHER']
-                                .map((gender) => DropdownMenuItem(
-                                      value: gender,
-                                      child: Text(gender),
-                                    ))
-                                .toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _gender = value;
-                              });
-                            },
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Veuillez sélectionner votre sexe';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: height * 0.03),
-                          // Bouton Inscription
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                _createAccount();
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.grey,
-                              minimumSize: Size(double.infinity, height * 0.06),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Text(
-                              "S'inscrire",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: width * 0.045,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: height * 0.03),
-                  // Footer : Lien pour s'inscrire
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Déjà inscrit ?",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SigninPage()),
-                          );
-                        },
-                        child: const Text(
-                          "connect toi",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+        ),
+        child: Stack(
+          children: [
+            // Overlay pour assombrir l'image
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: AppColors.dark.withOpacity(0.9),
             ),
+            // Contenu de la page avec défilement
+            SizedBox(
+                height: height,
+                child: SingleChildScrollView(
+                    child: SizedBox(
+                  height: height,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.05, // 5% de marge horizontale
+                      vertical: height * 0.02, // 2% de marge verticale
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Logo Container
+                        SizedBox(height: height * 0.05), // Espacement dynamique
+                        SvgPicture.asset(
+                          "assets/img/logo.svg",
+                          height: height * 0.12, // Taille relative à la hauteur
+                        ),
+                        SizedBox(height: height * 0.05), // Espacement dynamique
+                        // Formulaire de connexion
+                        Container(
+                          padding:
+                              EdgeInsets.all(width * 0.05), // 5% de padding
+                          decoration: BoxDecoration(
+                            color: AppColors.lightDark,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Bienvenue ! 👋",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: width * 0.06, // 6% de la largeur
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: height * 0.02),
+                                _buildTextField(
+                                    "Email", (value) => _email = value,
+                                    isEmail: true),
+                                SizedBox(height: height * 0.01),
+                                _buildTextField("Mot de passe",
+                                    (value) => _password = value,
+                                    isPassword: true),
+                                SizedBox(height: height * 0.01),
+                                TextFormField(
+                                  controller: _confirmPasswordController,
+                                  style: TextStyle(color: Colors.grey[400]),
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    hintText: "Confirmation mot de passe",
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[400]),
+                                    filled: true,
+                                    fillColor: AppColors.grey,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 4.0, horizontal: 12.0),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Veuillez confirmer votre mot de passe';
+                                    }
+                                    if (value != _password) {
+                                      return 'Les mots de passe ne correspondent pas';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                SizedBox(height: height * 0.03),
+                                // Bouton Inscription
+                                ElevatedButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _formKey.currentState!.save();
+                                      _createAccount();
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.grey,
+                                    minimumSize:
+                                        Size(double.infinity, height * 0.06),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "S'inscrire",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: width * 0.045,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.03),
+                        // Footer : Lien pour s'inscrire
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Déjà inscrit ?",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const SigninPage()),
+                                );
+                              },
+                              child: const Text(
+                                "connect toi",
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                )))
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField(String hintText, Function(String?)? onSaved,
+      {bool isPassword = false, bool isEmail = false}) {
+    return TextFormField(
+      style: TextStyle(color: Colors.grey[400]),
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(color: Colors.grey[400]),
+        filled: true,
+        fillColor: AppColors.grey,
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      keyboardType: isEmail ? TextInputType.emailAddress : TextInputType.text,
+      onSaved: onSaved,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Veuillez entrer $hintText';
+        }
+        if (isEmail && !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+          return 'Veuillez entrer un email valide';
+        }
+        return null;
+      },
     );
   }
 }
