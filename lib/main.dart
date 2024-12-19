@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:myapp/Pages/home_page.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/Pages/profile_setup_page.dart';
 import 'package:myapp/Pages/welcome_page.dart';
@@ -6,8 +8,13 @@ import '../Pages/register_page.dart';
 import '../Pages/signin_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(const MyApp());
+  });
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -22,7 +29,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const WelcomePage(), // Page d'accueil
       routes: {
-        '/home': (context) => const WelcomePage(),
+        '/home': (context) => const HomePage(),
         '/register': (context) => const RegisterPage(), // Route vers la page de création de compte
         '/login': (context) => const SigninPage(),
         '/profil': (context) => const ProfileSetupPage(),
