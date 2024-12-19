@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myapp/Pages/register_page.dart';
-import 'package:myapp/Pages/resetpassword_page.dart';
+import 'package:myapp/Components/button_widget.dart';
+import 'package:myapp/Components/form_text_field.dart';
+import 'package:myapp/Pages/register_page.dart' as register_page;
 import 'package:myapp/Theme/app_colors.dart';
 import '../api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -161,53 +162,24 @@ class _SigninPageState extends State<SigninPage> {
                             ),
                             SizedBox(height: screenHeight * 0.03),
                             // Champ Email
-                            TextFormField(
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                hintText: "Email",
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                filled: true,
-                                fillColor: AppColors.grey,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                  horizontal: 12.0,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                              keyboardType: TextInputType.emailAddress,
-                              onSaved: (value) => _email = value,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Veuillez entrer une adresse e-mail';
-                                }
-                                if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                                  return 'Veuillez entrer une adresse e-mail valide';
-                                }
-                                return null;
-                              },
-                            ),
+                            BLFormTextField(hintText: "Email", 
+                            controller: _emailController, 
+                            onSaved: (value) => _email = value, 
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Veuillez entrer une adresse e-mail';
+                              }
+                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                return 'Veuillez entrer une adresse e-mail valide';
+                              }
+                              return null;
+                            }),
                             SizedBox(height: screenHeight * 0.02),
                             // Champ Mot de passe
-                            TextFormField(
+                            BLFormTextField(
+                              hintText: "Mot de passe",
+                              isPassword: true,
                               controller: _passwordController,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                hintText: "Mot de passe",
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                filled: true,
-                                fillColor: AppColors.grey,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                  horizontal: 12.0,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
                               onSaved: (value) => _password = value,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -217,8 +189,7 @@ class _SigninPageState extends State<SigninPage> {
                                   return 'Le mot de passe doit contenir au moins 6 caractères';
                                 }
                                 return null;
-                              },
-                            ),
+                            }),
                             SizedBox(height: screenHeight * 0.02),
                             // Checkbox et Lien
                             Row(
@@ -252,23 +223,7 @@ class _SigninPageState extends State<SigninPage> {
                             ),
                             SizedBox(height: screenHeight * 0.02),
                             // Bouton Connexion
-                            ElevatedButton(
-                              onPressed: _loginAccount,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                minimumSize: Size(double.infinity, screenHeight * 0.06),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: const Text(
-                                "Connexion",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
+                            BLElevatedButton(onPressed: _loginAccount, text: "Connexion", variant: ButtonVariant.primary),
                             SizedBox(height: screenHeight * 0.04),
                             // Icônes de connexion
                             Wrap(
@@ -302,7 +257,7 @@ class _SigninPageState extends State<SigninPage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const RegisterPage()),
+                              MaterialPageRoute(builder: (context) => const register_page.RegisterPage()),
                             );
                           },
                           child: const Text(

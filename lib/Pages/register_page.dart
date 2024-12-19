@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myapp/Components/button_widget.dart';
+import 'package:myapp/Components/form_text_field.dart';
 import 'package:myapp/Pages/signin_page.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import '../api_service.dart';
@@ -88,9 +90,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: width * 0.05, // 5% de marge horizontale
-                      vertical: height * 0.02, // 2% de marge verticale
+                      vertical: height * 0.05, // 5% de marge verticale
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // Logo Container
@@ -122,31 +125,39 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ),
                                 ),
                                 SizedBox(height: height * 0.02),
-                                _buildTextField(
-                                    "Email", (value) => _email = value,
-                                    isEmail: true),
+                                BLFormTextField(
+                                  hintText: "Email", 
+                                  onSaved: (value) => _email = value,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Veuillez entrer un email';
+                                    }
+                                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                      return 'Veuillez entrer un email valide';
+                                    }
+                                    return null;
+                                  },
+                                ),
                                 SizedBox(height: height * 0.01),
-                                _buildTextField("Mot de passe",
-                                    (value) => _password = value,
-                                    isPassword: true),
+                                BLFormTextField(hintText: "Mot de passe", 
+                                  onSaved: (value) => _password = value,
+                                  isPassword: true,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Veuillez entrer un mot de passe';
+                                    }
+                                    if (value.length < 6) {
+                                      return 'Le mot de passe doit contenir au moins 6 caractères';
+                                    }
+                                    return null;
+                                  },
+                                ),
                                 SizedBox(height: height * 0.01),
-                                TextFormField(
+                                BLFormTextField(
                                   controller: _confirmPasswordController,
-                                  style: TextStyle(color: Colors.grey[400]),
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    hintText: "Confirmation mot de passe",
-                                    hintStyle:
-                                        TextStyle(color: Colors.grey[400]),
-                                    filled: true,
-                                    fillColor: AppColors.grey,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 4.0, horizontal: 12.0),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
+                                  hintText: "Confirmation mot de passe",
+                                  onSaved: (value) => _password = value,
+                                  isPassword: true,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Veuillez confirmer votre mot de passe';
@@ -159,28 +170,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 SizedBox(height: height * 0.03),
                                 // Bouton Inscription
-                                ElevatedButton(
+                                BLElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
                                       _createAccount();
                                     }
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.grey,
-                                    minimumSize:
-                                        Size(double.infinity, height * 0.06),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "S'inscrire",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: width * 0.045,
-                                    ),
-                                  ),
+                                  text: "S'inscrire",
+                                  variant: ButtonVariant.primary,
                                 ),
                               ],
                             ),
@@ -204,7 +202,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 );
                               },
                               child: const Text(
-                                "connect toi",
+                                "Connecte-toi",
                                 style: TextStyle(
                                   color: AppColors.primary,
                                 ),

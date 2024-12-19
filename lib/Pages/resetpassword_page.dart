@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myapp/Components/button_widget.dart';
+import 'package:myapp/Components/form_text_field.dart';
 import 'package:myapp/Theme/app_colors.dart';
 
 class ResetpasswordPage extends StatelessWidget {
@@ -88,64 +90,24 @@ Widget build(BuildContext context) {
                             ),
                             SizedBox(height: screenHeight * 0.03),
                             // Champ Email
-                            TextFormField(
+                            BLFormTextField(
                               controller: _emailController,
-                              decoration: InputDecoration(
-                                hintText: "Email",
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                filled: true,
-                                fillColor: AppColors.grey,
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: screenHeight * 0.015,
-                                  horizontal: screenWidth * 0.03,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                              keyboardType: TextInputType.emailAddress,
-                            ),
+                              hintText: "Email",
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Veuillez entrer un email';
+                                }
+                                if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                  return 'Veuillez entrer un email valide';
+                                }
+                                return null;
+                            }),
                             SizedBox(height: screenHeight * 0.02),
                             // Bouton Envoyer
-                            ElevatedButton(
-                               onPressed: () => _sendResetLink(context),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                minimumSize: Size(double.infinity, screenHeight * 0.05),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Text(
-                                "Envoyer",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: screenHeight * 0.02,
-                                ),
-                              ),
-                            ),
+                            BLElevatedButton(onPressed: () => _sendResetLink(context), text: "Envoyer"),
                             SizedBox(height: screenHeight * 0.01),
                             // Bouton Annuler
-                            ElevatedButton(
-                              onPressed: () {
-                                // Action pour se connecter
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.grey,
-                                minimumSize: Size(double.infinity, screenHeight * 0.05),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Text(
-                                "Annuler",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: screenHeight * 0.02,
-                                ),
-                              ),
-                            ),
+                            BLElevatedButton(onPressed: () {}, text: "Annuler", variant: ButtonVariant.grey),
                           ],
                         ),
                       ),
