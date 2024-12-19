@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Profilpage extends StatefulWidget {
   @override
-  _ProfilpageState createState() => _ProfilpageState();
+  State<Profilpage> createState() => _ProfilpageState();
 }
 
 class _ProfilpageState extends State<Profilpage> {
@@ -31,6 +31,11 @@ class _ProfilpageState extends State<Profilpage> {
       print("2");
       setState(() {
         _profileData = profil; // Stocker les données du profil
+        _lastName = profil['lastname'];
+        _firstName = profil['firstname'];
+        _email = profil['email'];
+        _gender = profil['sex'];
+        _status = profil['status'];
       });
       return profil;
     } catch (e) {
@@ -168,9 +173,10 @@ class _ProfilpageState extends State<Profilpage> {
                                 ))
                             .toList(),
                         onChanged: (value) {
-                          setState(() {
-                            _gender = value;
-                          });
+                          _gender = value;
+                          // setState(() {
+                          //   _gender = value;
+                          // });
                         },
                         validator: (value) {
                           if (value == null) {
@@ -199,9 +205,7 @@ class _ProfilpageState extends State<Profilpage> {
                                 ))
                             .toList(),
                         onChanged: (value) {
-                          setState(() {
-                            _status = value;
-                          });
+                          _status = value;
                         },
                         validator: (value) {
                           if (value == null) {
@@ -210,7 +214,7 @@ class _ProfilpageState extends State<Profilpage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 100),
+                      SizedBox(height: 60),
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
@@ -226,6 +230,17 @@ class _ProfilpageState extends State<Profilpage> {
                           Navigator.pushNamed(context, '/forgotpassword');
                         },
                         child: Text('Changer de mot de passe'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          print("test");
+                          print(_lastName);
+                          print(_firstName);
+                          print(_email);
+                          print(_gender);
+                          print(_status);
+                        },
+                        child: Text('print'),
                       ),
                     ],
                   ),
