@@ -311,10 +311,10 @@ class _SigninPageState extends State<SigninPage> {
                               color: primary,
                             ),
                           ),
-                          const SizedBox(height: 32),
+                        )
                         ],
                       ),
-                    ),
+                    
                   ],
                 ),
               ),

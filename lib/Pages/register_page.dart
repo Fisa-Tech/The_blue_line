@@ -136,9 +136,32 @@ Widget build(BuildContext context) {
                           _buildTextField("Email", (value) => _email = value,
                               isEmail: true),
                           SizedBox(height: height * 0.01),
-                          _buildTextField("Mot de passe",
-                              (value) => _password = value,
-                              isPassword: true),
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              hintText: "Mot de passe",
+                              hintStyle: TextStyle(color: Colors.grey[400]),
+                              filled: true,
+                              fillColor: grey,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 12.0),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            onSaved: (value) => _password = value,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Veuillez entrer un mot de passe';
+                              }
+                              if (value.length < 6) {
+                                return 'Le mot de passe doit contenir au moins 6 caractères';
+                              }
+                              return null;
+                            },
+                          ),
                           SizedBox(height: height * 0.01),
                          TextFormField(
                           controller: _confirmPasswordController,
