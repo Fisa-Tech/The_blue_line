@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myapp/Components/button_widget.dart';
 import 'package:myapp/Components/form_text_field.dart';
-import 'package:myapp/Theme/theme.dart';
+import 'package:myapp/Theme/app_colors.dart';
 
 class ResetpasswordPage extends StatelessWidget {
   ResetpasswordPage({super.key});
@@ -13,7 +13,8 @@ class ResetpasswordPage extends StatelessWidget {
 
     if (email.isEmpty || !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez entrer une adresse e-mail valide')),
+        const SnackBar(
+            content: Text('Veuillez entrer une adresse e-mail valide')),
       );
     } else {
       // Simuler l'envoi d'un e-mail de réinitialisation
@@ -45,7 +46,7 @@ Widget build(BuildContext context) {
           Container(
             width: double.infinity,
             height: double.infinity,
-            color: dark.withOpacity(0.9),
+            color: AppColors.dark.withOpacity(0.9),
           ),
           // Contenu de la page
           Padding(
@@ -73,7 +74,7 @@ Widget build(BuildContext context) {
                         margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
                         padding: EdgeInsets.all(screenWidth * 0.06),
                         decoration: BoxDecoration(
-                          color: lightDark,
+                          color: AppColors.lightDark,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(

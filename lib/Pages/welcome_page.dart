@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myapp/Components/button_widget.dart';
-import 'package:myapp/Theme/theme.dart';
+import 'package:myapp/Theme/app_colors.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -29,7 +29,7 @@ class WelcomePage extends StatelessWidget {
             Container(
               width: double.infinity,
               height: double.infinity,
-              color: dark.withOpacity(0.9),
+              color: AppColors.dark.withOpacity(0.9),
             ),
             // Contenu principal
             Column(
@@ -82,8 +82,8 @@ class WelcomePage extends StatelessWidget {
                               // Bouton "Se connecter"
                               BLElevatedButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/login'); // Navigation vers le formulaire
+                                  Navigator.pushNamed(context,
+                                      '/login'); // Navigation vers le formulaire
                                 },
                                 text: "Se connecter", 
                                 variant: ButtonVariant.primary
@@ -92,8 +92,8 @@ class WelcomePage extends StatelessWidget {
                               // Bouton "S'inscrire"
                               BLElevatedButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/register'); // Navigation vers le formulaire
+                                  Navigator.pushNamed(context,
+                                      '/register'); // Navigation vers le formulaire
                                 },
                                 text: "S'inscrire", 
                                 variant: ButtonVariant.grey
