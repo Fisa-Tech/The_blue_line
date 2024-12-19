@@ -19,6 +19,8 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _password;
   String? _gender;
   final apiService = ApiService(); // Crée une instance de la classe ApiService
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
     Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
@@ -138,8 +140,32 @@ Widget build(BuildContext context) {
                               (value) => _password = value,
                               isPassword: true),
                           SizedBox(height: height * 0.01),
-                          _buildTextField("Confirmation mot de passe", null,
-                              isPassword: true),
+                         TextFormField(
+                          controller: _confirmPasswordController,
+                          style: TextStyle(color: Colors.grey[400]),
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            hintText: "Confirmation mot de passe",
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            filled: true,
+                            fillColor: grey,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 4.0, horizontal: 12.0),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Veuillez confirmer votre mot de passe';
+                            }
+                            if (value != _passwordController.text) {
+                              return 'Les mots de passe ne correspondent pas';
+                            }
+                            return null;
+                          },
+                        ),
                           SizedBox(height: height * 0.02),
                           // Dropdown Sexe
                           DropdownButtonFormField<String>(

@@ -4,6 +4,7 @@ import 'package:myapp/Pages/register_page.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/Theme/theme.dart';
 import '../api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -18,34 +19,79 @@ class _SigninPageState extends State<SigninPage> {
   final TextEditingController _passwordController = TextEditingController();
   String? _email;
   String? _password;
-  final apiService = ApiService();
+  bool _rememberMe = false;
+  final apiService = ApiService(); // Instance de la classe ApiService
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
+
+  Future<void> _loadSavedCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _emailController.text = prefs.getString('email') ?? '';
+      _passwordController.text = prefs.getString('password') ?? '';
+      _rememberMe = _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+    });
+  }
+
+  Future<void> _saveUserCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (_rememberMe) {
+      await prefs.setString('email', _email ?? '');
+      await prefs.setString('password', _password ?? '');
+    } else {
+      await prefs.remove('email');
+      await prefs.remove('password');
+    }
+  }
 
   Future<void> _loginAccount() async {
-    if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
+    if (_formKey.currentState == null) {
+      print('Le formulaire n\'est pas initialisé correctement');
       return;
     }
-    _formKey.currentState!.save();
-    try {
-      final userData = {'email': _email, 'password': _password};
-      final response = await apiService.post('api/users/login', userData);
-      print(response);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Connexion réussie')),
-      );
-      Navigator.pushNamed(context, '/');
-    } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erreur lors de la connexion')),
-      );
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      try {
+        final userData = {
+          'email': _email,
+          'password': _password,
+        };
+
+        if (_email != null && _password != null) {
+          String url = 'api/users/login?email=$_email&password=$_password';
+          final response = await apiService.post(url, userData);
+
+          print('Code de statut: ${response.statusCode}');
+          print('Corps de la réponse: ${response.body}');
+
+          if (response.statusCode == 200) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Connexion réussie')),
+            );
+
+            await _saveUserCredentials();
+            Navigator.pushNamed(context, '/home');
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Erreur: ${response.body}')),
+            );
+          }
+        }
+      } catch (e) {
+        print("Erreur lors de la connexion: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Erreur lors de la connexion, réessayez plus tard')),
+        );
+      }
     }
   }
 
   void _forgotPassword() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ResetpasswordPage()),
-    );
+    Navigator.pushNamed(context, '/forgotpassword');
   }
 
   @override
@@ -65,7 +111,6 @@ class _SigninPageState extends State<SigninPage> {
         ),
         child: Stack(
           children: [
-            // Overlay pour assombrir l'image
             Container(
               width: double.infinity,
               height: double.infinity,
@@ -181,11 +226,15 @@ class _SigninPageState extends State<SigninPage> {
                               children: [
                                 Row(
                                   children: [
-                                    Checkbox(
-                                      value: false,
-                                      onChanged: (value) {},
-                                      activeColor: primary,
-                                    ),
+                                     Checkbox(
+                                    value: _rememberMe,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _rememberMe = value!;
+                                      });
+                                    },
+                                    activeColor: primary,
+                                  ),
                                     const Text(
                                       "Se souvenir",
                                       style: TextStyle(color: Colors.white),
@@ -262,8 +311,9 @@ class _SigninPageState extends State<SigninPage> {
                               color: primary,
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 32),
+                        ],
+                      ),
                     ),
                   ],
                 ),

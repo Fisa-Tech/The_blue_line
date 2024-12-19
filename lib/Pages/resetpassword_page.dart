@@ -108,9 +108,7 @@ Widget build(BuildContext context) {
                             SizedBox(height: screenHeight * 0.02),
                             // Bouton Envoyer
                             ElevatedButton(
-                              onPressed: () {
-                                // Action pour se connecter
-                              },
+                               onPressed: () => _sendResetLink(context),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: primary,
                                 minimumSize: Size(double.infinity, screenHeight * 0.05),
@@ -129,7 +127,9 @@ Widget build(BuildContext context) {
                             SizedBox(height: screenHeight * 0.01),
                             // Bouton Annuler
                             ElevatedButton(
-                              onPressed: () => _sendResetLink(context),
+                              onPressed: () {
+                                // Action pour se connecter
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: grey,
                                 minimumSize: Size(double.infinity, screenHeight * 0.05),
