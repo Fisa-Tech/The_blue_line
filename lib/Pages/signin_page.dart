@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myapp/Pages/register_page.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
-import 'package:myapp/Theme/theme.dart';
+import 'package:myapp/Theme/app_colors.dart';
 import '../api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -114,7 +114,7 @@ class _SigninPageState extends State<SigninPage> {
             Container(
               width: double.infinity,
               height: double.infinity,
-              color: dark.withOpacity(0.9),
+              color: AppColors.dark.withOpacity(0.9),
             ),
             // Contenu principal
             SizedBox(
@@ -143,7 +143,7 @@ class _SigninPageState extends State<SigninPage> {
                     Container(
                       padding: EdgeInsets.all(screenWidth * 0.05),
                       decoration: BoxDecoration(
-                        color: lightDark,
+                        color: AppColors.lightDark,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Form(
@@ -167,7 +167,7 @@ class _SigninPageState extends State<SigninPage> {
                                 hintText: "Email",
                                 hintStyle: TextStyle(color: Colors.grey[400]),
                                 filled: true,
-                                fillColor: grey,
+                                fillColor: AppColors.grey,
                                 contentPadding: const EdgeInsets.symmetric(
                                   vertical: 8.0,
                                   horizontal: 12.0,
@@ -198,7 +198,7 @@ class _SigninPageState extends State<SigninPage> {
                                 hintText: "Mot de passe",
                                 hintStyle: TextStyle(color: Colors.grey[400]),
                                 filled: true,
-                                fillColor: grey,
+                                fillColor: AppColors.grey,
                                 contentPadding: const EdgeInsets.symmetric(
                                   vertical: 8.0,
                                   horizontal: 12.0,
@@ -233,7 +233,7 @@ class _SigninPageState extends State<SigninPage> {
                                         _rememberMe = value!;
                                       });
                                     },
-                                    activeColor: primary,
+                                    activeColor: AppColors.primary,
                                   ),
                                     const Text(
                                       "Se souvenir",
@@ -255,7 +255,7 @@ class _SigninPageState extends State<SigninPage> {
                             ElevatedButton(
                               onPressed: _loginAccount,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: primary,
+                                backgroundColor: AppColors.primary,
                                 minimumSize: Size(double.infinity, screenHeight * 0.06),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -277,7 +277,7 @@ class _SigninPageState extends State<SigninPage> {
                                 3,
                                 (index) => CircleAvatar(
                                   radius: screenWidth * 0.06,
-                                  backgroundColor: primary,
+                                  backgroundColor: AppColors.primary,
                                   child: Icon(
                                     Icons.person,
                                     color: Colors.grey[400],
@@ -308,7 +308,7 @@ class _SigninPageState extends State<SigninPage> {
                           child: const Text(
                             "S'inscrire",
                             style: TextStyle(
-                              color: primary,
+                              color: AppColors.primary,
                             ),
                           ),
                         )
