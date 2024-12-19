@@ -16,6 +16,8 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _email;
   String? _password;
   final apiService = ApiService(); // Crée une instance de la classe ApiService
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
@@ -54,43 +56,53 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/img/RunGirl.jpg"),
-            fit: BoxFit.cover,
-          ),
+Widget build(BuildContext context) {
+  final size = MediaQuery.of(context).size;
+  final width = size.width;
+  final height = size.height;
+
+  return Scaffold(
+    body: Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/img/RunGirl.jpg"),
+          fit: BoxFit.cover,
         ),
-        child: Stack(
-          children: [
-            // Overlay pour assombrir l'image
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: AppColors.dark.withOpacity(0.9),
-            ),
-            // Contenu de la page
-            Padding(
-              padding: const EdgeInsets.all(12.0),
+      ),
+      child: Stack(
+        children: [
+          // Overlay pour assombrir l'image
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: AppColors.dark.withOpacity(0.9),
+          ),
+          // Contenu de la page avec défilement
+          SizedBox(
+            height: height,
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: height,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: width * 0.05, // 5% de marge horizontale
+                vertical: height * 0.02, // 2% de marge verticale
+              ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Logo Container
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: SvgPicture.asset(
-                      "assets/img/logo.svg",
-                      height: 100,
-                    ),
+                  SizedBox(height: height * 0.05), // Espacement dynamique
+                  SvgPicture.asset(
+                    "assets/img/logo.svg",
+                    height: height * 0.12, // Taille relative à la hauteur
                   ),
+                  SizedBox(height: height * 0.05), // Espacement dynamique
                   // Formulaire de connexion
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 12),
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(width * 0.05), // 5% de padding
                     decoration: BoxDecoration(
                       color: AppColors.lightDark,
                       borderRadius: BorderRadius.circular(12),
@@ -100,47 +112,26 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Text(
+                          Text(
                             "Bienvenue ! 👋",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 24,
+                              fontSize: width * 0.06, // 6% de la largeur
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 24),
-                          // Champ Email
+                          SizedBox(height: height * 0.02),
+                          // Champs de formulaire (généralisation possible)
+                          _buildTextField("Nom", (value) => _lastName = value),
+                          SizedBox(height: height * 0.01),
+                          _buildTextField(
+                              "Prénom", (value) => _firstName = value),
+                          SizedBox(height: height * 0.01),
+                          _buildTextField("Email", (value) => _email = value,
+                              isEmail: true),
+                          SizedBox(height: height * 0.01),
                           TextFormField(
-                            style: TextStyle(color: Colors.grey[400]),
-                            decoration: InputDecoration(
-                              hintText: "Email",
-                              hintStyle: TextStyle(color: Colors.grey[400]),
-                              filled: true,
-                              fillColor: AppColors.grey,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 4.0, horizontal: 12.0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                            onSaved: (value) => _email = value,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Veuillez entrer votre email';
-                              }
-                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                                  .hasMatch(value)) {
-                                return 'Veuillez entrer un email valide';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 8),
-                          // Champ Mot de passe
-                          TextFormField(
-                            style: TextStyle(color: Colors.grey[400]),
+                            controller: _passwordController,
                             obscureText: true,
                             decoration: InputDecoration(
                               hintText: "Mot de passe",
@@ -165,77 +156,95 @@ class _RegisterPageState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 8),
-                          // Champ Mot de passe
-                          TextFormField(
+                          SizedBox(height: height * 0.01),
+                         TextFormField(
+                          controller: _confirmPasswordController,
+                          style: TextStyle(color: Colors.grey[400]),
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            hintText: "Confirmation mot de passe",
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            filled: true,
+                            fillColor: AppColors.grey,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 4.0, horizontal: 12.0),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Veuillez confirmer votre mot de passe';
+                            }
+                            if (value != _passwordController.text) {
+                              return 'Les mots de passe ne correspondent pas';
+                            }
+                            return null;
+                          },
+                        ),
+                          SizedBox(height: height * 0.02),
+                          // Dropdown Sexe
+                          DropdownButtonFormField<String>(
                             style: TextStyle(color: Colors.grey[400]),
-                            obscureText: true,
                             decoration: InputDecoration(
-                              hintText: "Confirmation mot de passe",
-                              hintStyle: TextStyle(color: Colors.grey[400]),
                               filled: true,
-                              fillColor: AppColors.grey,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 4.0, horizontal: 12.0),
+                              fillColor: grey,
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: height * 0.01, // Ajustez si besoin
+                                horizontal: width * 0.02,
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                             ),
+                            hint: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Sexe',
+                                style: TextStyle(color: Colors.grey[400]),
+                              ),
+                            ),
+                            items: ['MALE', 'FEMALE', 'OTHER']
+                                .map((gender) => DropdownMenuItem(
+                                      value: gender,
+                                      child: Text(gender),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _gender = value;
+                              });
+                            },
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Veuillez confirmer votre mot de passe';
+                              if (value == null) {
+                                return 'Veuillez sélectionner votre sexe';
                               }
-                              // if (value != _password) {
-                              //   return 'Les mots de passe ne correspondent pas';
-                              // }
                               return null;
                             },
                           ),
-                          const SizedBox(height: 16),
-                          // Bouton Connexion
+                          SizedBox(height: height * 0.03),
+                          // Bouton Inscription
                           ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                // Traitez les données du formulaire
-                                print('Email: $_email');
-                                print('Mot de passe: $_password');
                                 _createAccount();
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              minimumSize: const Size(double.infinity, 42),
+                              backgroundColor: AppColors.grey,
+                              minimumSize: Size(double.infinity, height * 0.06),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              "S'incrire",
+                            child: Text(
+                              "S'inscrire",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-                          // Icônes de connexion
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                              3,
-                              (index) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: CircleAvatar(
-                                  radius: 24,
-                                  backgroundColor: AppColors.primary,
-                                  child: Icon(
-                                    Icons.person,
-                                    color: Colors.grey[400],
-                                  ),
-                                ),
+                                fontSize: width * 0.045,
                               ),
                             ),
                           ),
@@ -243,6 +252,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                   ),
+                  SizedBox(height: height * 0.03),
                   // Footer : Lien pour s'inscrire
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -22,48 +22,55 @@ class ResetpasswordPage extends StatelessWidget {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/img/RunGirl.jpg"),
-            fit: BoxFit.cover,
-          ),
+ @override
+Widget build(BuildContext context) {
+  final mediaQuery = MediaQuery.of(context);
+  final screenHeight = mediaQuery.size.height;
+  final screenWidth = mediaQuery.size.width;
+
+  return Scaffold(
+    body: Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/img/RunGirl.jpg"),
+          fit: BoxFit.cover,
         ),
-        child: Stack(
-          children: [
-            // Overlay pour assombrir l'image
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: AppColors.dark.withOpacity(0.9),
+      ),
+      child: Stack(
+        children: [
+          // Overlay pour assombrir l'image
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: AppColors.dark.withOpacity(0.9),
+          ),
+          // Contenu de la page
+          Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.02,
+              horizontal: screenWidth * 0.04,
             ),
-            // Contenu de la page
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Logo Container
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: SvgPicture.asset(
-                      "assets/img/logo.svg",
-                      height: 100,
-                    ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Logo Container
+                Padding(
+                  padding: EdgeInsets.only(top: screenHeight * 0.05),
+                  child: SvgPicture.asset(
+                    "assets/img/logo.svg",
+                    height: screenHeight * 0.1,
                   ),
-                  // Formulaire de connexion
-                  Expanded(
-                      child: Column(
+                ),
+                // Formulaire de connexion
+                Expanded(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 12),
-                        padding: const EdgeInsets.all(24),
+                        margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+                        padding: EdgeInsets.all(screenWidth * 0.06),
                         decoration: BoxDecoration(
                           color: AppColors.lightDark,
                           borderRadius: BorderRadius.circular(12),
@@ -71,15 +78,15 @@ class ResetpasswordPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text(
+                            Text(
                               "Mot de passe oublié ! 🔐",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 24,
+                                fontSize: screenHeight * 0.03,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 24),
+                            SizedBox(height: screenHeight * 0.03),
                             // Champ Email
                             TextFormField(
                               controller: _emailController,
@@ -88,8 +95,10 @@ class ResetpasswordPage extends StatelessWidget {
                                 hintStyle: TextStyle(color: Colors.grey[400]),
                                 filled: true,
                                 fillColor: AppColors.grey,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 4.0, horizontal: 12.0),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: screenHeight * 0.015,
+                                  horizontal: screenWidth * 0.03,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
@@ -97,44 +106,43 @@ class ResetpasswordPage extends StatelessWidget {
                               ),
                               keyboardType: TextInputType.emailAddress,
                             ),
-
-                            const SizedBox(height: 16),
-                            // Bouton Connexion
+                            SizedBox(height: screenHeight * 0.02),
+                            // Bouton Envoyer
+                            ElevatedButton(
+                               onPressed: () => _sendResetLink(context),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                minimumSize: Size(double.infinity, screenHeight * 0.05),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: Text(
+                                "Envoyer",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: screenHeight * 0.02,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: screenHeight * 0.01),
+                            // Bouton Annuler
                             ElevatedButton(
                               onPressed: () {
                                 // Action pour se connecter
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                minimumSize: const Size(double.infinity, 42),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: const Text(
-                                "Envoyer",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            // Bouton Connexion
-                            ElevatedButton(
-                              onPressed: () => _sendResetLink(context),
-                              style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.grey,
-                                minimumSize: const Size(double.infinity, 42),
+                                minimumSize: Size(double.infinity, screenHeight * 0.05),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
-                              child: const Text(
+                              child: Text(
                                 "Annuler",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: screenHeight * 0.02,
                                 ),
                               ),
                             ),
@@ -142,13 +150,14 @@ class ResetpasswordPage extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ))
-                ],
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
