@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myapp/Components/button_widget.dart';
+import 'package:myapp/Components/form_text_field.dart';
 import 'package:myapp/Pages/signin_page.dart';
 import 'package:myapp/Theme/theme.dart';
 import '../api_service.dart';
@@ -129,30 +130,45 @@ Widget build(BuildContext context) {
                           ),
                           SizedBox(height: height * 0.02),
                           // Champs de formulaire (généralisation possible)
-                          _buildTextField("Nom", (value) => _lastName = value),
+                          BLFormTextField(
+                            hintText: "Nom", 
+                            onSaved: (value) => _lastName = value,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Veuillez entrer votre nom';
+                              }
+                              return null;
+                            },
+                          ),
                           SizedBox(height: height * 0.01),
-                          _buildTextField(
-                              "Prénom", (value) => _firstName = value),
+                          BLFormTextField(
+                            hintText: "Prénom", 
+                            onSaved: (value) => _firstName = value,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Veuillez entrer votre prénom';
+                              }
+                              return null;
+                            },
+                          ),
                           SizedBox(height: height * 0.01),
-                          _buildTextField("Email", (value) => _email = value,
-                              isEmail: true),
+                          BLFormTextField(
+                            hintText: "Email", 
+                            onSaved: (value) => _email = value,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Veuillez entrer un email';
+                              }
+                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                return 'Veuillez entrer un email valide';
+                              }
+                              return null;
+                            },
+                          ),
                           SizedBox(height: height * 0.01),
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              hintText: "Mot de passe",
-                              hintStyle: TextStyle(color: Colors.grey[400]),
-                              filled: true,
-                              fillColor: grey,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 4.0, horizontal: 12.0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
+                          BLFormTextField(hintText: "Mot de passe", 
                             onSaved: (value) => _password = value,
+                            isPassword: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Veuillez entrer un mot de passe';
@@ -164,32 +180,20 @@ Widget build(BuildContext context) {
                             },
                           ),
                           SizedBox(height: height * 0.01),
-                         TextFormField(
-                          controller: _confirmPasswordController,
-                          style: TextStyle(color: Colors.grey[400]),
-                          obscureText: true,
-                          decoration: InputDecoration(
+                          BLFormTextField(
                             hintText: "Confirmation mot de passe",
-                            hintStyle: TextStyle(color: Colors.grey[400]),
-                            filled: true,
-                            fillColor: grey,
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 4.0, horizontal: 12.0),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
+                            onSaved: (value) => _password = value,
+                            isPassword: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Veuillez confirmer votre mot de passe';
+                              }
+                              if (value != _passwordController.text) {
+                                return 'Les mots de passe ne correspondent pas';
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Veuillez confirmer votre mot de passe';
-                            }
-                            if (value != _passwordController.text) {
-                              return 'Les mots de passe ne correspondent pas';
-                            }
-                            return null;
-                          },
-                        ),
                           SizedBox(height: height * 0.02),
                           // Dropdown Sexe
                           DropdownButtonFormField<String>(

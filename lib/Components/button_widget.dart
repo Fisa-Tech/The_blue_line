@@ -48,7 +48,7 @@ class BLElevatedButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
-        minimumSize: Size(double.infinity, screenHeight * 0.06),
+        minimumSize: Size(double.infinity, screenHeight * 0.055),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
