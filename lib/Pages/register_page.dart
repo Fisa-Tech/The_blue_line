@@ -90,9 +90,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: width * 0.05, // 5% de marge horizontale
-                      vertical: height * 0.02, // 2% de marge verticale
+                      vertical: height * 0.05, // 5% de marge verticale
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // Logo Container
@@ -169,28 +170,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 SizedBox(height: height * 0.03),
                                 // Bouton Inscription
-                                ElevatedButton(
+                                BLElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
                                       _createAccount();
                                     }
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.grey,
-                                    minimumSize:
-                                        Size(double.infinity, height * 0.06),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "S'inscrire",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: width * 0.045,
-                                    ),
-                                  ),
+                                  text: "S'inscrire",
+                                  variant: ButtonVariant.primary,
                                 ),
                               ],
                             ),
@@ -214,7 +202,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 );
                               },
                               child: const Text(
-                                "connect toi",
+                                "Connecte-toi",
                                 style: TextStyle(
                                   color: AppColors.primary,
                                 ),
