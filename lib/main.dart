@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/Pages/home_page.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/Pages/profile_setup_page.dart';
 import 'package:myapp/Pages/welcome_page.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const WelcomePage(), // Page d'accueil
       routes: {
-        '/home': (context) => const WelcomePage(),
+        '/home': (context) => const HomePage(),
         '/register': (context) => const RegisterPage(), // Route vers la page de création de compte
         '/login': (context) => const SigninPage(),
         '/profil': (context) => const ProfileSetupPage(),
