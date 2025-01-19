@@ -7,10 +7,12 @@ class BLFormTextField extends StatelessWidget {
   final TextEditingController? controller;
   final Function(String?)? onSaved;
   final String? Function(String?)? validator;
+  final String? label;
 
   const BLFormTextField({
     super.key,
     required this.hintText,
+    this.label,
     this.isPassword = false,
     this.controller,
     this.onSaved,
@@ -25,6 +27,7 @@ class BLFormTextField extends StatelessWidget {
       controller: controller,
       obscureText: isPassword,
       decoration: InputDecoration(
+        label: label != null ? Text(label!) : null,
         hintText: hintText,
         hintStyle: const TextStyle(color: AppColors.disabled),
         filled: true,

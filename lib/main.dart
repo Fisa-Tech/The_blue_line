@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myapp/Pages/edit_password_page.dart';
 import 'package:myapp/Pages/home_page.dart';
+import 'package:myapp/Pages/notification_settings.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/Pages/profile_setup_page.dart';
+import 'package:myapp/Pages/settings_page.dart';
 import 'package:myapp/Pages/welcome_page.dart';
 import '../Pages/register_page.dart';
 import '../Pages/signin_page.dart';
@@ -34,6 +37,10 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const SigninPage(),
         '/profil': (context) => const ProfileSetupPage(),
         '/forgotpassword': (context) => ResetpasswordPage(),
+        '/settings': (context) => const SettingsPage(),
+        '/settings/profile_edit': (context) => const ProfileSetupPage(),
+        '/settings/edit_password': (context) => const EditPasswordPage(),
+        '/settings/notification_settings': (context) => const NotificationSettingsPage(),
       },
     );
   }

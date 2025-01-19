@@ -11,6 +11,7 @@ class HomePage extends StatelessWidget {
       leftIcon: Icons.notifications_outlined,
       onLeftIconPressed: () {  },
       title: '',
+      appBarVariant: AppBarVariant.notifAndProfile,
       currentIndex: 0,
       onTabSelected: (int value) {  },
       child: const Center(
