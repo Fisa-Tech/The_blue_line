@@ -18,8 +18,9 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _email;
   String? _password;
   final apiService = ApiService(); // Crée une instance de la classe ApiService
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
 
   Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
@@ -142,6 +143,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 BLFormTextField(hintText: "Mot de passe", 
                                   onSaved: (value) => _password = value,
                                   isPassword: true,
+                                  controller: _passwordController,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Veuillez entrer un mot de passe';
@@ -156,13 +158,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                 BLFormTextField(
                                   controller: _confirmPasswordController,
                                   hintText: "Confirmation mot de passe",
-                                  onSaved: (value) => _password = value,
                                   isPassword: true,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Veuillez confirmer votre mot de passe';
                                     }
-                                    if (value != _password) {
+                                    if (value != _passwordController.text) {
                                       return 'Les mots de passe ne correspondent pas';
                                     }
                                     return null;
