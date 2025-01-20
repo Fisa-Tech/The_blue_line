@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserState extends ChangeNotifier {
-  static const String _baseUrl = "https://blue-line-preprod.fisadle.fr/api";
+  static const String _baseUrl = "blue-line-preprod.fisadle.fr";
 
   UserDto? _currentUser; // Utilisateur actuel
   String? _token; // JWT Token
@@ -37,14 +37,11 @@ class UserState extends ChangeNotifier {
 
   /// Login user
   Future<bool> login(String email, String password) async {
-    final url = Uri.parse("$_baseUrl/users/login");
+    final url = Uri.https(
+        _baseUrl, "api/users/login", {'email': email, 'password': password});
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'email': email,
-        'password': password,
-      }),
     );
 
     if (response.statusCode == 200) {
@@ -62,18 +59,15 @@ class UserState extends ChangeNotifier {
   }
 
   Future<bool> TryLoginFromSharedPreference() async {
-    final url = Uri.parse("$_baseUrl/users/login");
     String pass = await loadSavedCredentials();
 
     if (_currentUser == null) return false;
 
+    final url = Uri.https(_baseUrl, "api/users/login",
+        {'email': _currentUser?.email, 'password': pass});
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'email': _currentUser?.email,
-        'password': pass,
-      }),
     );
 
     if (response.statusCode == 200) {
