@@ -5,14 +5,49 @@ import 'package:myapp/Components/setting_tile.dart';
 import 'package:myapp/Components/switch.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class NotificationSettingsPage extends StatelessWidget {
+class NotificationSettingsPage extends StatefulWidget {
   const NotificationSettingsPage({super.key});
+
+  @override
+  State<NotificationSettingsPage> createState() =>
+      _NotificationSettingsPageState();
+}
+
+class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
+  // Variables pour stocker les états des switches
+  bool notifApp1 = false;
+  bool notifApp2 = false;
+  bool notifApp3 = false;
+  bool notifAmis1 = false;
+  bool notifAmis2 = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences(); // Charger les préférences au démarrage
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      notifApp1 = prefs.getBool('notifApp1') ?? false;
+      notifApp2 = prefs.getBool('notifApp2') ?? false;
+      notifApp3 = prefs.getBool('notifApp3') ?? false;
+      notifAmis1 = prefs.getBool('notifAmis1') ?? false;
+      notifAmis2 = prefs.getBool('notifAmis2') ?? false;
+    });
+  }
+
+  Future<void> _savePreference(String key, bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(key, value);
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final avatarRadius = screenWidth * 0.15; // Taille de l'avatar ajustée au mobile
 
     return MainFrame(
       leftIcon: Icons.notifications_outlined,
@@ -27,9 +62,11 @@ class NotificationSettingsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Notifications de l'application
               const Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Notifications de l\'application', style: AppTextStyles.hintText),
+                child: Text('Notifications de l\'application',
+                    style: AppTextStyles.hintText),
               ),
               const SizedBox(height: 16),
               Container(
@@ -40,10 +77,39 @@ class NotificationSettingsPage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
+                    BLElevatedButton(
+                      onPressed: () async {
+                        print("params :");
+                        print(await SharedPreferences.getInstance().then(
+                            (prefs) =>
+                                prefs.getBool('notifApp1') ?? 'Non défini'));
+                        print(await SharedPreferences.getInstance().then(
+                            (prefs) =>
+                                prefs.getBool('notifApp2') ?? 'Non défini'));
+                        print(await SharedPreferences.getInstance().then(
+                            (prefs) =>
+                                prefs.getBool('notifApp3') ?? 'Non défini'));
+                        print(await SharedPreferences.getInstance().then(
+                            (prefs) =>
+                                prefs.getBool('notifAmis1') ?? 'Non défini'));
+                        print(await SharedPreferences.getInstance().then(
+                            (prefs) =>
+                                prefs.getBool('notifAmis2') ?? 'Non défini'));
+                      },
+                      text: 'getparam',
+                    ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 1',
-                      trailing: BLSwitch(value: true, onChanged: (value) {}),
+                      title: 'Notification app 1',
+                      trailing: BLSwitch(
+                        value: notifApp1,
+                        onChanged: (value) {
+                          setState(() {
+                            notifApp1 = value;
+                          });
+                          _savePreference('notifApp1', value);
+                        },
+                      ),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10),
@@ -51,21 +117,40 @@ class NotificationSettingsPage extends StatelessWidget {
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 2',
-                      trailing: BLSwitch(value: false, onChanged: (value) {}),
+                      title: 'Notification app 2',
+                      trailing: BLSwitch(
+                        value: notifApp2,
+                        onChanged: (value) {
+                          setState(() {
+                            notifApp2 = value;
+                          });
+                          _savePreference('notifApp2', value);
+                        },
+                      ),
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 3',
-                      trailing: BLSwitch(value: false, onChanged: (value) {}),
+                      title: 'Notification app 3',
+                      trailing: BLSwitch(
+                        value: notifApp3,
+                        onChanged: (value) {
+                          setState(() {
+                            notifApp3 = value;
+                          });
+                          _savePreference('notifApp3', value);
+                        },
+                      ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 32),
+
+              // Notifications des amis
               const Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Notifications des amis', style: AppTextStyles.hintText),
+                child: Text('Notifications des amis',
+                    style: AppTextStyles.hintText),
               ),
               const SizedBox(height: 16),
               Container(
@@ -78,8 +163,16 @@ class NotificationSettingsPage extends StatelessWidget {
                   children: [
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 1',
-                      trailing: BLSwitch(value: true, onChanged: (value) {}),
+                      title: 'Notification amis 1',
+                      trailing: BLSwitch(
+                        value: notifAmis1,
+                        onChanged: (value) {
+                          setState(() {
+                            notifAmis1 = value;
+                          });
+                          _savePreference('notifAmis1', value);
+                        },
+                      ),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10),
@@ -87,8 +180,16 @@ class NotificationSettingsPage extends StatelessWidget {
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 2',
-                      trailing: BLSwitch(value: false, onChanged: (value) {}),
+                      title: 'Notification amis 2',
+                      trailing: BLSwitch(
+                        value: notifAmis2,
+                        onChanged: (value) {
+                          setState(() {
+                            notifAmis2 = value;
+                          });
+                          _savePreference('notifAmis2', value);
+                        },
+                      ),
                     ),
                   ],
                 ),
