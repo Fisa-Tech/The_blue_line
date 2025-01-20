@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myapp/Pages/defi_details_page.dart';
+import 'package:myapp/Pages/defis_page.dart';
 import 'package:myapp/Pages/home_page.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/Pages/profile_setup_page.dart';
@@ -34,6 +36,8 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const SigninPage(),
         '/profil': (context) => const ProfileSetupPage(),
         '/forgotpassword': (context) => ResetpasswordPage(),
+        '/defis': (context) => const DefisPage(),
+        '/defis_details': (context) => const DetailsDefisPage(),
       },
     );
   }
