@@ -1,74 +1,230 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Models/user_dto.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserState extends ChangeNotifier {
+  static const String _baseUrl = "https://blue-line-preprod.fisadle.fr/api";
+
   UserDto? _currentUser; // Utilisateur actuel
-  bool _isAuthenticated = false; // État d'authentification
   String? _token; // JWT Token
+  bool _rememberMe = false;
 
   // Getter pour l'utilisateur
   UserDto? get currentUser => _currentUser;
+  bool get rememberMe => _rememberMe;
 
   // Getter pour l'état d'authentification
-  bool get isAuthenticated => _isAuthenticated;
+  bool get isAuthenticated => _token != null;
 
   // Getter pour le token
   String? get token => _token;
 
-  // Méthode pour se connecter
-  Future<void> login(String email, String password) async {
-    try {
-      // Appel API pour se connecter
-      final response = await /* Appel HTTP pour POST /api/users/login */;
-      final token = response['token'];
-      final userResponse = await /* Appel HTTP pour GET /api/users/me avec le token */;
-      _token = token;
-      _currentUser = UserDto.fromJson(userResponse);
-      _isAuthenticated = true;
-
-      notifyListeners(); // Notification des changements
-    } catch (error) {
-      throw Exception("Erreur lors de la connexion : $error");
-    }
+  /// Set the authentication token
+  void setToken(String token) {
+    _token = token;
+    notifyListeners();
   }
 
-  // Méthode pour mettre à jour les informations de l'utilisateur
-  Future<void> updateUser(UserDto updatedUser) async {
-    try {
-      final response = await /* Appel HTTP PUT /api/users/me avec updatedUser.toJson() */;
-      _currentUser = UserDto.fromJson(response);
-      notifyListeners(); // Notification des changements
-    } catch (error) {
-      throw Exception("Erreur lors de la mise à jour de l'utilisateur : $error");
-    }
-  }
-
-  // Méthode pour changer le mot de passe
-  Future<void> updatePassword(String oldPassword, String newPassword) async {
-    try {
-      await /* Appel HTTP PATCH /api/users/password avec les paramètres */;
-    } catch (error) {
-      throw Exception("Erreur lors du changement de mot de passe : $error");
-    }
-  }
-
-  // Méthode pour se déconnecter
+  /// Clear user state
   void logout() {
-    _currentUser = null;
-    _isAuthenticated = false;
     _token = null;
-    notifyListeners(); // Notification des changements
+    _currentUser = null;
+    _clearUserCredentials();
+    notifyListeners();
   }
 
-  // Méthode pour enregistrer un utilisateur
-  Future<void> register(UserDto user, String password) async {
-    try {
-      final response = await /* Appel HTTP POST /api/users/register avec les données */;
-      _currentUser = UserDto.fromJson(response);
-      _isAuthenticated = true;
-      notifyListeners(); // Notification des changements
-    } catch (error) {
-      throw Exception("Erreur lors de l'enregistrement : $error");
+  /// Login user
+  Future<bool> login(String email, String password) async {
+    final url = Uri.parse("$_baseUrl/users/login");
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      _token = response.body; // Token is returned as a plain string
+
+      if (_rememberMe) {
+        await _saveUserCredentials(
+            password); // Enregistrer les données si "Se souvenir de moi" est activé
+      }
+      notifyListeners();
+      return true;
+    } else {
+      throw Exception("Failed to login: ${response.body}");
     }
+  }
+
+  Future<bool> TryLoginFromSharedPreference() async {
+    final url = Uri.parse("$_baseUrl/users/login");
+    String pass = await loadSavedCredentials();
+
+    if (_currentUser == null) return false;
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': _currentUser?.email,
+        'password': pass,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      _token = response.body; // Token is returned as a plain string
+
+      notifyListeners();
+      return true;
+    } else {
+      throw Exception("Failed to login: ${response.body}");
+    }
+  }
+
+  /// Register user
+  Future<bool> register(String email, String password) async {
+    final url = Uri.parse("$_baseUrl/users/register");
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      throw Exception("Failed to register user: ${response.body}");
+    }
+  }
+
+  /// Get authenticated user
+  Future<UserDto?> fetchAuthenticatedUser() async {
+    if (!await TryLoginFromSharedPreference()) return null;
+    if (_token == null) return null;
+
+    final url = Uri.parse("$_baseUrl/users/me");
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $_token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      _currentUser = UserDto.fromJson(json.decode(response.body));
+      notifyListeners();
+      return _currentUser;
+    } else if (response.statusCode == 401) {
+      logout();
+      throw Exception("Unauthorized: ${response.body}");
+    } else {
+      throw Exception("Failed to fetch user: ${response.body}");
+    }
+  }
+
+  /// Update authenticated user
+  Future<UserDto?> updateUser(UserDto updatedUser) async {
+    if (_token == null) return null;
+
+    final url = Uri.parse("$_baseUrl/users/me");
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $_token',
+      },
+      body: json.encode(updatedUser.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      _currentUser = UserDto.fromJson(json.decode(response.body));
+      notifyListeners();
+      return _currentUser;
+    } else {
+      throw Exception("Failed to update user: ${response.body}");
+    }
+  }
+
+  /// Delete authenticated user
+  Future<void> deleteUser() async {
+    if (_token == null) return;
+
+    final url = Uri.parse("$_baseUrl/users/me");
+    final response = await http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+    );
+
+    if (response.statusCode == 204) {
+      logout();
+    } else {
+      throw Exception("Failed to delete user: ${response.body}");
+    }
+  }
+
+  /// Update password
+  Future<void> updatePassword(String oldPassword, String newPassword) async {
+    if (_token == null) return;
+
+    final url = Uri.parse("$_baseUrl/users/password");
+    final response = await http.patch(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $_token',
+      },
+      body: json.encode({
+        'oldPassword': oldPassword,
+        'newPassword': newPassword,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to update password: ${response.body}");
+    }
+  }
+
+  // Charger les données utilisateur enregistrées
+  Future<String> loadSavedCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    _currentUser = prefs.containsKey('profil')
+        ? UserDto.fromJson(jsonDecode(prefs.getString('profil')!))
+        : null;
+
+    return prefs.getString('password') ?? '';
+  }
+
+  // Sauvegarder les données utilisateur
+  Future<void> _saveUserCredentials(String pass) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (currentUser != null) {
+      String user = jsonEncode(currentUser!.toJson());
+      prefs.setString('profil', user);
+      prefs.setString('password', pass);
+    }
+  }
+
+  // Supprimer les données utilisateur
+  Future<void> _clearUserCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('profil');
+    await prefs.remove('password');
+  }
+
+  // Setter pour "Se souvenir de moi"
+  void setRememberMe(bool value) {
+    _rememberMe = value;
+    notifyListeners();
   }
 }

@@ -51,6 +51,13 @@ class UserDto {
     };
   }
 
+  bool profilCompleted() {
+    return firstname.isNotEmpty &&
+        lastname.isNotEmpty &&
+        sex != null &&
+        status != null;
+  }
+
   @override
   String toString() {
     return jsonEncode(toJson());
