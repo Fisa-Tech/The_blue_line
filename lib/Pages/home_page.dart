@@ -104,7 +104,9 @@ class HomePage extends StatelessWidget {
                     style: AppTextStyles.headline2,
                   ),
                   TextButton(
-                    onPressed: () {  },
+                    onPressed: () { 
+                      Navigator.pushNamed(context, '/news');
+                    },
                     child: const Text(
                       'Voir tout',
                       style: AppTextStyles.hintText,

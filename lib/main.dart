@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myapp/Pages/actualites.dart';
 import 'package:myapp/Pages/home_page.dart';
 import 'package:myapp/Pages/notifications_page.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/profil': (context) => const ProfileSetupPage(),
         '/forgotpassword': (context) => ResetpasswordPage(),
         '/notifications': (context) => const NotificationsPage(),
+        '/news': (context) => const ActualitesPage(),
       },
     );
   }
