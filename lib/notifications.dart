@@ -1,15 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  static late BuildContext _navigatorContext; // Stocker le contexte pour la navigation
+
   // Initialisation des notifications
-  static Future<void> initialize() async {
+  static Future<void> initialize(BuildContext context) async {
+    _navigatorContext = context; // Stocker le contexte fourni
+
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('image_cloche'); // Utiliser l'icône de notification
+        AndroidInitializationSettings('image_cloche');
 
     const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
@@ -25,71 +28,125 @@ class NotificationService {
     if (!initialized!) {
       throw Exception('Notification initialization failed!');
     }
-
-    // Initialiser les données de fuseau horaire
-    tz.initializeTimeZones();
   }
 
-  static Future<void> showNotification({
+  // Méthode pour afficher différents types de notifications
+  static Future<void> showNotificationType({
+    required NotificationType type,
     required int id,
-    required String title,
-    required String body,
+    String? customTitle,
+    String? customBody,
   }) async {
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      channelDescription: 'Test de notification',
-      importance: Importance.high,
-      priority: Priority.high,
-    );
+    final notificationDetails = _getNotificationDetails(type);
 
-    const NotificationDetails platformDetails = NotificationDetails(
-      android: androidDetails,
-    );
+    final title = customTitle ?? type.defaultTitle;
+    final body = customBody ?? type.defaultBody;
 
     await _flutterLocalNotificationsPlugin.show(
       id,
       title,
       body,
-      platformDetails,
-      payload: 'Test de notification',
+      notificationDetails,
+      payload: type.payload,
     );
   }
 
-  // Fonction pour planifier la notification
-  static Future<void> scheduleNotification({
-    required int id,
-    required String title,
-    required String body,
-    required DateTime scheduledTime,
-  }) async {
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      channelDescription: 'Test de notification',
-      importance: Importance.high,
-      priority: Priority.high,
-    );
-
-    const NotificationDetails platformDetails = NotificationDetails(
-      android: androidDetails,
-    );
-
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledTime, tz.local), // Heure programmée
-      platformDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle, // Permet l'envoi même si l'appareil est en veille
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
+  // Configuration des types de notifications
+  static NotificationDetails _getNotificationDetails(NotificationType type) {
+    switch (type) {
+      case NotificationType.info:
+        return const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'info_channel_id',
+            'Info Notifications',
+            channelDescription: 'Notifications informatives',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: 'image_cloche',
+          ),
+        );
+      case NotificationType.warning:
+        return const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'warning_channel_id',
+            'Warning Notifications',
+            channelDescription: 'Notifications d\'avertissement',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: 'image_cloche',
+          ),
+        );
+      case NotificationType.success:
+        return const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'success_channel_id',
+            'Success Notifications',
+            channelDescription: 'Notifications de succès',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: 'image_cloche',
+          ),
+        );
+      case NotificationType.error:
+        return const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'error_channel_id',
+            'Error Notifications',
+            channelDescription: 'Notifications d\'erreur',
+            importance: Importance.max,
+            priority: Priority.high,
+            icon: 'image_cloche',
+          ),
+        );
+      default:
+        throw Exception('Type de notification inconnu');
+    }
   }
 
-  // Callback pour la sélection de la notification
+  // Gestion de la sélection d'une notification
   static Future<void> onSelectNotification(String? payload) async {
     print('Notification sélectionnée : $payload');
-    // Vous pouvez effectuer une action ici, comme naviguer vers une autre page.
+
+    if (payload != null) {
+      switch (payload) {
+        case 'info_payload':
+          // Navigator.push(
+          //   _navigatorContext,
+          //   MaterialPageRoute(builder: (context) => const InfoPage()),
+          // );
+          break;
+        case 'success_payload':
+          // Navigator.push(
+          //   _navigatorContext,
+          //   MaterialPageRoute(builder: (context) => const SuccessPage()),
+          // );
+          break;
+        case 'error_payload':
+          // Navigator.push(
+          //   _navigatorContext,
+          //   MaterialPageRoute(builder: (context) => const ErrorPage()),
+          // );
+          break;
+        default:
+          // Navigator.push(
+          //   _navigatorContext,
+          //   MaterialPageRoute(builder: (context) => const DefaultPage()),
+          // );
+      }
+    }
   }
+}
+
+// Enum pour les types de notifications
+enum NotificationType {
+  info('Information', 'Voici une notification informative.', 'info_payload'),
+  warning('Avertissement', 'Attention, une action est requise.', 'warning_payload'),
+  success('Succès', 'Action effectuée avec succès.', 'success_payload'),
+  error('Erreur', 'Une erreur est survenue.', 'error_payload');
+
+  final String defaultTitle;
+  final String defaultBody;
+  final String payload;
+
+  const NotificationType(this.defaultTitle, this.defaultBody, this.payload);
 }
