@@ -14,7 +14,7 @@ class NotificationsPage extends StatelessWidget {
       currentIndex: 0,
       onTabSelected: (int value) {  },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 6.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
