@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/Theme/app_colors.dart';
 
 class CommunautePostCard extends StatelessWidget {
   final String profileName;
@@ -20,7 +21,7 @@ class CommunautePostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-      color: const Color(0xFF2C2C2E), // Couleur similaire à l'exemple
+      color: AppColors.lightDark, // Couleur similaire à l'exemple
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),

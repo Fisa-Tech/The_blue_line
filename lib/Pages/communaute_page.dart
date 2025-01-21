@@ -50,7 +50,7 @@ class CommunautePage extends StatelessWidget {
   // Widget pour afficher les posts des amis
   static Widget _buildFluxContent(BuildContext context) {
     // Vérifiez ici si l'utilisateur a des amis (par exemple via une liste d'amis)
-    bool hasFriends = false; // Remplacez par votre logique réelle
+    bool hasFriends = true; // Remplacez par votre logique réelle
 
     if (!hasFriends) {
       return Column(
