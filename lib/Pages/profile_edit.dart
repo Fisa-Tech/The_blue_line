@@ -4,6 +4,7 @@ import 'package:myapp/Components/form_text_field.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
+import 'package:myapp/Components/dropdown_button.dart';
 
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({super.key});
@@ -27,24 +28,25 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   late TextEditingController emailController;
   late TextEditingController lastnameController;
   late TextEditingController firstnameController;
-  late TextEditingController sexController;
   late TextEditingController statusController;
+
+  // Variables pour DropdownButton
+  String? selectedSex;
+  String? selectedStatus;
 
   @override
   void initState() {
     super.initState();
 
     // Initialisation avec des valeurs par défaut si profilJson est vide ou contient des nulls
-    emailController =
-        TextEditingController(text: profilJson['email'] ?? "");
+    emailController = TextEditingController(text: profilJson['email'] ?? "");
     lastnameController =
         TextEditingController(text: profilJson['lastname'] ?? "");
     firstnameController =
         TextEditingController(text: profilJson['firstname'] ?? "");
-    sexController =
-        TextEditingController(text: profilJson['sex'] ?? "");
-    statusController =
-        TextEditingController(text: profilJson['status'] ?? "");
+    statusController = TextEditingController(text: profilJson['status'] ?? "");
+    selectedSex = profilJson['sex'];
+    selectedStatus = profilJson['status'];
   }
 
   @override
@@ -53,7 +55,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     emailController.dispose();
     lastnameController.dispose();
     firstnameController.dispose();
-    sexController.dispose();
     statusController.dispose();
     super.dispose();
   }
@@ -122,18 +123,45 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                       label: "Prénom",
                     ),
                     const SizedBox(height: 10),
-                    BLFormTextField(
-                      color: Colors.white,
-                      controller: sexController,
-                      hintText: "Homme",
+                    // Genre Dropdown
+                    BLDropdownButton<String>(
+                      items: [
+                        DropdownMenuItem(value: 'MALE', child: Text('Homme')),
+                        DropdownMenuItem(value: 'FEMALE', child: Text('Femme')),
+                        DropdownMenuItem(value: 'OTHER', child: Text('Autre')),
+                      ],
+                      hintText: "Sélectionner un genre",
+                      value: selectedSex,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedSex = value;
+                        });
+                      },
                       label: "Genre",
+                      color: Colors.white,
                     ),
                     const SizedBox(height: 10),
-                    BLFormTextField(
-                      color: Colors.white,
-                      controller: statusController,
-                      hintText: "Actif",
+                    // Statut Dropdown
+                    BLDropdownButton<String>(
+                      items: [
+                        DropdownMenuItem(value: 'LYCEE', child: Text('Lycée')),
+                        DropdownMenuItem(
+                            value: 'COLLEGE', child: Text('Collège')),
+                        DropdownMenuItem(
+                            value: 'ETUDIANT', child: Text('Étudiant')),
+                        DropdownMenuItem(
+                            value: 'PERSONNEL', child: Text('Personnel')),
+                        DropdownMenuItem(value: 'AUTRES', child: Text('Autre')),
+                      ],
+                      hintText: "Sélectionner un statut",
+                      value: selectedStatus,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedStatus = value;
+                        });
+                      },
                       label: "Statut",
+                      color: Colors.white,
                     ),
                     const SizedBox(height: 32),
                     BLElevatedButton(
@@ -143,7 +171,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                         print("Email : ${emailController.text}");
                         print("Nom : ${lastnameController.text}");
                         print("Prénom : ${firstnameController.text}");
-                        print("Genre : ${sexController.text}");
+                        print("Genre : ${selectedSex}");
                         print("Statut : ${statusController.text}");
                       },
                       text: "Enregistrer",
