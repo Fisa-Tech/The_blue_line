@@ -1,34 +1,40 @@
-class Defi {
+class Challenge {
   final int id;
   final String titre;
   final String description;
   final String etat;
-  final String imageUrl;
-  final int participants;
-  final String deadline;
+  final double distance;
+  final int time;
+  final DateTime deadline;
+  final DateTime beginDate;
   final String type;
+  final int eventid;
 
-  Defi({
+  Challenge({
     required this.id,
     required this.titre,
     required this.description,
     required this.etat,
-    required this.imageUrl,
-    required this.participants,
+    required this.distance,
+    required this.time,
     required this.deadline,
+    required this.beginDate,
     required this.type,
+    required this.eventid,
   });
 
-  factory Defi.fromJson(Map<String, dynamic> json) {
-    return Defi(
+  factory Challenge.fromJson(Map<String, dynamic> json) {
+    return Challenge(
       id: json['id'],
       titre: json['titre'],
       description: json['description'],
       etat: json['etat'],
-      imageUrl: json['imageUrl'],
-      participants: json['participants'],
+      distance: json['distance'],
+      time: json['time'],
       deadline: json['deadline'],
+      beginDate: json['beginDate'],
       type: json['type'],
+      eventid: json['eventid'],
     );
   }
 
@@ -38,10 +44,12 @@ class Defi {
       'titre': titre,
       'description': description,
       'etat': etat,
-      'imageUrl': imageUrl,
-      'participants': participants,
+      'distance': distance,
+      'time': time,
       'deadline': deadline,
+      'beginDate': beginDate,
       'type': type,
+      'eventid': eventid,
     };
   }
 }

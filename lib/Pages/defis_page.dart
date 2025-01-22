@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
-import 'defi_dto.dart';
-import 'defi_service.dart';
+import 'challenge_dto.dart';
+import 'challenge_service.dart';
 
 class DefisPage extends StatelessWidget {
   const DefisPage({super.key});
@@ -33,9 +33,9 @@ class DefisPage extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: TabBarView(
             children: [
-              _buildDefisTab('A relever'),
-              _buildDefisTab('En cours'),
-              _buildDefisTab('Terminés'),
+              _buildDefisTab('pending'),
+              _buildDefisTab('ongoing'),
+              _buildDefisTab('completed'),
             ],
           ),
         ),
@@ -44,15 +44,15 @@ class DefisPage extends StatelessWidget {
   }
 
   Widget _buildDefisTab(String etat) {
-    return FutureBuilder<List<Defi>>(
-      future: DefiService.fetchDefisByEtat(etat),
+    return FutureBuilder<List<Challenge>>(
+      future: ChallengeService.fetchDefisByEtat(etat),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Erreur: ${snapshot.error}'));
+          return Center(child: Text('Erreur: ${snapshot.error}', style: AppTextStyles.hintText));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('Aucun défi trouvé'));
+          return const Center(child: Text('Aucun défi trouvé', style: AppTextStyles.hintText));
         } else {
           return ListView.builder(
             itemCount: snapshot.data!.length,
