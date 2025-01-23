@@ -139,7 +139,10 @@ class CommunautePage extends StatelessWidget {
         return GroupCard(
           groupName: group["name"]!,
           groupSlogan: group["slogan"]!, 
-          onTap: () {  },
+          onTap: () { 
+            //naviguer à la page /login avec en parametre le nom de groupe
+            Navigator.pushNamed(context, '/login', arguments: group["name"]);
+           },
         );
       },
     );

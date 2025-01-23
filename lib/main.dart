@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myapp/Components/friendCard.dart';
+import 'package:myapp/Pages/ajouter_amis_page.dart';
 import 'package:myapp/Pages/communaute_page.dart';
+import 'package:myapp/Pages/group_flux_page.dart';
 import 'package:myapp/Pages/home_page.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/Pages/profile_setup_page.dart';
@@ -28,12 +31,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const WelcomePage(), // Page d'accueil
+      home: const CommunautePage(), // Page d'accueil
       routes: {
         '/home': (context) => const CommunautePage(),
         '/register': (context) => const RegisterPage(), // Route vers la page de création de compte
-        '/login': (context) => const SigninPage(),
-        '/profil': (context) => const ProfileSetupPage(),
+        '/login': (context) => const GroupFeedPage(groupName: '',),
+        '/profil': (context) => const AddFriendsPage(),
         '/forgotpassword': (context) => ResetpasswordPage(),
       },
     );
