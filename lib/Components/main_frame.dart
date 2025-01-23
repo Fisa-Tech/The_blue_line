@@ -58,19 +58,19 @@ class MainFrame extends StatelessWidget {
         unselectedItemColor: AppColors.textPrimary, // Couleur des icônes non sélectionnées
         items: const [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
+            icon: Icon(Icons.home),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.timer),
+            icon: Icon(Icons.timer),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
+            icon: Icon(Icons.home),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
+            icon: Icon(Icons.home),
             label: '',
           ),
         ],
@@ -81,8 +81,10 @@ class MainFrame extends StatelessWidget {
    _buildAppBar(BuildContext context) {
     if(appBarVariant == AppBarVariant.notifAndProfile) {
       return AppBar(
+        scrolledUnderElevation: 0.0,
         backgroundColor: AppColors.dark,
         bottom: bottom,
+        elevation: 0, // Remove shadow
         leading: leftIcon != null
             ? IconButton(
                 icon: Icon(leftIcon, color: Colors.white, size: 26),
@@ -114,8 +116,10 @@ class MainFrame extends StatelessWidget {
       );
     } else if(appBarVariant == AppBarVariant.backAndProfile) {
       return AppBar(
+        scrolledUnderElevation: 0.0,
         backgroundColor: AppColors.dark,
         bottom: bottom,
+        elevation: 0, // Remove shadow
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
           onPressed: () => Navigator.of(context).pop(),
@@ -143,8 +147,10 @@ class MainFrame extends StatelessWidget {
       );
     } else if(appBarVariant == AppBarVariant.backAndLogout) {
       return AppBar(
+        scrolledUnderElevation: 0.0,
         backgroundColor: AppColors.dark,
         bottom: bottom,
+        elevation: 0, // Remove shadow
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
@@ -166,8 +172,10 @@ class MainFrame extends StatelessWidget {
       );
     } else if(appBarVariant == AppBarVariant.backAndShare) {
       return AppBar(
+        scrolledUnderElevation: 0.0,
         backgroundColor: AppColors.dark,
         bottom: bottom,
+        elevation: 0, // Remove shadow
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),

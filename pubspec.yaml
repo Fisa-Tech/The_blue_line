@@ -38,6 +38,7 @@ dependencies:
   http: ^1.2.2
   flutter_appauth: ^8.0.1
   shared_preferences: ^2.0.15
+  intl: ^0.20.0
 
 dev_dependencies:
   flutter_test:

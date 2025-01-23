@@ -70,6 +70,8 @@ class _SigninPageState extends State<SigninPage> {
           print('Corps de la réponse: ${response.body}');
 
           if (response.statusCode == 200) {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('auth_token', response.body);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Connexion réussie')),
             );

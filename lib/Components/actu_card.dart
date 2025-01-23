@@ -9,13 +9,13 @@ class ActuCard extends StatelessWidget {
   final bool challenge;
 
   const ActuCard({
-    Key? key,
+    super.key,
     required this.postTitle,
     required this.postSubtitle,
     required this.postText,
     required this.postImageUrl,
     this.challenge = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

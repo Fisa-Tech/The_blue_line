@@ -3,6 +3,8 @@ import 'package:myapp/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profilpage extends StatefulWidget {
+  const Profilpage({super.key});
+
   @override
   State<Profilpage> createState() => _ProfilpageState();
 }
@@ -73,7 +75,7 @@ class _ProfilpageState extends State<Profilpage> {
 
         print(userData);
         if (_email != null) {
-          final url = 'api/users/me';
+          const url = 'api/users/me';
           final response = await apiService
               .put(url, userData, headers: {"Authorization": "Bearer $token"});
         }
@@ -90,14 +92,14 @@ class _ProfilpageState extends State<Profilpage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Mon profil'),
+          title: const Text('Mon profil'),
         ),
         body: FutureBuilder<Map<String, dynamic>>(
           future:
               _profileData == null ? fetchData() : Future.value(_profileData),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text("Erreur: ${snapshot.error}"));
             } else if (snapshot.hasData) {
@@ -112,7 +114,7 @@ class _ProfilpageState extends State<Profilpage> {
                   child: ListView(
                     children: [
                       TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "Nom",
                           border: OutlineInputBorder(),
                         ),
@@ -125,9 +127,9 @@ class _ProfilpageState extends State<Profilpage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "Prenom",
                           border: OutlineInputBorder(),
                         ),
@@ -140,9 +142,9 @@ class _ProfilpageState extends State<Profilpage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "Email",
                           border: OutlineInputBorder(),
                         ),
@@ -159,9 +161,9 @@ class _ProfilpageState extends State<Profilpage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Sexe',
                           border: OutlineInputBorder(),
                         ),
@@ -185,9 +187,9 @@ class _ProfilpageState extends State<Profilpage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Status',
                           border: OutlineInputBorder(),
                         ),
@@ -214,7 +216,7 @@ class _ProfilpageState extends State<Profilpage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 60),
+                      const SizedBox(height: 60),
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
@@ -222,14 +224,14 @@ class _ProfilpageState extends State<Profilpage> {
                             _updateAccount(snapshot.data);
                           }
                         },
-                        child: Text('Mettre à jour le profil TODO'),
+                        child: const Text('Mettre à jour le profil TODO'),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/forgotpassword');
                         },
-                        child: Text('Changer de mot de passe'),
+                        child: const Text('Changer de mot de passe'),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -240,14 +242,14 @@ class _ProfilpageState extends State<Profilpage> {
                           print(_gender);
                           print(_status);
                         },
-                        child: Text('print'),
+                        child: const Text('print'),
                       ),
                     ],
                   ),
                 ),
               );
             } else {
-              return Center(child: Text("Aucune donnée"));
+              return const Center(child: Text("Aucune donnée"));
             }
           },
         ));

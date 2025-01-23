@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Components/main_frame.dart';
+import 'package:myapp/Models/event_dto.dart';
+import 'package:myapp/Services/event_service.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late Future<List<EventDTO>> _futureEvents;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureEvents = EventService().fetchRecentEvents();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +41,7 @@ class HomePage extends StatelessWidget {
                 style: AppTextStyles.headline1,
               ),
               const SizedBox(height: 16.0),
-              Container(
+              SizedBox(
                 height: 150,
                 child: const Center(
                   child: Text(
@@ -115,37 +130,38 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16.0),
-              const Card(
-                color: AppColors.lightDark,
-                child: ListTile(
-                  title: Text(
-                    'Ceci est une actualité',
-                    style: AppTextStyles.bodyText1,
-                  ),
-                  subtitle: const Text(
-                    'Descritpion de l\'actualité',
-                    style: AppTextStyles.bodyText2,
-                  ),
-                  //Image de l'actualité
-                  trailing: Image(image: NetworkImage('https://placehold.co/200x200.png')),
-                ),
+              FutureBuilder<List<EventDTO>>(
+                future: _futureEvents,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return const Center(child: Text('Error loading events'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No recent events'));
+                  } else {
+                    return Column(
+                      children: snapshot.data!.map((event) {
+                        return Card(
+                          color: AppColors.lightDark,
+                          child: ListTile(
+                            title: Text(
+                              event.name,
+                              style: AppTextStyles.bodyText1,
+                            ),
+                            subtitle: Text(
+                              event.description,
+                              style: AppTextStyles.bodyText2,
+                            ),
+                            trailing: const Image(image: NetworkImage('https://placehold.co/200x200.png')),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }
+                },
               ),
-              const SizedBox(height: 2.0),
-              const Card(
-                color: AppColors.lightDark,
-                child: ListTile(
-                  title: Text(
-                    'Ceci est une actualité',
-                    style: AppTextStyles.bodyText1,
-                  ),
-                  subtitle: const Text(
-                    'Descritpion de l\'actualité',
-                    style: AppTextStyles.bodyText2,
-                  ),
-                  //Image de l'actualité
-                  trailing: Image(image: NetworkImage('https://placehold.co/200x200.png')),
-                ),
-              ),
+              const SizedBox(height: 4.0),
             ],
           ),
         ),
