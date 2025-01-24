@@ -15,14 +15,10 @@ class CommunautePage extends StatelessWidget {
     return DefaultTabController(
       length: 2, // Deux onglets : Flux et Groupes
       child: MainFrame(
-        leftIcon: Icons.person_add,
-        onLeftIconPressed: () {
-          // Action lorsque l'icône "Ajouter une personne" est pressée
-          Navigator.pushNamed(context, '/add-friends'); // Redirection vers la page ajout d'amis
-        },
         title: 'Communauté',
         currentIndex: 0,
         onTabSelected: (int value) {},
+        appBarVariant: AppBarVariant.friendsAndProfile,
         bottom: const TabBar(
           indicatorColor: AppColors.textPrimary,
           labelColor: AppColors.textPrimary,

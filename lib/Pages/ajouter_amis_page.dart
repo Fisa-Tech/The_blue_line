@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
-import 'package:myapp/Components/friendCard.dart'; // Je suppose que tu as un dossier widgets
+import 'package:myapp/Components/friendCard.dart';
+import 'add_friends_service.dart';
+import 'add_friends_dto.dart'; 
 
 class AddFriendsPage extends StatefulWidget {
   const AddFriendsPage({super.key});
@@ -12,24 +14,21 @@ class AddFriendsPage extends StatefulWidget {
 }
 
 class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProviderStateMixin {
-  TextEditingController _searchController = TextEditingController();
-  List<Map<String, String>> friends = []; // Liste des amis, tu peux la remplacer par des données réelles.
-  List<Map<String, String>> displayedFriends = []; // Liste des amis affichés
-  List<Map<String, String>> pendingFriends = []; // Liste des demandes en cours
+  final TextEditingController _searchController = TextEditingController();
+  late AddFriendsService _addFriendsService;
+
+  List<AddFriendsDto> friends = [];
+  List<AddFriendsDto> displayedFriends = [];
+  List<AddFriendsDto> pendingFriends = [];
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    // Exemple de données d'amis
-    friends = [
-      {'first_name': 'Rafa', 'last_name': 'Nadal', 'image_url': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRClykP2AdMI6Ifav78RmO6iCBQ1GVMoW8yZB6oijRwqbL9r1ktazq1d0TYoUltNyGqCIK7hA8-yspWnV8T5UJYSg'},
-      {'first_name': 'Iga', 'last_name': 'Swiatek', 'image_url': 'https://media.ouest-france.fr/v1/pictures/MjAyNTAxNzM2MWMwN2U0ZTBiN2NjZjMzMTY2YjczZWYyMWNkZTM?width=1260&height=708&focuspoint=50%2C25&cropresize=1&client_id=bpeditorial&sign=8180d92713f939d6b7c0618a1215dfe32f101e22aa5e4c947a680167f2a64bf0'},
-      // Ajoutez plus d'amis ici
-    ];
-    // Initialiser la liste affichée avec les 10 premiers amis
-    displayedFriends = friends.take(4).toList();
+    _addFriendsService = AddFriendsService(baseUrl: 'https://example.com'); // Base URL à remplacer
     _tabController = TabController(length: 2, vsync: this);
+
+    _fetchFriends();
   }
 
   @override
@@ -38,28 +37,58 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
     super.dispose();
   }
 
-  void _addFriend(Map<String, String> friend) {
-    setState(() {
-      displayedFriends.remove(friend);
-      pendingFriends.add({...friend, 'status': 'En attente'});
-    });
+  Future<void> _fetchFriends() async {
+    try {
+      final friendsList = await _addFriendsService.getFriends();
+      final pendingList = await _addFriendsService.getPendingRelationships();
+      setState(() {
+        friends = friendsList;
+        displayedFriends = friendsList;
+        pendingFriends = pendingList;
+      });
+    } catch (e) {
+      print("Erreur lors du chargement des amis : $e");
+    }
   }
 
-  void _removeFriend(Map<String, String> friend) {
-    setState(() {
-      pendingFriends.remove(friend);
-      displayedFriends.add({...friend, 'status': 'Ajouter'});
-    });
+  Future<void> _addFriend(AddFriendsDto friend) async {
+    try {
+      await _addFriendsService.createRelationship(friend.idReceiver);
+      setState(() {
+        displayedFriends.remove(friend);
+        pendingFriends.add(AddFriendsDto(
+          id: friend.id,
+          idAsker: friend.idAsker,
+          idReceiver: friend.idReceiver,
+          status: 'En attente',
+        ));
+      });
+    } catch (e) {
+      print("Erreur lors de l'ajout de l'ami : $e");
+    }
+  }
+
+  Future<void> _removeFriend(AddFriendsDto friend) async {
+    try {
+      await _addFriendsService.deleteRelationship(friend.idReceiver);
+      setState(() {
+        pendingFriends.remove(friend);
+        displayedFriends.add(AddFriendsDto(
+          id: friend.id,
+          idAsker: friend.idAsker,
+          idReceiver: friend.idReceiver,
+          status: 'Ajouter',
+        ));
+      });
+    } catch (e) {
+      print("Erreur lors de la suppression de l'ami : $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MainFrame(
-      leftIcon: Icons.arrow_back,
-      onLeftIconPressed: () {
-        // Action lorsque l'icône "Ajouter une personne" est pressée
-        Navigator.pushNamed(context, '/communaute-page'); // Redirection vers la page ajout d'amis
-      },
+      appBarVariant: AppBarVariant.backAndProfile,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -78,8 +107,8 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
               onChanged: (value) {
                 setState(() {
                   displayedFriends = friends.where((friend) {
-                    return friend['first_name']!.toLowerCase().contains(value.toLowerCase()) ||
-                           friend['last_name']!.toLowerCase().contains(value.toLowerCase());
+                    return friend.idAsker.toString().contains(value) ||
+                           friend.idReceiver.toString().contains(value);
                   }).toList();
                 });
               },
@@ -107,13 +136,11 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
           ),
         ],
       ),
-      currentIndex: 0, // Par exemple, l'index pour l'onglet actif
+      currentIndex: 0,
       onTabSelected: (index) {
-        // Logique de navigation par onglets
         Navigator.pushNamed(context, index == 0 ? '/home' : '/defis');
       },
       title: 'Ajout d\'amis',
-      appBarVariant: AppBarVariant.notifAndProfile,
     );
   }
 
@@ -123,11 +150,15 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
       itemBuilder: (context, index) {
         final friend = displayedFriends[index];
         return FriendCard(
-          friend: friend,
-          onAddPressed: friend['status'] == 'Ajouter'
+          friend: {
+            'first_name': friend.idAsker.toString(), // Modifier en fonction des données réelles
+            'last_name': friend.idReceiver.toString(),
+            'image_url': '', // Ajouter une URL si disponible
+          },
+          onAddPressed: friend.status == 'Ajouter'
               ? () => _addFriend(friend)
               : null,
-          buttonText: friend['status'] ?? 'Ajouter',
+          buttonText: friend.status ?? 'Ajouter',
         );
       },
     );
@@ -139,7 +170,11 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
       itemBuilder: (context, index) {
         final friend = pendingFriends[index];
         return FriendCard(
-          friend: friend,
+          friend: {
+            'first_name': friend.idAsker.toString(),
+            'last_name': friend.idReceiver.toString(),
+            'image_url': '',
+          },
           onAddPressed: () => _removeFriend(friend),
           buttonText: 'Supprimer',
         );

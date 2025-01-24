@@ -7,6 +7,7 @@ import 'package:myapp/Pages/profile_setup_page.dart';
 import 'package:myapp/Pages/welcome_page.dart';
 import '../Pages/register_page.dart';
 import '../Pages/signin_page.dart';
+import 'Pages/ajouter_amis_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const SigninPage(),
         '/profil': (context) => const ProfileSetupPage(),
         '/forgotpassword': (context) => ResetpasswordPage(),
+        '/add-friends': (context) => const AddFriendsPage(),
       },
     );
   }

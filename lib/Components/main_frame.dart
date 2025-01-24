@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
 
-enum AppBarVariant { notifAndProfile, backAndProfile, backAndLogout, backAndShare }
+enum AppBarVariant { notifAndProfile, backAndProfile, backAndLogout, backAndShare, friendsAndProfile }
 
 class MainFrame extends StatelessWidget {
   final Widget child;
@@ -117,7 +117,7 @@ class MainFrame extends StatelessWidget {
         backgroundColor: AppColors.dark,
         bottom: bottom,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
+          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -183,6 +183,35 @@ class MainFrame extends StatelessWidget {
             child: IconButton(
               onPressed: (){}, 
               icon: const Icon(Icons.share , color: AppColors.textPrimary),
+            ),
+          ),
+        ],
+      );
+    } else if(appBarVariant == AppBarVariant.friendsAndProfile) {
+      return AppBar(
+        backgroundColor: AppColors.dark,
+        bottom: bottom,
+        leading: IconButton(
+          icon: const Icon(Icons.person_add, color: Colors.white),
+          onPressed: () =>  Navigator.pushNamed(context, '/add-friends'),
+        ), 
+        title: Text(
+          title,
+          style: AppTextStyles.headline2,
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/settings');
+              },
+              child: const CircleAvatar(
+                backgroundImage: NetworkImage(
+                  'https://www.gravatar.com/avatar',
+                ),
+              ),
             ),
           ),
         ],
