@@ -8,11 +8,11 @@ import 'package:myapp/Theme/app_text_styles.dart';
 import 'challenge_completion_dto.dart';
 import 'challenge_dto.dart';
 
-class ChallengeDetailsPage extends StatelessWidget {
+class DetailsDefisPage extends StatelessWidget {
   final Challenge challenge;
 
   // Constructeur pour passer un défi spécifique
-  ChallengeDetailsPage({required this.challenge});
+  DetailsDefisPage({required this.challenge});
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +33,13 @@ class ChallengeDetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Image prenant toute la largeur de l'écran
-            SizedBox(
-              width: screenWidth,
-              child: Image.network(
-                challenge.imageUrl, // Image du défi
-                fit: BoxFit.cover,
-              ),
-            ),
+            // SizedBox(
+            //   width: screenWidth,
+            //   child: Image.network(
+            //     challenge.imageUrl, // Image du défi
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
             const SizedBox(height: 16), // Espacement entre l'image et les tabs
 
             // TabBar pour sélectionner Détails et Classement
@@ -104,26 +104,26 @@ class ChallengeDetailsPage extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            const Icon(Icons.people, color: Colors.white),
-                            const SizedBox(width: 8),
-                            Text(
-                              '${challenge.participantsCount} participants actuellement', // Nombre de participants
-                              style: const TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        SizedBox(
-                          width: double.infinity,
-                          child: BLElevatedButton(
-                            text: 'Participer',
-                            onPressed: () {
-                              ChallengeService.participateInChallenge(challenge.id);
-                            },
-                          ),
-                        ),
+                        // Row(
+                        //   children: [
+                        //     const Icon(Icons.people, color: Colors.white),
+                        //     const SizedBox(width: 8),
+                        //     Text(
+                        //       '${challenge.participantsCount} participants actuellement', // Nombre de participants
+                        //       style: const TextStyle(fontSize: 16, color: Colors.white),
+                        //     ),
+                        //   ],
+                        // ),
+                        // const Spacer(),
+                        // SizedBox(
+                        //   width: double.infinity,
+                        //   child: BLElevatedButton(
+                        //     text: 'Participer',
+                        //     onPressed: () {
+                        //       ChallengeService.participateInChallenge(challenge.id);
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

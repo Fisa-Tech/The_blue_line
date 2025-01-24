@@ -37,7 +37,6 @@ class MyApp extends StatelessWidget {
         '/profil': (context) => const ProfileSetupPage(),
         '/forgotpassword': (context) => ResetpasswordPage(),
         '/defis': (context) => const DefisPage(),
-        '/defis_details': (context) => const DetailsDefisPage(),
       },
     );
   }
