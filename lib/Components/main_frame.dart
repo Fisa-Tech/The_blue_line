@@ -44,10 +44,10 @@ class MainFrame extends StatelessWidget {
               Navigator.pushNamed(context, '/defis');
               break;
             case 2:
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushNamed(context, '/login');
               break;
             case 3:
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushNamed(context, '/profil');
               break;
           }
         },
@@ -87,7 +87,7 @@ class MainFrame extends StatelessWidget {
             ? IconButton(
                 icon: Icon(leftIcon, color: Colors.white, size: 26),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/notifications');
+                  
                 },
               )
             : Container(),

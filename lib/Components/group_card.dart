@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/Components/button_widget.dart';
 import 'package:myapp/Theme/app_colors.dart';
 
-class GroupCard extends StatelessWidget {
+class GroupCard extends StatefulWidget {
   final String groupName;
   final String groupSlogan;
-  final VoidCallback onTap; // Nouvelle propriété
+  final VoidCallback onTap;
 
   const GroupCard({
     super.key,
     required this.groupName,
     required this.groupSlogan,
-    required this.onTap, // Rendre onTap obligatoire
+    required this.onTap,
   });
+
+  @override
+  _GroupCardState createState() => _GroupCardState();
+}
+
+class _GroupCardState extends State<GroupCard> {
+  bool isIntegrated = false;
+
+  void toggleIntegration() {
+    setState(() {
+      isIntegrated = !isIntegrated;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,21 +43,30 @@ class GroupCard extends StatelessWidget {
           color: Colors.white,
         ),
         title: Text(
-          groupName,
+          widget.groupName,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary
+            color: AppColors.textPrimary,
           ),
         ),
         subtitle: Text(
-          groupSlogan,
+          widget.groupSlogan,
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: 13,
             color: AppColors.disabled,
           ),
         ),
-        onTap: onTap, // Utiliser l'action fournie
+        onTap: isIntegrated ? widget.onTap : null, // Activer onTap seulement si intégré
+        trailing: SizedBox(
+          width: 120, // Limitez la largeur du bouton
+          height: 30,
+          child: BLElevatedButton(
+            onPressed: toggleIntegration,
+            text: isIntegrated ? 'Intégré' : 'Intégrer',
+            variant: isIntegrated ? ButtonVariant.grey : ButtonVariant.primary,
+          ),
+        ),
       ),
     );
   }
