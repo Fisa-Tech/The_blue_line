@@ -3,6 +3,8 @@ import 'package:myapp/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profilpage extends StatefulWidget {
+  const Profilpage({super.key});
+
   @override
   State<Profilpage> createState() => _ProfilpageState();
 }

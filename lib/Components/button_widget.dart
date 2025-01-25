@@ -15,7 +15,6 @@ class BLElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // Récupération des dimensions de l'écran
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
@@ -39,7 +38,6 @@ class BLElevatedButton extends StatelessWidget {
         textColor = Colors.white;
         break;
       case ButtonVariant.custom:
-      default:
         backgroundColor = Colors.blue;
         textColor = Colors.white;
     }
