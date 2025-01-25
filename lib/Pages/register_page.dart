@@ -4,7 +4,8 @@ import 'package:myapp/Components/button_widget.dart';
 import 'package:myapp/Components/form_text_field.dart';
 import 'package:myapp/Pages/signin_page.dart';
 import 'package:myapp/Theme/app_colors.dart';
-import '../api_service.dart';
+import 'package:myapp/user_state.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -17,41 +18,28 @@ class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   String? _email;
   String? _password;
-  final apiService = ApiService(); // Crée une instance de la classe ApiService
+  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
   Future<void> _createAccount() async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState!.save();
-      try {
-        // Préparer les données utilisateur
-        final userData = {
-          'email': _email,
-          'password': _password,
-        };
 
-        // Envoyer les données à l'API avec la valeur password dans le corps de la requête
-        if (_password != null) {
-          final url = 'api/users/register?password=$_password';
-          final response = await apiService.post(url, userData);
+      // Utilisation de UserState pour gérer l'inscription
+      final userState = Provider.of<UserState>(context, listen: false);
 
-          // Gérer la réponse
-          if (response != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Compte créé avec succès !')),
-            );
-            Navigator.pushNamed(context, '/profil');
-            // Navigate to another page if needed
-          }
-        }
-      } catch (e) {
-        print("Erreur lors de la création du compte");
-        print(e);
+      final isSuccess = await userState.register(_email!, _password!);
+
+      if (isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Compte créé avec succès !')),
+        );
+        Navigator.pushNamed(context, '/profil');
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text(
-                  'Erreur lors de la création du compte, réessayer plus tard')),
+              content: Text('Erreur lors de la création du compte.')),
         );
       }
     }
@@ -126,20 +114,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 SizedBox(height: height * 0.02),
                                 BLFormTextField(
-                                  hintText: "Email", 
+                                  hintText: "Email",
                                   onSaved: (value) => _email = value,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Veuillez entrer un email';
                                     }
-                                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                        .hasMatch(value)) {
                                       return 'Veuillez entrer un email valide';
                                     }
                                     return null;
                                   },
                                 ),
                                 SizedBox(height: height * 0.01),
-                                BLFormTextField(hintText: "Mot de passe", 
+                                BLFormTextField(
+                                  controller: _passwordController,
+                                  hintText: "Mot de passe",
                                   onSaved: (value) => _password = value,
                                   isPassword: true,
                                   validator: (value) {
@@ -162,7 +153,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     if (value == null || value.isEmpty) {
                                       return 'Veuillez confirmer votre mot de passe';
                                     }
-                                    if (value != _password) {
+                                    if (value !=
+                                        _passwordController.value.text) {
                                       return 'Les mots de passe ne correspondent pas';
                                     }
                                     return null;
