@@ -4,7 +4,7 @@ import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
 import 'package:myapp/Components/friendCard.dart';
 import 'add_friends_service.dart';
-import 'add_friends_dto.dart'; 
+import 'add_friends_dto.dart';
 
 class AddFriendsPage extends StatefulWidget {
   const AddFriendsPage({super.key});
@@ -14,18 +14,17 @@ class AddFriendsPage extends StatefulWidget {
 }
 
 class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProviderStateMixin {
-  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _friendIdController = TextEditingController();
   late AddFriendsService _addFriendsService;
 
-  List<AddFriendsDto> friends = [];
-  List<AddFriendsDto> displayedFriends = [];
-  List<AddFriendsDto> pendingFriends = [];
+  List<AddFriendsDto> sentFriends = [];
+  List<AddFriendsDto> receivedFriends = [];
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _addFriendsService = AddFriendsService(baseUrl: 'https://example.com'); // Base URL à remplacer
+    _addFriendsService = AddFriendsService(baseUrl: 'https://example.com');
     _tabController = TabController(length: 2, vsync: this);
 
     _fetchFriends();
@@ -39,32 +38,34 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
 
   Future<void> _fetchFriends() async {
     try {
-      final friendsList = await _addFriendsService.getFriends();
-      final pendingList = await _addFriendsService.getPendingRelationships();
+      final sentList = await _addFriendsService.getPendingRelationships();
+      final receivedList = await _addFriendsService.getPendingRelationships();
       setState(() {
-        friends = friendsList;
-        displayedFriends = friendsList;
-        pendingFriends = pendingList;
+        sentFriends = sentList;
+        receivedFriends = receivedList;
       });
     } catch (e) {
       print("Erreur lors du chargement des amis : $e");
     }
   }
 
-  Future<void> _addFriend(AddFriendsDto friend) async {
+  Future<void> _addFriend(String friendId) async {
     try {
-      await _addFriendsService.createRelationship(friend.idReceiver);
+      await _addFriendsService.createRelationship(int.parse(friendId));
       setState(() {
-        displayedFriends.remove(friend);
-        pendingFriends.add(AddFriendsDto(
-          id: friend.id,
-          idAsker: friend.idAsker,
-          idReceiver: friend.idReceiver,
+        sentFriends.add(AddFriendsDto(
+          id: DateTime.now().millisecondsSinceEpoch,
+          idAsker: int.parse(friendId),
+          idReceiver: 0, // À définir en fonction de votre logique
           status: 'En attente',
         ));
       });
+      _friendIdController.clear();
     } catch (e) {
       print("Erreur lors de l'ajout de l'ami : $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("L'ami n'existe pas.")),
+      );
     }
   }
 
@@ -72,16 +73,32 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
     try {
       await _addFriendsService.deleteRelationship(friend.idReceiver);
       setState(() {
-        pendingFriends.remove(friend);
-        displayedFriends.add(AddFriendsDto(
-          id: friend.id,
-          idAsker: friend.idAsker,
-          idReceiver: friend.idReceiver,
-          status: 'Ajouter',
-        ));
+        sentFriends.remove(friend);
       });
     } catch (e) {
       print("Erreur lors de la suppression de l'ami : $e");
+    }
+  }
+
+  Future<void> _acceptFriend(AddFriendsDto friend) async {
+    try {
+      await _addFriendsService.updateRelationshipStatus(friend.id, 'accepted');
+      setState(() {
+        receivedFriends.remove(friend);
+      });
+    } catch (e) {
+      print("Erreur lors de l'acceptation de l'ami : $e");
+    }
+  }
+
+  Future<void> _rejectFriend(AddFriendsDto friend) async {
+    try {
+      await _addFriendsService.updateRelationshipStatus(friend.id, 'rejected');
+      setState(() {
+        receivedFriends.remove(friend);
+      });
+    } catch (e) {
+      print("Erreur lors du rejet de l'ami : $e");
     }
   }
 
@@ -94,24 +111,31 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              style: TextStyle(color: AppColors.textPrimary),
-              decoration: InputDecoration(
-                hintText: 'Rechercher par prénom ou nom',
-                prefixIcon: Icon(Icons.search, color: AppColors.textPrimary),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _friendIdController,
+                    style: TextStyle(color: AppColors.textPrimary),
+                    decoration: InputDecoration(
+                      hintText: 'Entrez le friendID',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  displayedFriends = friends.where((friend) {
-                    return friend.idAsker.toString().contains(value) ||
-                           friend.idReceiver.toString().contains(value);
-                  }).toList();
-                });
-              },
+                SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    final friendId = _friendIdController.text;
+                    if (friendId.isNotEmpty) {
+                      _addFriend(friendId);
+                    }
+                  },
+                  child: Text('Ajouter'),
+                ),
+              ],
             ),
           ),
           TabBar(
@@ -121,16 +145,16 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
             unselectedLabelColor: AppColors.lightGrey,
             dividerColor: AppColors.lightGrey,
             tabs: const [
-              Tab(text: 'Ajouter'),
-              Tab(text: 'En cours'),
+              Tab(text: 'Envoyé'),
+              Tab(text: 'Reçu'),
             ],
           ),
           Expanded(
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildAddFriendsContent(),
-                _buildPendingFriendsContent(),
+                _buildSentFriendsContent(),
+                _buildReceivedFriendsContent(),
               ],
             ),
           ),
@@ -144,31 +168,11 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
     );
   }
 
-  Widget _buildAddFriendsContent() {
+  Widget _buildSentFriendsContent() {
     return ListView.builder(
-      itemCount: displayedFriends.length,
+      itemCount: sentFriends.length,
       itemBuilder: (context, index) {
-        final friend = displayedFriends[index];
-        return FriendCard(
-          friend: {
-            'first_name': friend.idAsker.toString(), // Modifier en fonction des données réelles
-            'last_name': friend.idReceiver.toString(),
-            'image_url': '', // Ajouter une URL si disponible
-          },
-          onAddPressed: friend.status == 'Ajouter'
-              ? () => _addFriend(friend)
-              : null,
-          buttonText: friend.status ?? 'Ajouter',
-        );
-      },
-    );
-  }
-
-  Widget _buildPendingFriendsContent() {
-    return ListView.builder(
-      itemCount: pendingFriends.length,
-      itemBuilder: (context, index) {
-        final friend = pendingFriends[index];
+        final friend = sentFriends[index];
         return FriendCard(
           friend: {
             'first_name': friend.idAsker.toString(),
@@ -177,6 +181,28 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
           },
           onAddPressed: () => _removeFriend(friend),
           buttonText: 'Supprimer',
+          onAcceptPressed: null,
+          onRejectPressed: null,
+        );
+      },
+    );
+  }
+
+  Widget _buildReceivedFriendsContent() {
+    return ListView.builder(
+      itemCount: receivedFriends.length,
+      itemBuilder: (context, index) {
+        final friend = receivedFriends[index];
+        return FriendCard(
+          friend: {
+            'first_name': friend.idAsker.toString(),
+            'last_name': friend.idReceiver.toString(),
+            'image_url': '',
+          },
+          onAddPressed: null,
+          buttonText: '',
+          onAcceptPressed: () => _acceptFriend(friend),
+          onRejectPressed: () => _rejectFriend(friend),
         );
       },
     );

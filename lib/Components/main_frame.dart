@@ -66,11 +66,11 @@ class MainFrame extends StatelessWidget {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
+            icon: const Icon(Icons.group),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
+            icon: const Icon(Icons.person_add),
             label: '',
           ),
         ],

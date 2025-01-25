@@ -5,12 +5,16 @@ import 'package:myapp/Theme/app_colors.dart';
 class FriendCard extends StatelessWidget {
   final Map<String, String> friend;
   final VoidCallback? onAddPressed;
+  final VoidCallback? onAcceptPressed;
+  final VoidCallback? onRejectPressed;
   final String buttonText;
 
   const FriendCard({
     super.key,
     required this.friend,
     required this.onAddPressed,
+    required this.onAcceptPressed,
+    required this.onRejectPressed,
     required this.buttonText,
   });
 
@@ -52,14 +56,24 @@ class FriendCard extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.29, // Par exemple, 60% de la largeur de l'écran
-              child: BLElevatedButton(
-                onPressed: onAddPressed ?? () {}, // Passer une fonction vide si null
-                text: buttonText,
-                variant: ButtonVariant.primary, // Choisissez la variante souhaitée
+            if (onAcceptPressed != null && onRejectPressed != null) ...[
+              IconButton(
+                icon: Icon(Icons.check, color: Colors.green),
+                onPressed: onAcceptPressed,
               ),
-            ),
+              IconButton(
+                icon: Icon(Icons.close, color: Colors.red),
+                onPressed: onRejectPressed,
+              ),
+            ] else
+              Container(
+                width: MediaQuery.of(context).size.width * 0.29,
+                child: BLElevatedButton(
+                  onPressed: onAddPressed ?? () {},
+                  text: buttonText,
+                  variant: ButtonVariant.primary,
+                ),
+              ),
           ],
         ),
       ),
