@@ -38,6 +38,16 @@ class MyApp extends StatelessWidget {
         '/forgotpassword': (context) => ResetpasswordPage(),
         '/defis': (context) => const DefisPage(),
       },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/defi_details') {
+          final challengeId = settings.arguments as int;
+          return MaterialPageRoute(
+            builder: (context) => DetailsDefisPage(challengeId: challengeId),
+          );
+        }
+        // Handle other routes or return a default route
+        return null;
+      },
     );
   }
 }

@@ -71,7 +71,7 @@ class DefisPage extends StatelessWidget {
                     style: AppTextStyles.bodyText2,
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, '/defis_details', arguments: defi.id);
+                    Navigator.pushNamed(context, '/defi_details', arguments: defi.id);
                   },
                 ),
               );
