@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/theme/app_colors.dart';
-import 'package:myapp/theme/app_text_styles.dart';
+import 'package:myapp/Theme/app_colors.dart';
+import 'package:myapp/Theme/app_text_styles.dart';
 
 class ThemeProvider {
   static final ThemeData myTheme = ThemeData(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myapp/Theme/theme.dart';
+import 'package:myapp/Components/button_widget.dart';
+import 'package:myapp/Theme/app_colors.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -28,7 +29,7 @@ class WelcomePage extends StatelessWidget {
             Container(
               width: double.infinity,
               height: double.infinity,
-              color: dark.withOpacity(0.9),
+              color: AppColors.dark.withOpacity(0.9),
             ),
             // Contenu principal
             Column(
@@ -79,53 +80,23 @@ class WelcomePage extends StatelessWidget {
                           child: Column(
                             children: [
                               // Bouton "Se connecter"
-                              ElevatedButton(
+                              BLElevatedButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/login'); // Navigation vers le formulaire
+                                  Navigator.pushNamed(context,
+                                      '/login'); // Navigation vers le formulaire
                                 },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: primary, // Couleur de fond
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        12), // Coins arrondis
-                                  ),
-                                  minimumSize: Size(
-                                      double.infinity, height * 0.06), // Taille dynamique
-                                ),
-                                child: Text(
-                                  'Se connecter',
-                                  style: TextStyle(
-                                    color: Colors.white, // Couleur du texte
-                                    fontSize: width * 0.045, // Taille dynamique
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
+                                text: "Se connecter", 
+                                variant: ButtonVariant.primary
                               ),
                               SizedBox(height: height * 0.02), // Espacement dynamique
                               // Bouton "S'inscrire"
-                              ElevatedButton(
+                              BLElevatedButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/register'); // Navigation vers le formulaire
+                                  Navigator.pushNamed(context,
+                                      '/register'); // Navigation vers le formulaire
                                 },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: grey, // Couleur de fond
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        12), // Coins arrondis
-                                  ),
-                                  minimumSize: Size(
-                                      double.infinity, height * 0.06), // Taille dynamique
-                                ),
-                                child: Text(
-                                  "S'inscrire",
-                                  style: TextStyle(
-                                    color: Colors.white, // Couleur du texte
-                                    fontSize: width * 0.045, // Taille dynamique
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
+                                text: "S'inscrire", 
+                                variant: ButtonVariant.grey
                               ),
                             ],
                           ),
