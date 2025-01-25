@@ -5,7 +5,6 @@ import 'package:myapp/Components/form_text_field.dart';
 import 'package:myapp/Pages/register_page.dart' as register_page;
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/user_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 class SigninPage extends StatefulWidget {
@@ -41,7 +40,11 @@ class _SigninPageState extends State<SigninPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Connexion réussie')),
         );
-        Navigator.pushReplacementNamed(context, '/home');
+        if (!userState.currentUser!.profilCompleted()) {
+          Navigator.pushReplacementNamed(context, '/profil');
+        } else {
+          Navigator.pushReplacementNamed(context, '/home');
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Email ou mot de passe incorrect')),

@@ -18,6 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   String? _email;
   String? _password;
+  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
@@ -128,6 +129,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 SizedBox(height: height * 0.01),
                                 BLFormTextField(
+                                  controller: _passwordController,
                                   hintText: "Mot de passe",
                                   onSaved: (value) => _password = value,
                                   isPassword: true,
@@ -151,7 +153,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     if (value == null || value.isEmpty) {
                                       return 'Veuillez confirmer votre mot de passe';
                                     }
-                                    if (value != _password) {
+                                    if (value !=
+                                        _passwordController.value.text) {
                                       return 'Les mots de passe ne correspondent pas';
                                     }
                                     return null;

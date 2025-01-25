@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserState extends ChangeNotifier {
-  static const String _baseUrl = "blue-line-preprod.fisadle.fr";
+  static const String _baseUrl = "https://blue-line-preprod.fisadle.fr/api";
 
   UserDto? _currentUser; // Utilisateur actuel
   String? _token; // JWT Token
@@ -37,15 +37,19 @@ class UserState extends ChangeNotifier {
 
   /// Login user
   Future<bool> login(String email, String password) async {
-    final url = Uri.https(
-        _baseUrl, "api/users/login", {'email': email, 'password': password});
+    final url = Uri.parse("$_baseUrl/users/login");
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': email,
+        'password': password,
+      }),
     );
 
     if (response.statusCode == 200) {
       _token = response.body; // Token is returned as a plain string
+      await fetchAuthenticatedUser(); // Fetch authenticated user
 
       if (_rememberMe) {
         await _saveUserCredentials(
@@ -58,26 +62,12 @@ class UserState extends ChangeNotifier {
     }
   }
 
-  Future<bool> TryLoginFromSharedPreference() async {
+  Future<bool> tryLoginFromSharedPreference() async {
     String pass = await loadSavedCredentials();
 
     if (_currentUser == null) return false;
 
-    final url = Uri.https(_baseUrl, "api/users/login",
-        {'email': _currentUser?.email, 'password': pass});
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-    );
-
-    if (response.statusCode == 200) {
-      _token = response.body; // Token is returned as a plain string
-
-      notifyListeners();
-      return true;
-    } else {
-      throw Exception("Failed to login: ${response.body}");
-    }
+    return await login(_currentUser!.email!, pass);
   }
 
   /// Register user
@@ -101,8 +91,9 @@ class UserState extends ChangeNotifier {
 
   /// Get authenticated user
   Future<UserDto?> fetchAuthenticatedUser() async {
-    if (!await TryLoginFromSharedPreference()) return null;
-    if (_token == null) return null;
+    if (_token == null) {
+      if (!await tryLoginFromSharedPreference()) return null;
+    }
 
     final url = Uri.parse("$_baseUrl/users/me");
     final response = await http.get(

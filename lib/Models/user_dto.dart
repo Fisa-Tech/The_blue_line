@@ -6,19 +6,19 @@ enum UserStatus { LYCEE, COLLEGE, ETUDIANT, PERSONNEL, AUTRES }
 
 class UserDto {
   final int? id; // Champ read-only
-  final String firstname;
-  final String lastname;
-  final String? email;
-  final UserSex? sex;
+  final String? firstname;
+  final String? lastname;
+  final String email;
+  final UserSex? gender;
   final String? avatar;
   final UserStatus? status;
 
   UserDto({
     this.id,
-    required this.firstname,
-    required this.lastname,
-    this.email,
-    this.sex,
+    this.firstname,
+    this.lastname,
+    required this.email,
+    this.gender,
     this.avatar,
     this.status,
   });
@@ -27,10 +27,11 @@ class UserDto {
   factory UserDto.fromJson(Map<String, dynamic> json) {
     return UserDto(
       id: json['id'] as int?,
-      firstname: json['firstname'] as String,
-      lastname: json['lastname'] as String,
-      email: json['email'] as String?,
-      sex: json['sex'] != null ? UserSex.values.byName(json['sex']) : null,
+      firstname: json['firstname'] as String?,
+      lastname: json['lastname'] as String?,
+      email: json['email'] as String,
+      gender:
+          json['gender'] != null ? UserSex.values.byName(json['gender']) : null,
       avatar: json['avatar'] as String?,
       status: json['status'] != null
           ? UserStatus.values.byName(json['status'])
@@ -45,16 +46,16 @@ class UserDto {
       'firstname': firstname,
       'lastname': lastname,
       'email': email,
-      'sex': sex?.name,
+      'gender': gender?.name,
       'avatar': avatar,
       'status': status?.name,
     };
   }
 
   bool profilCompleted() {
-    return firstname.isNotEmpty &&
-        lastname.isNotEmpty &&
-        sex != null &&
+    return firstname != null &&
+        lastname != null &&
+        gender != null &&
         status != null;
   }
 

@@ -56,7 +56,7 @@ class AuthRedirectPage extends StatelessWidget {
       final user = await userState.fetchAuthenticatedUser();
 
       // Si l'utilisateur est connecté mais le profil est incomplet
-      if (user != null && (user.firstname.isEmpty || user.lastname.isEmpty)) {
+      if (user != null && (!user.profilCompleted())) {
         return '/profil'; // Rediriger vers la page de configuration de profil
       }
 
