@@ -1,13 +1,17 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:myapp/Helpers/auth_helper.dart';
+import 'package:myapp/user_state.dart';
 import '../Models/event_dto.dart';
+import 'package:provider/provider.dart';
+
 
 class EventService {
   static const String baseUrl = 'https://blue-line-preprod.fisadle.fr';
 
-  Future<List<EventDTO>> fetchEvents() async {
-    final token = await AuthHelper.getToken();
+  Future<List<EventDTO>> fetchEvents(BuildContext context) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
     final response = await http.get(Uri.parse('$baseUrl/api/events'),
       headers: {
         'Content-Type': 'application/json',
@@ -24,8 +28,8 @@ class EventService {
     }
   }
 
-  Future<List<EventDTO>> fetchRecentEvents() async {
-    List<EventDTO> allEvents = await fetchEvents();
+  Future<List<EventDTO>> fetchRecentEvents(BuildContext context) async {
+    List<EventDTO> allEvents = await fetchEvents(context);
     allEvents.sort((a, b) => b.startDate.compareTo(a.startDate)); // Assuming EventDTO has a 'date' field
     return allEvents.take(3).toList();
   }

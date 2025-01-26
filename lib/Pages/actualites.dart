@@ -18,7 +18,7 @@ class _ActualitesPageState extends State<ActualitesPage> {
   @override
   void initState() {
     super.initState();
-    _eventsFuture = EventService().fetchEvents(); // Fetch events from the service
+    _eventsFuture = EventService().fetchEvents(context); // Fetch events from the service
   }
 
   @override

@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _futureEvents = EventService().fetchRecentEvents();
+    _futureEvents = EventService().fetchRecentEvents(context);
   }
 
   @override
