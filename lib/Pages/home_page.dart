@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Models/event_dto.dart';
 import 'package:myapp/Services/event_service.dart';
@@ -146,14 +149,17 @@ class _HomePageState extends State<HomePage> {
                           color: AppColors.lightDark,
                           child: ListTile(
                             title: Text(
-                              event.name,
+                              utf8.decode(event.name.runes.toList()),
                               style: AppTextStyles.bodyText1,
                             ),
                             subtitle: Text(
-                              event.description,
-                              style: AppTextStyles.bodyText2,
+                              EventService().formatEventDates(event.startDate, event.endDate),                          
+                              style: AppTextStyles.hintText,
                             ),
-                            trailing: const Image(image: NetworkImage('https://placehold.co/200x200.png')),
+                            leading: CircleAvatar(
+                              backgroundColor: AppColors.primary.withOpacity(0.2),
+                              child: const Icon(Icons.event, color: AppColors.primary),
+                            ),
                           ),
                         );
                       }).toList(),

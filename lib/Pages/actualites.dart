@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:myapp/Components/actu_card.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Models/event_dto.dart';
-import 'package:myapp/Services/event_service.dart'; // Import your event service
+import 'package:myapp/Services/event_service.dart';
+import 'package:myapp/user_state.dart'; // Import your event service
+import 'package:provider/provider.dart';
+
 
 class ActualitesPage extends StatefulWidget {
   const ActualitesPage({super.key});
@@ -23,6 +25,9 @@ class _ActualitesPageState extends State<ActualitesPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final userId = Provider.of<UserState>(context, listen: false).currentUser?.id ?? 0;
+
     return MainFrame(
       appBarVariant: AppBarVariant.backAndProfile,
       title: 'Actualités',
@@ -46,11 +51,10 @@ class _ActualitesPageState extends State<ActualitesPage> {
                     children: [
                       const SizedBox(height: 32.0),
                       ActuCard(
-                        postTitle: event.name,
-                        postSubtitle: 'du ${DateFormat('dd/MM/yyyy à HH:mm').format(event.startDate)} au ${DateFormat('dd/MM/yyyy à HH:mm').format(event.endDate)}',
-                        postText: event.description,
-                        postImageUrl: "https://placehold.co/600x200.png",
-                        challenge: false,
+                        event: event,
+                        userId: userId,
+                        //TODO: Créer une méthode dans le challenge_service pour vérifier si un événement à au moins un challenge
+                        challenge: true,
                       ),
                       const SizedBox(height: 6.0),
                     ],

@@ -1,21 +1,70 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:myapp/Models/event_dto.dart';
+import 'package:myapp/Services/event_service.dart';
 import 'package:myapp/Theme/app_colors.dart';
 
-class ActuCard extends StatelessWidget {
-  final String postTitle;
-  final String postSubtitle;
-  final String postText;
-  final String postImageUrl;
+class ActuCard extends StatefulWidget {
+  final EventDTO event;
+  final int userId;
   final bool challenge;
 
   const ActuCard({
     super.key,
-    required this.postTitle,
-    required this.postSubtitle,
-    required this.postText,
-    required this.postImageUrl,
+    required this.event,
+    required this.userId,
     this.challenge = false,
   });
+
+  @override
+  _ActuCardState createState() => _ActuCardState();
+}
+
+class _ActuCardState extends State<ActuCard> {
+  late bool isParticipating;
+  late int participantsCount;
+
+  @override
+  void initState() {
+    super.initState();
+    isParticipating = widget.event.participantIds.contains(widget.userId);
+    participantsCount = widget.event.participantIds.length;
+  }
+
+  void toggleParticipation() async {
+    try {
+      if (isParticipating) {
+        await EventService().leaveEvent(context, widget.event.id);
+        setState(() {
+          isParticipating = false;
+          participantsCount--;
+        });
+      } else {
+        await EventService().joinEvent(context, widget.event.id);
+        setState(() {
+          isParticipating = true;
+          participantsCount++;
+        });
+      }
+    } catch (e) {
+      // Afficher une snackbar en cas d'erreur
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Une erreur est survenue : $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void navigateToChallenges() {
+    Navigator.pushNamed(
+      context,
+      '/challenges',
+      arguments: {'filter': widget.event.id},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +84,8 @@ class ActuCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: Colors.grey[400], // Couleur de placeholder pour l'image
-              image: DecorationImage(
-                image: NetworkImage(postImageUrl),
+              image: const DecorationImage(
+                image: AssetImage('assets/img/event_default.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -48,36 +97,79 @@ class ActuCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  postTitle,
+                  utf8.decode(widget.event.name.runes.toList()),
                   style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  postSubtitle,
+                  EventService().formatEventDates(widget.event.startDate, widget.event.endDate),
                   style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  postText,
+                  utf8.decode(widget.event.description.runes.toList()),
                   style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ],
             ),
           ),
-          // Bouton de participation au défi s'il y en a un
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: challenge
-                  ? TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Voir le défi',
-                        style: TextStyle(color: AppColors.primary),
+          // Boutons et compteur de participants
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Compteur de participants avec icône
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.person,
+                      color: Colors.grey,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      participantsCount.toString(),
+                      style: const TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
+                  ],
+                ),
+                // Boutons alignés à droite
+                Row(
+                  children: [
+                    // Bouton "Voir le défi"
+                    if (widget.challenge)
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.grey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: navigateToChallenges,
+                        child: const Text(
+                          'Défis',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                    )
-                  : const SizedBox(),
+                    const SizedBox(width: 8), // Espacement entre les boutons
+                    // Bouton "Participer" ou "Annuler participation"
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isParticipating ? AppColors.danger : AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: toggleParticipation,
+                      child: Text(
+                        isParticipating ? 'Annuler' : 'Participer',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],
