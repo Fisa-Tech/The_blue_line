@@ -7,10 +7,7 @@ enum AppBarVariant { notifAndProfile, backAndProfile, backAndLogout, backAndShar
 class MainFrame extends StatelessWidget {
   final Widget child;
   final int currentIndex;
-  final ValueChanged<int> onTabSelected;
   final String title;
-  final IconData? leftIcon;
-  final VoidCallback? onLeftIconPressed;
   final PreferredSizeWidget? bottom;
   final AppBarVariant appBarVariant;
 
@@ -18,10 +15,7 @@ class MainFrame extends StatelessWidget {
     super.key,
     required this.child,
     required this.currentIndex,
-    required this.onTabSelected,
     required this.title,
-    this.leftIcon,
-    this.onLeftIconPressed,
     this.bottom,
     this.appBarVariant = AppBarVariant.notifAndProfile,
   });
@@ -35,26 +29,28 @@ class MainFrame extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.lightDark,
         currentIndex: currentIndex,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Navigator.pushReplacementNamed(context, '/home');
-              break;
-            case 1:
-              Navigator.pushReplacementNamed(context, '/defis');
-              break;
-            case 2:
-              Navigator.pushReplacementNamed(context, '/news');
-              break;
-            case 3:
-              Navigator.pushReplacementNamed(context, '/home');
-              break;
+         onTap: (index) {
+          if (index != currentIndex) { // Vérifie si l'index est différent avant de naviguer
+            switch (index) {
+              case 0:
+                Navigator.pushNamed(context, '/home');
+                break;
+              case 1:
+                Navigator.pushNamed(context, '/challenges');
+                break;
+              case 2:
+                Navigator.pushNamed(context, '/news');
+                break;
+              case 3:
+                Navigator.pushNamed(context, '/profile');
+                break;
+            }
           }
         },
         type: BottomNavigationBarType.fixed, // Style fixe
         showSelectedLabels: false, // Désactive les labels sélectionnés
         showUnselectedLabels: false, // Désactive les labels non sélectionnés
-        selectedItemColor: AppColors.textPrimary, // Couleur des icônes sélectionnées
+        selectedItemColor: AppColors.primary, // Couleur des icônes sélectionnées
         unselectedItemColor: AppColors.textPrimary, // Couleur des icônes non sélectionnées
         items: const [
           BottomNavigationBarItem(
@@ -85,15 +81,13 @@ class MainFrame extends StatelessWidget {
         backgroundColor: AppColors.dark,
         bottom: bottom,
         elevation: 0, // Remove shadow
-        leading: leftIcon != null
-            ? IconButton(
-                icon: Icon(leftIcon, color: Colors.white, size: 26),
+        leading: IconButton(
+                icon: Icon(Icons.notifications_none_outlined, color: Colors.white, size: 26),
                 onPressed: () {
                   Navigator.pushNamed(context, '/notifications');
                 },
-              )
-            : Container(),
-        title: Text(
+              ),     
+          title: Text(
           title,
           style: AppTextStyles.headline2,
         ),

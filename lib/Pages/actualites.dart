@@ -29,10 +29,9 @@ class _ActualitesPageState extends State<ActualitesPage> {
     final userId = Provider.of<UserState>(context, listen: false).currentUser?.id ?? 0;
 
     return MainFrame(
-      appBarVariant: AppBarVariant.backAndProfile,
+      appBarVariant: AppBarVariant.notifAndProfile,
       title: 'Actualités',
-      currentIndex: 0,
-      onTabSelected: (int value) {},
+      currentIndex: 2,
       child: FutureBuilder<List<EventDTO>>(
         future: _eventsFuture,
         builder: (context, snapshot) {

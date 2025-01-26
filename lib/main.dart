@@ -34,15 +34,25 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: const AuthRedirectPage(), // Page de redirection initiale
-        routes: {
-          '/home': (context) => const HomePage(),
-          '/register': (context) => const RegisterPage(),
-          '/login': (context) => const SigninPage(),
-          '/profil': (context) => const ProfileSetupPage(),
-          '/forgotpassword': (context) => ResetpasswordPage(),
-          '/welcome': (context) => const WelcomePage(),
-          '/notifications': (context) => const NotificationsPage(),
-        '/news': (context) => const ActualitesPage(),
+        onGenerateRoute: (settings) {
+          if (settings.name == '/home') 
+            return PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage());
+          if (settings.name == '/register')
+            return PageRouteBuilder(pageBuilder: (_, __, ___) => RegisterPage());
+          if (settings.name == '/login')
+            return PageRouteBuilder(pageBuilder: (_, __, ___) => SigninPage());
+          if (settings.name == '/profil')
+            return PageRouteBuilder(pageBuilder: (_, __, ___) => ProfileSetupPage());
+          if (settings.name == '/forgotpassword')
+            return PageRouteBuilder(pageBuilder: (_, __, ___) => ResetpasswordPage());
+          if (settings.name == '/welcome')
+            return PageRouteBuilder(pageBuilder: (_, __, ___) => WelcomePage());
+          if (settings.name == '/notifications')
+            return PageRouteBuilder(pageBuilder: (_, __, ___) => NotificationsPage());
+          if (settings.name == '/news')
+            return PageRouteBuilder(pageBuilder: (_, __, ___) => ActualitesPage());
+
+          return null;
         },
       )
     );

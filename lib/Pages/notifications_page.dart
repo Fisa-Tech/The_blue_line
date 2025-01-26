@@ -12,7 +12,6 @@ class NotificationsPage extends StatelessWidget {
       appBarVariant: AppBarVariant.backAndProfile,
       title: 'Notifications',
       currentIndex: 0,
-      onTabSelected: (int value) {  },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 6.0),
         child: SingleChildScrollView(

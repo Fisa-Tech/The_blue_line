@@ -27,11 +27,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MainFrame(
-      leftIcon: Icons.notifications_outlined,
-      onLeftIconPressed: () {  },
       title: '',
       currentIndex: 0,
-      onTabSelected: (int value) {  },
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
