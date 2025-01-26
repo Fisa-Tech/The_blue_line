@@ -44,6 +44,9 @@ class MainFrame extends StatelessWidget {
               case 3:
                 Navigator.pushNamed(context, '/profile');
                 break;
+              case 4:
+                Navigator.pushNamed(context, '/blueline');
+                break;
             }
           }
         },
@@ -55,19 +58,23 @@ class MainFrame extends StatelessWidget {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: '',
+            label: 'Accueil',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.timer),
-            label: '',
+            label: 'Défis',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.newspaper),
-            label: '',
+            label: 'Actualités',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            label: '',
+            label: 'Amis',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Ligne Bleue',
           ),
         ],
       ),

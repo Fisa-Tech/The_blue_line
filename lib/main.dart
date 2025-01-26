@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myapp/Pages/actualites.dart';
+import 'package:myapp/Pages/actualites_page.dart';
+import 'package:myapp/Pages/blue_line_page.dart';
 import 'package:myapp/Pages/home_page.dart';
 import 'package:myapp/Pages/notifications_page.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
@@ -51,6 +52,8 @@ class MyApp extends StatelessWidget {
             return PageRouteBuilder(pageBuilder: (_, __, ___) => NotificationsPage());
           if (settings.name == '/news')
             return PageRouteBuilder(pageBuilder: (_, __, ___) => ActualitesPage());
+          if (settings.name == '/blueline')
+            return PageRouteBuilder(pageBuilder: (_, __, ___) => BlueLinePage());
 
           return null;
         },

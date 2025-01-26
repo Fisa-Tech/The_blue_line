@@ -71,6 +71,12 @@ flutter:
      - assets/img/RunGirl.jpg
      - assets/img/logo.svg
      - assets/img/event_default.jpg
+     - assets/img/ligne_bleue_all.png
+     - assets/img/ligne_endurance.png
+     - assets/img/ligne_force.png
+     - assets/img/ligne_loisir.png
+     - assets/img/ligne_sante.png
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
