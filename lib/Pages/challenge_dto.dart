@@ -32,23 +32,23 @@ class Challenge {
       distance: json['distanceGoal'],
       time: json['timeGoal'],
       deadline: DateTime(
-        json['endDate'][0],
-        json['endDate'][1],
-        json['endDate'][2],
-        json['endDate'][3],
-        json['endDate'][4],
-        json['endDate'][5],
-        json['endDate'][6],
-      ), // Conversion de la liste en DateTime
-      beginDate: DateTime(
-        json['startDate'][0],
-        json['startDate'][1],
-        json['startDate'][2],
-        json['startDate'][3],
-        json['startDate'][4],
-        json['startDate'][5],
-        json['startDate'][6],
-      ), // Conversion de la liste en DateTime
+      json['endDate'][0],
+      json['endDate'][1],
+      json['endDate'][2],
+      json['endDate'][3],
+      json['endDate'][4],
+      json['endDate'][5],
+      (json['endDate'][6] / 1000000).round(), // Convertir nanosecondes en millisecondes
+    ),
+    beginDate: DateTime(
+      json['startDate'][0],
+      json['startDate'][1],
+      json['startDate'][2],
+      json['startDate'][3],
+      json['startDate'][4],
+      json['startDate'][5],
+      (json['startDate'][6] / 1000000).round(), // Convertir nanosecondes en millisecondes
+    ),
       type: json['type'],
       eventid: json['eventId'],
     );
