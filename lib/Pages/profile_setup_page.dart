@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/Components/custom_dropbox.dart';
+import 'package:myapp/Components/form_text_field.dart';
+import 'package:myapp/Models/user_dto.dart';
+import 'package:myapp/Theme/app_colors.dart';
+import 'package:myapp/user_state.dart';
+import 'package:provider/provider.dart';
 
 class ProfileSetupPage extends StatefulWidget {
   const ProfileSetupPage({super.key});
@@ -8,16 +14,29 @@ class ProfileSetupPage extends StatefulWidget {
 }
 
 class _ProfileSetupPageState extends State<ProfileSetupPage> {
+  late UserState userState;
   final PageController _pageController = PageController();
   int _currentStep = 0;
 
-  final List<String> sports = [
-    "Course à pied",
-    "Vélo",
-    "Musculation",
-    "Marche",
-  ];
-  final List<bool> selectedSports = [false, false, false, false];
+  // Contrôleurs pour les champs de texte
+  final TextEditingController _firstnameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
+
+  // Données utilisateur
+  String? _gender;
+  String? _avatar;
+  String? _status;
+
+  // Options pour les champs de sélection
+  final List<String> genders = UserSex.values.map((e) => e.name).toList();
+  final List<String> avatars = ["Avatar 1", "Avatar 2", "Avatar 3"];
+  final List<String> statuses = UserStatus.values.map((e) => e.name).toList();
+
+  @override
+  void initState() {
+    super.initState();
+    userState = Provider.of<UserState>(context, listen: false);
+  }
 
   void _nextPage() {
     if (_currentStep < 2) {
@@ -46,13 +65,26 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
     }
   }
 
-  void _submitData() {
-    // Action à réaliser pour envoyer les données à l'API
-    print(
-        "Données soumises : ${selectedSports.asMap().entries.map((e) => e.value ? sports[e.key] : null).where((sport) => sport != null).toList()}");
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Profil enregistré avec succès !')),
-    );
+  Future<void> _submitData() async {
+    UserDto user = userState.currentUser!;
+    UserDto? updated = await userState.updateUser(UserDto(
+        id: user.id,
+        email: user.email,
+        firstname: _firstnameController.text,
+        lastname: _lastnameController.text,
+        gender: UserSex.values.byName(_gender!),
+        avatar: _avatar,
+        status: UserStatus.values.byName(_status!)));
+    if (updated != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Compte créé avec succès')),
+      );
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erreur de connexion')),
+      );
+    }
   }
 
   @override
@@ -71,8 +103,9 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
               child: Row(
                 children: [
                   IconButton(
-                      onPressed: _previousPage,
-                      icon: const Icon(Icons.arrow_back, color: Colors.white)),
+                    onPressed: _previousPage,
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  ),
                   Expanded(
                     child: LinearProgressIndicator(
                       value: (_currentStep + 1) / 3,
@@ -88,14 +121,12 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  // Étape 1 : Sélection des sports favoris
-                  _buildSportsStep(),
-                  // Étape 2 : Exemple d'autre étape
-                  _buildExampleStep("Dis-nous plus sur toi !",
-                      "Ajoute une description ici..."),
+                  // Étape 1 : Informations personnelles
+                  _buildPersonalInfoStep(),
+                  // Étape 2 : Sélection des préférences
+                  _buildPreferencesStep(),
                   // Étape 3 : Confirmation
-                  _buildExampleStep(
-                      "Tout est prêt !", "Prêt à commencer ton aventure."),
+                  _buildConfirmationStep(),
                 ],
               ),
             ),
@@ -127,81 +158,154 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
     );
   }
 
-  Widget _buildSportsStep() {
+  Widget _buildPersonalInfoStep() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.lightDark,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Center(
+                        child: Icon(
+                          Icons.account_circle,
+                          size: 100,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        "Informations personnelles",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      BLFormTextField(
+                        controller: _firstnameController,
+                        hintText: "Prénom",
+                      ),
+                      const SizedBox(height: 16),
+                      BLFormTextField(
+                        controller: _lastnameController,
+                        hintText: "Nom",
+                      ),
+                    ]),
+              ),
+            ]));
+  }
+
+  Widget _buildPreferencesStep() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.lightDark,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Center(
+                      child: Icon(
+                        Icons.settings,
+                        size: 100,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      "Préférences",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomDropdown<String>(
+                      labelText: "Genre",
+                      value: _gender,
+                      items: genders,
+                      onChanged: (value) {
+                        setState(() {
+                          _gender = value;
+                        });
+                      },
+                      itemToString: (gender) => gender,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomDropdown<String>(
+                      labelText: "Avatar",
+                      value: _avatar,
+                      items: avatars,
+                      onChanged: (value) {
+                        setState(() {
+                          _avatar = value;
+                        });
+                      },
+                      itemToString: (avatar) => avatar,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomDropdown<String>(
+                      labelText: "Statut",
+                      value: _status,
+                      items: statuses,
+                      onChanged: (value) {
+                        setState(() {
+                          _status = value;
+                        });
+                      },
+                      itemToString: (status) => status,
+                    ),
+                  ],
+                ),
+              )
+            ]));
+  }
+
+  Widget _buildConfirmationStep() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Center(
+        children: const [
+          Center(
             child: Icon(
-              Icons.directions_run,
+              Icons.check_circle,
               size: 100,
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 24),
-          const Text(
-            "Quels sont tes sports favoris ?",
+          SizedBox(height: 24),
+          Text(
+            "Tout est prêt !",
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16),
-          ...sports.asMap().entries.map((entry) {
-            int index = entry.key;
-            String sport = entry.value;
-            return CheckboxListTile(
-              value: selectedSports[index],
-              onChanged: (value) {
-                setState(() {
-                  selectedSports[index] = value!;
-                });
-              },
-              title: Text(
-                sport,
-                style: const TextStyle(color: Colors.white),
-              ),
-              activeColor: const Color(0xFF546EFF),
-              checkColor: Colors.white,
-              controlAffinity: ListTileControlAffinity.leading,
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildExampleStep(String title, String description) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Center(
-            child: Icon(
-              Icons.account_circle,
-              size: 100,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 24),
+          SizedBox(height: 16),
           Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            description,
-            style: const TextStyle(color: Colors.white),
+            "Prêt à commencer ton aventure.",
+            style: TextStyle(color: Colors.white),
           ),
         ],
       ),
