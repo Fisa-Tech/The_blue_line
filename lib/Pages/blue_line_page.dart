@@ -24,7 +24,7 @@ class _BlueLinePageState extends State<BlueLinePage> {
     bool isFirstTime = prefs.getBool('isFirstTimeBlueLine') ?? true;
 
     if (isFirstTime) {
-      await prefs.setBool('isFirstTimeBlueLine', true);
+      await prefs.setBool('isFirstTimeBlueLine', false);
     }
 
     setState(() {
