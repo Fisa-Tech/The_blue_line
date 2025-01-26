@@ -6,6 +6,8 @@ import 'package:myapp/Models/event_dto.dart';
 import 'package:myapp/Services/event_service.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
+import 'package:provider/provider.dart';
+import 'package:myapp/user_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,6 +27,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userState = Provider.of<UserState>(context);
+    final firstName = userState.currentUser?.firstname ?? 'toi';
+
     return MainFrame(
       title: '',
       currentIndex: 0,
@@ -35,14 +40,14 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 32.0),
-              const Text(
-                'Salut Username 👋',
+              Text(
+                'Salut $firstName 👋',
                 style: AppTextStyles.headline1,
               ),
               const SizedBox(height: 16.0),
-              SizedBox(
+              const SizedBox(
                 height: 150,
-                child: const Center(
+                child: Center(
                   child: Text(
                     'Ici map',
                     style: AppTextStyles.hintText,
