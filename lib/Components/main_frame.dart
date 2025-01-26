@@ -38,16 +38,16 @@ class MainFrame extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 0:
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushReplacementNamed(context, '/home');
               break;
             case 1:
-              Navigator.pushNamed(context, '/defis');
+              Navigator.pushReplacementNamed(context, '/defis');
               break;
             case 2:
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushReplacementNamed(context, '/news');
               break;
             case 3:
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushReplacementNamed(context, '/home');
               break;
           }
         },
@@ -66,11 +66,11 @@ class MainFrame extends StatelessWidget {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.newspaper),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.people),
             label: '',
           ),
         ],
