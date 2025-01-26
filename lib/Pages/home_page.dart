@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Models/event_dto.dart';
 import 'package:myapp/Services/event_service.dart';
