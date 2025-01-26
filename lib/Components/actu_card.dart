@@ -49,9 +49,8 @@ class _ActuCardState extends State<ActuCard> {
     } catch (e) {
       // Afficher une snackbar en cas d'erreur
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Une erreur est survenue : $e'),
-          backgroundColor: Colors.red,
+        const SnackBar(
+          content: Text('Une erreur est survenue'),
         ),
       );
     }
