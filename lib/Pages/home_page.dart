@@ -28,9 +28,9 @@ class _HomePageState extends State<HomePage> {
     return MainFrame(
       title: '',
       currentIndex: 0,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

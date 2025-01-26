@@ -32,37 +32,38 @@ class _ActualitesPageState extends State<ActualitesPage> {
       appBarVariant: AppBarVariant.notifAndProfile,
       title: 'Actualités',
       currentIndex: 2,
+      child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: FutureBuilder<List<EventDTO>>(
         future: _eventsFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Aucune actualité disponible'));
-          } else {
-            return SingleChildScrollView( 
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: snapshot.data!.map((event) {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 32.0),
-                      ActuCard(
-                        event: event,
-                        userId: userId,
-                        //TODO: Créer une méthode dans le challenge_service pour vérifier si un événement à au moins un challenge
-                        challenge: true,
-                      ),
-                      const SizedBox(height: 6.0),
-                    ],
-                  );
-                }).toList(),
-              ),
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('Aucune actualité disponible'));
+        } else {
+          return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: snapshot.data!.map((event) {
+            return Column(
+              children: [
+                ActuCard(
+                  event: event,
+                  userId: userId,
+                  //TODO: Créer une méthode dans le challenge_service pour vérifier si un événement à au moins un challenge
+                  challenge: true,
+                ),
+              ],
             );
-          }
+            }).toList(),
+          ),
+          );
+        }
         },
+      ),
       ),
     );
   }
