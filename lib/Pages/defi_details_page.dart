@@ -182,7 +182,32 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                           width: double.infinity,
                           child: BLElevatedButton(
                             text: 'Participer',
-                            onPressed: () {},
+                            onPressed: () async {
+                              try {
+                                // Construire le corps de la requête
+                                Map<String, dynamic> requestBody = {
+                                  'distanceAchieved': 0,
+                                  'timeAchieved': 0,
+                                  'completionDate': DateTime.now().toIso8601String(),
+                                };
+
+                                // Appel de l'API pour participer au défi
+                                await ChallengeService.addCompletionForChallenge(widget.challengeId, requestBody);
+
+                                // Affichage d'un message de succès
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Participation réussie au défi !')),
+                                );
+
+                                // Optionnel : Mettre à jour la liste des participants
+                                await fetchParticipants();
+                              } catch (e) {
+                                // Affichage d'un message d'erreur
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Erreur : ${e.toString()}')),
+                                );
+                              }
+                            },
                           ),
                         ),
                       ],
