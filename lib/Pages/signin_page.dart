@@ -6,6 +6,7 @@ import 'package:myapp/Pages/register_page.dart' as register_page;
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/user_state.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});

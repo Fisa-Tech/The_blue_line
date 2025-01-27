@@ -14,9 +14,11 @@ class MainFrame extends StatelessWidget {
   final int currentIndex;
   final String title;
   final PreferredSizeWidget? bottom;
-  final AppBarVariant appBarVariant;
   final IconData? leftIcon;
   final VoidCallback? onActionButtonPressed;
+  final dynamic onLeftIconPressed;
+  final ValueChanged<int> onTabSelected;
+  final AppBarVariant appBarVariant;
 
   const MainFrame({
     super.key,
@@ -24,9 +26,10 @@ class MainFrame extends StatelessWidget {
     required this.currentIndex,
     required this.title,
     required this.appBarVariant,
+    this.onLeftIconPressed,
     this.leftIcon,
     this.onActionButtonPressed,
-    this.bottom,
+    this.bottom, 
   });
 
   @override

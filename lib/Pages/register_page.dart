@@ -130,7 +130,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 SizedBox(height: height * 0.01),
                                 BLFormTextField(
-                                  controller: _passwordController,
                                   hintText: "Mot de passe",
                                   onSaved: (value) => _password = value,
                                   isPassword: true,

@@ -3,8 +3,10 @@ import 'package:myapp/Components/button_widget.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
-import 'challenge_service.dart';
-import 'challenge_dto.dart';
+import '../Services/challenge_service.dart';
+import '../Models/challenge_dto.dart';
+import '../Models/challenge_completion_dto.dart';
+import '../Services/challenge_completion_service.dart';
 
 class DetailsDefisPage extends StatefulWidget {
   final int challengeId;
@@ -192,7 +194,7 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                                 };
 
                                 // Appel de l'API pour participer au défi
-                                await ChallengeService.addCompletionForChallenge(widget.challengeId, requestBody);
+                                await ChallengeCompletionService.addCompletionForChallenge(widget.challengeId, requestBody);
 
                                 // Affichage d'un message de succès
                                 ScaffoldMessenger.of(context).showSnackBar(
