@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
 
     return MainFrame(
       title: '',
+      appBarVariant: AppBarVariant.notifAndProfile,
       currentIndex: 0,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -64,56 +65,59 @@ class _HomePageState extends State<HomePage> {
                 style: AppTextStyles.hintText,
               ),
               const SizedBox(height: 16.0),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: AppColors.lightDark, // Couleur de fond
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildStatItem(
-                            icon: Icons.timer_outlined,
-                            value: '3h34',
-                            label: 'Temps passé',
-                            iconColor: AppColors.primary,
-                          ),
-                          Container(
-                            height: 40,
-                            width: 1,
-                            color: Colors.grey.shade600, // Ligne de séparation
-                          ),
-                          _buildStatItem(
-                            icon: Icons.local_fire_department_outlined,
-                            value: '857',
-                            label: 'Calories totales',
-                            iconColor: AppColors.danger,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16.0),
-                    Container(
-                      height: 150,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: AppColors.lightDark, // Couleur de fond
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Ici graphique',
-                          style: AppTextStyles.hintText,
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: AppColors.lightDark, // Couleur de fond
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildStatItem(
+                              icon: Icons.timer_outlined,
+                              value: '3h34',
+                              label: 'Temps passé',
+                              iconColor: AppColors.primary,
+                            ),
+                            Container(
+                              height: 40,
+                              width: 1,
+                              color:
+                                  Colors.grey.shade600, // Ligne de séparation
+                            ),
+                            _buildStatItem(
+                              icon: Icons.local_fire_department_outlined,
+                              value: '857',
+                              label: 'Calories totales',
+                              iconColor: AppColors.danger,
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  ],
-                )
-              ),
+                      const SizedBox(height: 16.0),
+                      Container(
+                        height: 150,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: AppColors.lightDark, // Couleur de fond
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Ici graphique',
+                            style: AppTextStyles.hintText,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
               const SizedBox(height: 16.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                     style: AppTextStyles.headline2,
                   ),
                   TextButton(
-                    onPressed: () { 
+                    onPressed: () {
                       Navigator.pushNamed(context, '/news');
                     },
                     child: const Text(
@@ -154,12 +158,15 @@ class _HomePageState extends State<HomePage> {
                               style: AppTextStyles.bodyText1,
                             ),
                             subtitle: Text(
-                              EventService().formatEventDates(event.startDate, event.endDate),                          
+                              EventService().formatEventDates(
+                                  event.startDate, event.endDate),
                               style: AppTextStyles.hintText,
                             ),
                             leading: CircleAvatar(
-                              backgroundColor: AppColors.primary.withOpacity(0.2),
-                              child: const Icon(Icons.event, color: AppColors.primary),
+                              backgroundColor:
+                                  AppColors.primary.withOpacity(0.2),
+                              child: const Icon(Icons.event,
+                                  color: AppColors.primary),
                             ),
                           ),
                         );
@@ -175,41 +182,41 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
 
-  Widget _buildStatItem({
-    required IconData icon,
-    required String value,
-    required String label,
-    required Color iconColor,
-  }) {
-    return Row(
-      children: [
-        CircleAvatar(
-          backgroundColor: iconColor.withOpacity(0.2),
-          child: Icon(icon, color: iconColor),
-        ),
-        const SizedBox(width: 8),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+Widget _buildStatItem({
+  required IconData icon,
+  required String value,
+  required String label,
+  required Color iconColor,
+}) {
+  return Row(
+    children: [
+      CircleAvatar(
+        backgroundColor: iconColor.withOpacity(0.2),
+        child: Icon(icon, color: iconColor),
+      ),
+      const SizedBox(width: 8),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade400,
-              ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade400,
             ),
-          ],
-        ),
-      ],
-    );
-  }
+          ),
+        ],
+      ),
+    ],
+  );
 }

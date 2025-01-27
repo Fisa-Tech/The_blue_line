@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
 
-enum AppBarVariant { notifAndProfile, backAndProfile, backAndLogout, backAndShare }
+enum AppBarVariant {
+  notifAndProfile,
+  backAndProfile,
+  backAndLogout,
+  backAndShare
+}
 
 class MainFrame extends StatelessWidget {
   final Widget child;
@@ -10,14 +15,18 @@ class MainFrame extends StatelessWidget {
   final String title;
   final PreferredSizeWidget? bottom;
   final AppBarVariant appBarVariant;
+  final IconData? leftIcon;
+  final VoidCallback? onActionButtonPressed;
 
   const MainFrame({
     super.key,
     required this.child,
     required this.currentIndex,
     required this.title,
+    required this.appBarVariant,
+    this.leftIcon,
+    this.onActionButtonPressed,
     this.bottom,
-    this.appBarVariant = AppBarVariant.notifAndProfile,
   });
 
   @override
@@ -29,8 +38,9 @@ class MainFrame extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.lightDark,
         currentIndex: currentIndex,
-         onTap: (index) {
-          if (index != currentIndex) { // Vérifie si l'index est différent avant de naviguer
+        onTap: (index) {
+          if (index != currentIndex) {
+            // Vérifie si l'index est différent avant de naviguer
             switch (index) {
               case 0:
                 Navigator.pushNamed(context, '/home');
@@ -42,7 +52,7 @@ class MainFrame extends StatelessWidget {
                 Navigator.pushNamed(context, '/news');
                 break;
               case 3:
-                Navigator.pushNamed(context, '/profile');
+                Navigator.pushNamed(context, '/friends');
                 break;
               case 4:
                 Navigator.pushNamed(context, '/blueline');
@@ -53,8 +63,10 @@ class MainFrame extends StatelessWidget {
         type: BottomNavigationBarType.fixed, // Style fixe
         showSelectedLabels: false, // Désactive les labels sélectionnés
         showUnselectedLabels: false, // Désactive les labels non sélectionnés
-        selectedItemColor: AppColors.primary, // Couleur des icônes sélectionnées
-        unselectedItemColor: AppColors.textPrimary, // Couleur des icônes non sélectionnées
+        selectedItemColor:
+            AppColors.primary, // Couleur des icônes sélectionnées
+        unselectedItemColor:
+            AppColors.textPrimary, // Couleur des icônes non sélectionnées
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -81,49 +93,19 @@ class MainFrame extends StatelessWidget {
     );
   }
 
-   _buildAppBar(BuildContext context) {
-    if(appBarVariant == AppBarVariant.notifAndProfile) {
+  _buildAppBar(BuildContext context) {
+    if (appBarVariant == AppBarVariant.notifAndProfile) {
       return AppBar(
         scrolledUnderElevation: 0.0,
         backgroundColor: AppColors.dark,
         bottom: bottom,
         elevation: 0, // Remove shadow
         leading: IconButton(
-                icon: Icon(Icons.notifications_none_outlined, color: Colors.white, size: 26),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/notifications');
-                },
-              ),     
-          title: Text(
-          title,
-          style: AppTextStyles.headline2,
-        ),
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/settings');
-              },
-              child: const CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://www.gravatar.com/avatar',
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    } else if(appBarVariant == AppBarVariant.backAndProfile) {
-      return AppBar(
-        scrolledUnderElevation: 0.0,
-        backgroundColor: AppColors.dark,
-        bottom: bottom,
-        elevation: 0, // Remove shadow
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
-          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(Icons.notifications_none_outlined,
+              color: Colors.white, size: 26),
+          onPressed: () {
+            Navigator.pushNamed(context, '/notifications');
+          },
         ),
         title: Text(
           title,
@@ -146,16 +128,17 @@ class MainFrame extends StatelessWidget {
           ),
         ],
       );
-    } else if(appBarVariant == AppBarVariant.backAndLogout) {
+    } else if (appBarVariant == AppBarVariant.backAndProfile) {
       return AppBar(
         scrolledUnderElevation: 0.0,
         backgroundColor: AppColors.dark,
         bottom: bottom,
         elevation: 0, // Remove shadow
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_rounded,
+              color: AppColors.textPrimary),
           onPressed: () => Navigator.of(context).pop(),
-        ), 
+        ),
         title: Text(
           title,
           style: AppTextStyles.headline2,
@@ -164,14 +147,20 @@ class MainFrame extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
-            child: IconButton(
-              onPressed: (){}, 
-              icon: const Icon(Icons.logout , color: AppColors.danger),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/settings');
+              },
+              child: const CircleAvatar(
+                backgroundImage: NetworkImage(
+                  'https://www.gravatar.com/avatar',
+                ),
+              ),
             ),
           ),
         ],
       );
-    } else if(appBarVariant == AppBarVariant.backAndShare) {
+    } else if (appBarVariant == AppBarVariant.backAndLogout) {
       return AppBar(
         scrolledUnderElevation: 0.0,
         backgroundColor: AppColors.dark,
@@ -180,7 +169,7 @@ class MainFrame extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
-        ), 
+        ),
         title: Text(
           title,
           style: AppTextStyles.headline2,
@@ -190,8 +179,33 @@ class MainFrame extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
-              onPressed: (){}, 
-              icon: const Icon(Icons.share , color: AppColors.textPrimary),
+              onPressed: onActionButtonPressed,
+              icon: const Icon(Icons.logout, color: AppColors.danger),
+            ),
+          ),
+        ],
+      );
+    } else if (appBarVariant == AppBarVariant.backAndShare) {
+      return AppBar(
+        scrolledUnderElevation: 0.0,
+        backgroundColor: AppColors.dark,
+        bottom: bottom,
+        elevation: 0, // Remove shadow
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          title,
+          style: AppTextStyles.headline2,
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.share, color: AppColors.textPrimary),
             ),
           ),
         ],
