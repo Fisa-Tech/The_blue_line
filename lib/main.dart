@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myapp/Pages/edit_password_page.dart';
 import 'package:myapp/Pages/home_page.dart';
+import 'package:myapp/Pages/notification_settings.dart';
+import 'package:myapp/Pages/profile_edit.dart';
 import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/Pages/profile_setup_page.dart';
+import 'package:myapp/Pages/settings_page.dart';
 import 'package:myapp/Pages/welcome_page.dart';
 import '../Pages/register_page.dart';
 import '../Pages/signin_page.dart';
@@ -16,7 +20,6 @@ void main() {
     runApp(const MyApp());
   });
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -39,6 +42,11 @@ class MyApp extends StatelessWidget {
           '/profil': (context) => const ProfileSetupPage(),
           '/forgotpassword': (context) => ResetpasswordPage(),
           '/welcome': (context) => const WelcomePage(),
+          '/settings': (context) => const SettingsPage(),
+          '/settings/profile_edit': (context) => const ProfileEditPage(),
+          '/settings/edit_password': (context) => const EditPasswordPage(),
+          '/settings/notification_settings': (context) =>
+              const NotificationSettingsPage(),
         },
       ),
     );
