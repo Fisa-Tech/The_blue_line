@@ -11,11 +11,12 @@ class EditPasswordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final avatarRadius = screenWidth * 0.15; // Taille de l'avatar ajustée au mobile
+    final avatarRadius =
+        screenWidth * 0.15; // Taille de l'avatar ajustée au mobile
 
     return MainFrame(
       leftIcon: Icons.notifications_outlined,
-      onLeftIconPressed: () {},
+      onActionButtonPressed: () {},
       title: '',
       appBarVariant: AppBarVariant.backAndLogout,
       currentIndex: 0,
@@ -33,7 +34,7 @@ class EditPasswordPage extends StatelessWidget {
                   'https://www.gravatar.com/avatar?s=2048',
                 ),
               ),
-               const SizedBox(height: 16),
+              const SizedBox(height: 16),
               const Text('John Doe', style: AppTextStyles.headline1),
               const Text('johndoe@gmail.com', style: AppTextStyles.hintText),
               const SizedBox(height: 16),
@@ -52,12 +53,18 @@ class EditPasswordPage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    const BLFormTextField(hintText: "", label: "Mot de passe actuel"),
-                    const BLFormTextField(hintText: "", label: "Nouveau mot de passe"),
-                    const BLFormTextField(hintText: "", label: "Répéter le nouveau mot de passe"),
+                    const BLFormTextField(
+                        hintText: "", label: "Mot de passe actuel"),
+                    const BLFormTextField(
+                        hintText: "", label: "Nouveau mot de passe"),
+                    const BLFormTextField(
+                        hintText: "", label: "Répéter le nouveau mot de passe"),
                     const SizedBox(height: 32),
                     BLElevatedButton(onPressed: () {}, text: "Enregistrer"),
-                    BLElevatedButton(onPressed: () {}, text: "Annuler", variant: ButtonVariant.grey),
+                    BLElevatedButton(
+                        onPressed: () {},
+                        text: "Annuler",
+                        variant: ButtonVariant.grey),
                   ],
                 ),
               ),

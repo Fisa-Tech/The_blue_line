@@ -10,7 +10,7 @@ class MainFrame extends StatelessWidget {
   final ValueChanged<int> onTabSelected;
   final String title;
   final IconData? leftIcon;
-  final VoidCallback? onLeftIconPressed;
+  final VoidCallback? onActionButtonPressed;
   final AppBarVariant appBarVariant;
 
   const MainFrame({
@@ -21,7 +21,7 @@ class MainFrame extends StatelessWidget {
     required this.title,
     required this.appBarVariant,
     this.leftIcon,
-    this.onLeftIconPressed,
+    this.onActionButtonPressed,
   });
 
   @override
@@ -37,8 +37,10 @@ class MainFrame extends StatelessWidget {
         type: BottomNavigationBarType.fixed, // Force un style fixe
         showSelectedLabels: false, // Désactive les labels sélectionnés
         showUnselectedLabels: false, // Désactive les labels non sélectionnés
-        selectedItemColor: AppColors.textPrimary, // Couleur des icônes sélectionnées
-        unselectedItemColor: AppColors.textPrimary, // Couleur des icônes non sélectionnées
+        selectedItemColor:
+            AppColors.textPrimary, // Couleur des icônes sélectionnées
+        unselectedItemColor:
+            AppColors.textPrimary, // Couleur des icônes non sélectionnées
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
@@ -60,15 +62,15 @@ class MainFrame extends StatelessWidget {
       ),
     );
   }
-  
+
   _buildAppBar(BuildContext context) {
-    if(appBarVariant == AppBarVariant.notifAndProfile) {
+    if (appBarVariant == AppBarVariant.notifAndProfile) {
       return AppBar(
         backgroundColor: AppColors.dark,
         leading: leftIcon != null
             ? IconButton(
                 icon: Icon(leftIcon, color: Colors.white, size: 26),
-                onPressed: onLeftIconPressed,
+                onPressed: onActionButtonPressed,
               )
             : Container(),
         title: Text(
@@ -92,7 +94,7 @@ class MainFrame extends StatelessWidget {
           ),
         ],
       );
-    } else if(appBarVariant == AppBarVariant.backAndProfile) {
+    } else if (appBarVariant == AppBarVariant.backAndProfile) {
       return AppBar(
         backgroundColor: AppColors.dark,
         leading: IconButton(
@@ -120,13 +122,13 @@ class MainFrame extends StatelessWidget {
           ),
         ],
       );
-    } else if(appBarVariant == AppBarVariant.backAndLogout) {
+    } else if (appBarVariant == AppBarVariant.backAndLogout) {
       return AppBar(
         backgroundColor: AppColors.dark,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
-        ), 
+        ),
         title: Text(
           title,
           style: AppTextStyles.headline2,
@@ -136,8 +138,8 @@ class MainFrame extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
-              onPressed: (){}, 
-              icon: const Icon(Icons.logout , color: AppColors.danger),
+              onPressed: onActionButtonPressed,
+              icon: const Icon(Icons.logout, color: AppColors.danger),
             ),
           ),
         ],

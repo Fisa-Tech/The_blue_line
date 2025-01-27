@@ -9,13 +9,14 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MainFrame(
       leftIcon: Icons.notifications_outlined,
-      onLeftIconPressed: () {  },
+      onActionButtonPressed: () {},
       title: '',
       appBarVariant: AppBarVariant.notifAndProfile,
       currentIndex: 0,
-      onTabSelected: (int value) {  },
+      onTabSelected: (int value) {},
       child: const Center(
-        child: Text('Welcome to the Home Page!', style: AppTextStyles.headline1),
+        child:
+            Text('Welcome to the Home Page!', style: AppTextStyles.headline1),
       ),
     );
   }

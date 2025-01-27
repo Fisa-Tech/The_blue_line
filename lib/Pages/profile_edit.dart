@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/Components/button_widget.dart';
-import 'package:myapp/Components/form_text_field.dart';
-import 'package:myapp/Components/main_frame.dart';
+import 'package:myapp/Components/custom_dropbox.dart';
+import 'package:myapp/Models/user_dto.dart';
 import 'package:myapp/Theme/app_colors.dart';
-import 'package:myapp/Theme/app_text_styles.dart';
-import 'package:myapp/Components/dropdown_button.dart';
+import 'package:myapp/user_state.dart';
+import 'package:provider/provider.dart';
 
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({super.key});
@@ -14,198 +13,200 @@ class ProfileEditPage extends StatefulWidget {
 }
 
 class _ProfileEditPageState extends State<ProfileEditPage> {
-  // Profil avec valeurs possibles nulles
-  final profilJson = {
-    // 'id': "1",
-    // 'firstname': "John",
-    // 'lastname': "Doe",
-    // 'email': "example@gmail.com",
-    // 'sex': "Homme",
-    // 'avatar': "https://www.gravatar.com/avatar?s=2048",
-    // 'status': "Actif",
-  };
+  // Contrôleurs pour les champs modifiables
+  final TextEditingController _emailController = TextEditingController();
 
-  late TextEditingController emailController;
-  late TextEditingController lastnameController;
-  late TextEditingController firstnameController;
-  late TextEditingController statusController;
+  // Données utilisateur
+  late UserState userState;
+  late UserDto user;
 
-  // Variables pour DropdownButton
-  String? selectedSex;
-  String? selectedStatus;
+  String? _avatar;
+  String? _status;
+
+  // Options pour les champs modifiables
+  final List<String> avatars = ["Avatar 1", "Avatar 2", "Avatar 3"];
+  final List<String> statuses = UserStatus.values.map((e) => e.name).toList();
 
   @override
   void initState() {
     super.initState();
-
-    // Initialisation avec des valeurs par défaut si profilJson est vide ou contient des nulls
-    emailController = TextEditingController(text: profilJson['email'] ?? "");
-    lastnameController =
-        TextEditingController(text: profilJson['lastname'] ?? "");
-    firstnameController =
-        TextEditingController(text: profilJson['firstname'] ?? "");
-    statusController = TextEditingController(text: profilJson['status'] ?? "");
-    selectedSex = profilJson['sex'];
-    selectedStatus = profilJson['status'];
+    userState = Provider.of<UserState>(context, listen: false);
+    user = userState.currentUser!;
+    _emailController.text = user.email;
+    _avatar = user.avatar;
+    _status = user.status!.name;
   }
 
-  @override
-  void dispose() {
-    // Nettoyage des TextEditingController
-    emailController.dispose();
-    lastnameController.dispose();
-    firstnameController.dispose();
-    statusController.dispose();
-    super.dispose();
+  Future<void> _submitData() async {
+    UserDto updatedUser = UserDto(
+      id: user.id,
+      email: _emailController.text,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      gender: user.gender,
+      avatar: _avatar,
+      status: UserStatus.values.byName(_status!),
+    );
+
+    UserDto? updated = await userState.updateUser(updatedUser);
+
+    if (updated != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profil mis à jour avec succès')),
+      );
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erreur lors de la mise à jour')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final avatarRadius =
-        screenWidth * 0.15; // Taille de l'avatar ajustée au mobile
+    const Color dark = Color(0xFF262531);
 
-    return MainFrame(
-      leftIcon: Icons.notifications_outlined,
-      onLeftIconPressed: () {},
-      title: '',
-      appBarVariant: AppBarVariant.backAndLogout,
-      currentIndex: 0,
-      onTabSelected: (int value) {},
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: dark,
+        foregroundColor: Colors.white,
+        title: const Text("Modifier le profil"),
+        centerTitle: true,
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: dark,
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Section Profil
-              CircleAvatar(
-                radius: avatarRadius,
-                backgroundImage: NetworkImage(profilJson['avatar'] ??
-                    'https://www.gravatar.com/avatar?s=2048'), // Valeur par défaut si null
+              const SizedBox(height: 24),
+              _buildReadonlyField("Prénom", user.firstname!),
+              const SizedBox(height: 16),
+              _buildReadonlyField("Nom", user.lastname!),
+              const SizedBox(height: 16),
+              _buildReadonlyField("Genre", user.gender!.name),
+              const SizedBox(height: 16),
+              _buildEditableField(
+                labelText: "Email",
+                controller: _emailController,
               ),
               const SizedBox(height: 16),
-              const Text('Changer d\'avatar', style: AppTextStyles.hintText),
-              const SizedBox(height: 32),
-
-              // Section Paramètres
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Paramètres', style: AppTextStyles.hintText),
+              const Text(
+                "Status",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              CustomDropdown<String>(
+                labelText: "Statut",
+                value: _status,
+                items: statuses,
+                onChanged: (value) {
+                  setState(() {
+                    _status = value;
+                  });
+                },
+                itemToString: (status) => status,
               ),
               const SizedBox(height: 16),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppColors.lightDark,
-                  borderRadius: BorderRadius.circular(10),
+              const Text(
+                "Avatar",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              CustomDropdown<String>(
+                labelText: "Avatar",
+                value: _avatar,
+                items: avatars,
+                onChanged: (value) {
+                  setState(() {
+                    _avatar = value;
+                  });
+                },
+                itemToString: (avatar) => avatar,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _submitData,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF546EFF),
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    BLFormTextField(
-                      color: Colors.white,
-                      controller: emailController,
-                      hintText: "example@gmail.com",
-                      label: "Email",
-                    ),
-                    const SizedBox(height: 10),
-                    BLFormTextField(
-                      color: Colors.white,
-                      controller: lastnameController,
-                      hintText: "Doe",
-                      label: "Nom",
-                    ),
-                    const SizedBox(height: 10),
-                    BLFormTextField(
-                      color: Colors.white,
-                      controller: firstnameController,
-                      hintText: "John",
-                      label: "Prénom",
-                    ),
-                    const SizedBox(height: 10),
-                    // Genre Dropdown
-                    BLDropdownButton<String>(
-                      items: [
-                        DropdownMenuItem(value: 'MALE', child: Text('Homme')),
-                        DropdownMenuItem(value: 'FEMALE', child: Text('Femme')),
-                        DropdownMenuItem(value: 'OTHER', child: Text('Autre')),
-                      ],
-                      hintText: "Sélectionner un genre",
-                      value: selectedSex,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedSex = value;
-                        });
-                      },
-                      label: "Genre",
-                      color: Colors.white,
-                    ),
-                    const SizedBox(height: 10),
-                    // Statut Dropdown
-                    BLDropdownButton<String>(
-                      items: [
-                        DropdownMenuItem(value: 'LYCEE', child: Text('Lycée')),
-                        DropdownMenuItem(
-                            value: 'COLLEGE', child: Text('Collège')),
-                        DropdownMenuItem(
-                            value: 'ETUDIANT', child: Text('Étudiant')),
-                        DropdownMenuItem(
-                            value: 'PERSONNEL', child: Text('Personnel')),
-                        DropdownMenuItem(value: 'AUTRES', child: Text('Autre')),
-                      ],
-                      hintText: "Sélectionner un statut",
-                      value: selectedStatus,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedStatus = value;
-                        });
-                      },
-                      label: "Statut",
-                      color: Colors.white,
-                    ),
-                    const SizedBox(height: 32),
-                    BLElevatedButton(
-                      onPressed: () {
-                        // Logique pour enregistrer les modifications
-                        print("Enregistrer les modifications :");
-                        print("Email : ${emailController.text}");
-                        print("Nom : ${lastnameController.text}");
-                        print("Prénom : ${firstnameController.text}");
-                        print("Genre : ${selectedSex}");
-                        print("Statut : ${statusController.text}");
-                      },
-                      text: "Enregistrer",
-                    ),
-                    BLElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context); // Retour sans enregistrer
-                      },
-                      text: "Annuler",
-                      variant: ButtonVariant.grey,
-                    ),
-                    const SizedBox(height: 16),
-                    BLElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/settings/edit_password');
-                      },
-                      text: "Changer de mot de passe",
-                      variant: ButtonVariant.grey,
-                    ),
-                    BLElevatedButton(
-                      onPressed: () {
-                        // Logique pour supprimer le compte
-                        print("Demande de suppression du compte.");
-                      },
-                      text: "Supprimer mon compte",
-                      variant: ButtonVariant.danger,
-                    ),
-                  ],
+                child: const Text(
+                  "Enregistrer",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildReadonlyField(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.lightDark,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            value,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEditableField({
+    required String labelText,
+    required TextEditingController controller,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          labelText,
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: AppColors.grey,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 14,
+              horizontal: 12,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

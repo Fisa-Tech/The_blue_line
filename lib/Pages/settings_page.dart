@@ -5,7 +5,9 @@ import 'package:myapp/Components/setting_tile.dart';
 import 'package:myapp/Components/switch.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
+import 'package:myapp/user_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -15,6 +17,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  late UserState userState;
   bool switchValue1 = false;
   bool switchValue2 = false;
   bool switchValue3 = false;
@@ -22,6 +25,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
+    userState = Provider.of<UserState>(context, listen: false);
     _loadParams(); // Charger les valeurs des switches au démarrage
   }
 
@@ -44,19 +48,12 @@ class _SettingsPageState extends State<SettingsPage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final avatarRadius =
         screenWidth * 0.15; // Taille de l'avatar ajustée au mobile
-    final profilJson = {
-      'id': "1",
-      'firstname': "firstname",
-      'lastname': "lastname",
-      'email': "email",
-      'sex': "sex?.name",
-      'avatar': "avatar",
-      'status': "status?.name",
-    };
 
     return MainFrame(
       leftIcon: Icons.notifications_outlined,
-      onLeftIconPressed: () {},
+      onActionButtonPressed: () {
+        userState.logout();
+      },
       title: '',
       appBarVariant: AppBarVariant.backAndLogout,
       currentIndex: 0,
@@ -75,8 +72,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(profilJson['firstname']!, style: AppTextStyles.headline1),
-              Text(profilJson['email']!, style: AppTextStyles.hintText),
+              Text(userState.currentUser!.firstname!,
+                  style: AppTextStyles.headline1),
+              Text(userState.currentUser!.email, style: AppTextStyles.hintText),
               const SizedBox(height: 16),
               Align(
                 alignment: Alignment.center,
@@ -108,21 +106,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 child: Column(
                   children: [
-                    BLElevatedButton(
-                      onPressed: () async {
-                        print("params :");
-                        print(await SharedPreferences.getInstance().then(
-                            (prefs) =>
-                                prefs.getBool('param1') ?? 'Non défini'));
-                        print(await SharedPreferences.getInstance().then(
-                            (prefs) =>
-                                prefs.getBool('param2') ?? 'Non défini'));
-                        print(await SharedPreferences.getInstance().then(
-                            (prefs) =>
-                                prefs.getBool('param3') ?? 'Non défini'));
-                      },
-                      text: 'getparam',
-                    ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
                       title: 'Paramètre 1',

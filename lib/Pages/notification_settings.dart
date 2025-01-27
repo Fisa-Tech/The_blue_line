@@ -51,7 +51,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
     return MainFrame(
       leftIcon: Icons.notifications_outlined,
-      onLeftIconPressed: () {},
+      onActionButtonPressed: () {},
       title: '',
       appBarVariant: AppBarVariant.backAndLogout,
       currentIndex: 0,
@@ -75,29 +75,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   color: AppColors.lightDark,
                   borderRadius: BorderRadius.circular(10),
                 ),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   children: [
-                    BLElevatedButton(
-                      onPressed: () async {
-                        print("params :");
-                        print(await SharedPreferences.getInstance().then(
-                            (prefs) =>
-                                prefs.getBool('notifApp1') ?? 'Non défini'));
-                        print(await SharedPreferences.getInstance().then(
-                            (prefs) =>
-                                prefs.getBool('notifApp2') ?? 'Non défini'));
-                        print(await SharedPreferences.getInstance().then(
-                            (prefs) =>
-                                prefs.getBool('notifApp3') ?? 'Non défini'));
-                        print(await SharedPreferences.getInstance().then(
-                            (prefs) =>
-                                prefs.getBool('notifAmis1') ?? 'Non défini'));
-                        print(await SharedPreferences.getInstance().then(
-                            (prefs) =>
-                                prefs.getBool('notifAmis2') ?? 'Non défini'));
-                      },
-                      text: 'getparam',
-                    ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
                       title: 'Notification app 1',
@@ -159,6 +139,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   color: AppColors.lightDark,
                   borderRadius: BorderRadius.circular(10),
                 ),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   children: [
                     BLSettingTile(
