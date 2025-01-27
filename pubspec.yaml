@@ -38,6 +38,7 @@ dependencies:
   http: ^1.2.2
   flutter_appauth: ^8.0.1
   shared_preferences: ^2.0.15
+  intl: ^0.20.0
   flutter_local_notifications: ^18.0.1
   timezone: ^0.9.0
 
@@ -69,6 +70,13 @@ flutter:
   assets:
      - assets/img/welcome.jpg
      - assets/img/logo.svg
+     - assets/img/event_default.jpg
+     - assets/img/ligne_bleue_all.png
+     - assets/img/ligne_endurance.png
+     - assets/img/ligne_force.png
+     - assets/img/ligne_loisir.png
+     - assets/img/ligne_sante.png
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -55,7 +55,6 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       title: '',
       appBarVariant: AppBarVariant.backAndLogout,
       currentIndex: 0,
-      onTabSelected: (int value) {},
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),

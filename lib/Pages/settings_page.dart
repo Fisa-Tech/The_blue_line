@@ -53,11 +53,11 @@ class _SettingsPageState extends State<SettingsPage> {
       leftIcon: Icons.notifications_outlined,
       onActionButtonPressed: () {
         userState.logout();
+        Navigator.pushNamed(context, '/welcome');
       },
       title: '',
       appBarVariant: AppBarVariant.backAndLogout,
       currentIndex: 0,
-      onTabSelected: (int value) {},
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),

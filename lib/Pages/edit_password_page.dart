@@ -20,7 +20,6 @@ class EditPasswordPage extends StatelessWidget {
       title: '',
       appBarVariant: AppBarVariant.backAndLogout,
       currentIndex: 0,
-      onTabSelected: (int value) {},
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
