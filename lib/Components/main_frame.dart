@@ -14,11 +14,9 @@ class MainFrame extends StatelessWidget {
   final int currentIndex;
   final String title;
   final PreferredSizeWidget? bottom;
+  final AppBarVariant appBarVariant;
   final IconData? leftIcon;
   final VoidCallback? onActionButtonPressed;
-  final dynamic onLeftIconPressed;
-  final ValueChanged<int> onTabSelected;
-  final AppBarVariant appBarVariant;
 
   const MainFrame({
     super.key,
@@ -26,10 +24,9 @@ class MainFrame extends StatelessWidget {
     required this.currentIndex,
     required this.title,
     required this.appBarVariant,
-    this.onLeftIconPressed,
     this.leftIcon,
     this.onActionButtonPressed,
-    this.bottom, 
+    this.bottom,
   });
 
   @override
@@ -49,7 +46,7 @@ class MainFrame extends StatelessWidget {
                 Navigator.pushNamed(context, '/home');
                 break;
               case 1:
-                Navigator.pushNamed(context, '/challenges');
+                Navigator.pushNamed(context, '/defis');
                 break;
               case 2:
                 Navigator.pushNamed(context, '/news');
@@ -104,7 +101,7 @@ class MainFrame extends StatelessWidget {
         bottom: bottom,
         elevation: 0, // Remove shadow
         leading: IconButton(
-          icon: Icon(Icons.notifications_none_outlined,
+          icon: const Icon(Icons.notifications_none_outlined,
               color: Colors.white, size: 26),
           onPressed: () {
             Navigator.pushNamed(context, '/notifications');

@@ -211,35 +211,4 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-  Widget _buildTextField(String hintText, Function(String?)? onSaved,
-      {bool isPassword = false, bool isEmail = false}) {
-    return TextFormField(
-      style: TextStyle(color: Colors.grey[400]),
-      obscureText: isPassword,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(color: Colors.grey[400]),
-        filled: true,
-        fillColor: AppColors.grey,
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-      ),
-      keyboardType: isEmail ? TextInputType.emailAddress : TextInputType.text,
-      onSaved: onSaved,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Veuillez entrer $hintText';
-        }
-        if (isEmail && !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-          return 'Veuillez entrer un email valide';
-        }
-        return null;
-      },
-    );
-  }
 }

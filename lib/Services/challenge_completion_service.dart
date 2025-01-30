@@ -1,20 +1,21 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Models/challenge_completion_dto.dart';
 
 class AuthHelper {
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token'); // La clé doit correspondre à celle utilisée pour sauvegarder le token
+    return prefs.getString(
+        'auth_token'); // La clé doit correspondre à celle utilisée pour sauvegarder le token
   }
 }
 
 class ChallengeCompletionService {
   static const String baseUrl = "https://blue-line-preprod.fisadle.fr";
 
-   // Mettre à jour une participation existante
-  static Future<void> updateCompletion(int completionId, Map<String, dynamic> data) async {
+  // Mettre à jour une participation existante
+  static Future<void> updateCompletion(
+      int completionId, Map<String, dynamic> data) async {
     final token = await AuthHelper.getToken();
     if (token == null) {
       throw Exception('Token non disponible. Connectez-vous pour continuer.');
@@ -55,7 +56,8 @@ class ChallengeCompletionService {
   }
 
   // Récupérer toutes les participations pour un défi donné
-  static Future<List<dynamic>> getCompletionsForChallenge(int challengeId) async {
+  static Future<List<dynamic>> getCompletionsForChallenge(
+      int challengeId) async {
     final token = await AuthHelper.getToken();
     if (token == null) {
       throw Exception('Token non disponible. Connectez-vous pour continuer.');
@@ -77,7 +79,8 @@ class ChallengeCompletionService {
   }
 
   // Ajouter une nouvelle participation pour un défi donné
-  static Future<void> addCompletionForChallenge(int challengeId, Map<String, dynamic> data) async {
+  static Future<void> addCompletionForChallenge(
+      int challengeId, Map<String, dynamic> data) async {
     final token = await AuthHelper.getToken();
     if (token == null) {
       throw Exception('Token non disponible. Connectez-vous pour continuer.');
@@ -96,5 +99,4 @@ class ChallengeCompletionService {
       throw Exception('Failed to add completion for challenge');
     }
   }
-
 }

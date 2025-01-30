@@ -4,17 +4,15 @@ import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
 import '../Services/challenge_service.dart';
-import '../Models/challenge_dto.dart';
-import '../Models/challenge_completion_dto.dart';
 import '../Services/challenge_completion_service.dart';
 
 class DetailsDefisPage extends StatefulWidget {
   final int challengeId;
 
-  const DetailsDefisPage({Key? key, required this.challengeId}) : super(key: key);
+  const DetailsDefisPage({super.key, required this.challengeId});
 
   @override
-  _DetailsDefisPageState createState() => _DetailsDefisPageState();
+  State<DetailsDefisPage> createState() => _DetailsDefisPageState();
 }
 
 class _DetailsDefisPageState extends State<DetailsDefisPage> {
@@ -31,7 +29,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
 
   Future<void> fetchChallengeDetails() async {
     try {
-      final challenge = await ChallengeService.fetchDefiDetails(widget.challengeId);
+      final challenge =
+          await ChallengeService.fetchDefiDetails(context ,widget.challengeId);
       setState(() {
         challengeDetails = challenge.toJson();
         isLoading = false;
@@ -46,7 +45,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
 
   Future<void> fetchParticipants() async {
     try {
-      final response = await ChallengeService.fetchDefiParticipants(widget.challengeId);
+      final response =
+          await ChallengeService.fetchDefiParticipants(context ,widget.challengeId);
       setState(() {
         participants = response;
       });
@@ -56,22 +56,23 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
   }
 
   int _calculateDaysLeft(dynamic deadline) {
-  try {
-    // Si deadline est une chaîne, le convertir en DateTime
-    final deadlineDate = deadline is String ? DateTime.parse(deadline) : deadline;
-    final currentDate = DateTime.now();
+    try {
+      // Si deadline est une chaîne, le convertir en DateTime
+      final deadlineDate =
+          deadline is String ? DateTime.parse(deadline) : deadline;
+      final currentDate = DateTime.now();
 
-    // Calculer la différence en jours
-    final difference = deadlineDate.difference(currentDate).inDays;
+      // Calculer la différence en jours
+      final difference = deadlineDate.difference(currentDate).inDays;
 
-    // Retourner les jours restants, minimum 0 si déjà dépassé
-    return difference > 0 ? difference : 0;
-  } catch (e) {
-    // En cas d'erreur, retourner un message par défaut
-    debugPrint('Erreur lors du calcul du délai : $e');
-    return 0;
+      // Retourner les jours restants, minimum 0 si déjà dépassé
+      return difference > 0 ? difference : 0;
+    } catch (e) {
+      // En cas d'erreur, retourner un message par défaut
+      debugPrint('Erreur lors du calcul du délai : $e');
+      return 0;
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -84,10 +85,9 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
     return MainFrame(
       leftIcon: Icons.notifications_outlined,
       appBarVariant: AppBarVariant.backAndShare,
-      onLeftIconPressed: () {},
+      onActionButtonPressed: () {},
       title: challengeDetails?['titre'] ?? 'Détails Défi',
       currentIndex: 0,
-      onTabSelected: (int value) {},
       child: DefaultTabController(
         length: 2,
         child: Column(
@@ -97,7 +97,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
             SizedBox(
               width: screenWidth,
               child: Image.network(
-                challengeDetails?['imageUrl'] ?? 'https://placehold.co/600x400.png',
+                challengeDetails?['imageUrl'] ??
+                    'https://placehold.co/600x400.png',
                 fit: BoxFit.cover,
               ),
             ),
@@ -119,7 +120,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                 children: [
                   // Onglet Détails
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -134,7 +136,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                         const SizedBox(height: 16),
                         Row(
                           children: [
-                            const Icon(Icons.directions_walk, color: Colors.white),
+                            const Icon(Icons.directions_walk,
+                                color: Colors.white),
                             const SizedBox(width: 8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,11 +148,13 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                                       : challengeDetails?['time'] != 0
                                           ? '${challengeDetails?['time']} heures'
                                           : 'Objectif inconnu',
-                                  style: const TextStyle(fontSize: 16, color: Colors.white),
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.white),
                                 ),
                                 Text(
                                   challengeDetails?['type'] ?? 'Type inconnu',
-                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.grey),
                                 ),
                               ],
                             ),
@@ -164,7 +169,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                               challengeDetails?['deadline'] != null
                                   ? 'Fin dans ${_calculateDaysLeft(challengeDetails?['deadline'])} jours'
                                   : 'Fin dans N/A jours',
-                              style: const TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                           ],
                         ),
@@ -175,7 +181,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                             const SizedBox(width: 8),
                             Text(
                               '${participants.length} participants actuellement',
-                              style: const TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                           ],
                         ),
@@ -190,15 +197,20 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                                 Map<String, dynamic> requestBody = {
                                   'distanceAchieved': 0,
                                   'timeAchieved': 0,
-                                  'completionDate': DateTime.now().toIso8601String(),
+                                  'completionDate':
+                                      DateTime.now().toIso8601String(),
                                 };
 
                                 // Appel de l'API pour participer au défi
-                                await ChallengeCompletionService.addCompletionForChallenge(widget.challengeId, requestBody);
+                                await ChallengeCompletionService
+                                    .addCompletionForChallenge(
+                                        widget.challengeId, requestBody);
 
                                 // Affichage d'un message de succès
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Participation réussie au défi !')),
+                                  const SnackBar(
+                                      content: Text(
+                                          'Participation réussie au défi !')),
                                 );
 
                                 // Optionnel : Mettre à jour la liste des participants
@@ -206,7 +218,9 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                               } catch (e) {
                                 // Affichage d'un message d'erreur
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Erreur : ${e.toString()}')),
+                                  SnackBar(
+                                      content:
+                                          Text('Erreur : ${e.toString()}')),
                                 );
                               }
                             },
@@ -237,7 +251,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                               Expanded(
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.person_2_outlined, color: AppColors.primary),
+                                    const Icon(Icons.person_2_outlined,
+                                        color: AppColors.primary),
                                     const SizedBox(width: 8),
                                     Text(
                                       participant['name'] ?? 'Anonyme',

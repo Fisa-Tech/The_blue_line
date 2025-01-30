@@ -59,8 +59,8 @@ class _ActuCardState extends State<ActuCard> {
   void navigateToChallenges() {
     Navigator.pushNamed(
       context,
-      '/challenges',
-      arguments: {'filter': widget.event.id},
+      '/defi_details',
+      arguments: widget.event.id,
     );
   }
 
@@ -96,11 +96,15 @@ class _ActuCardState extends State<ActuCard> {
               children: [
                 Text(
                   utf8.decode(widget.event.name.runes.toList()),
-                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  EventService().formatEventDates(widget.event.startDate, widget.event.endDate),
+                  EventService().formatEventDates(
+                      widget.event.startDate, widget.event.endDate),
                   style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 const SizedBox(height: 8),
@@ -154,7 +158,9 @@ class _ActuCardState extends State<ActuCard> {
                     // Bouton "Participer" ou "Annuler participation"
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isParticipating ? AppColors.danger : AppColors.primary,
+                        backgroundColor: isParticipating
+                            ? AppColors.danger
+                            : AppColors.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

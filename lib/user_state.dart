@@ -67,7 +67,7 @@ class UserState extends ChangeNotifier {
 
     if (_currentUser == null) return false;
 
-    return await login(_currentUser!.email!, pass);
+    return await login(_currentUser!.email, pass);
   }
 
   /// Register user

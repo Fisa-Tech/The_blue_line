@@ -1,22 +1,22 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:myapp/user_state.dart';
 import '../Models/challenge_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-class AuthHelper {
-  static Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token'); // La clé doit correspondre à celle utilisée pour sauvegarder le token
-  }
-}
+import 'package:provider/provider.dart';
 
 class ChallengeService {
-  static const String baseUrl = 'https://blue-line-preprod.fisadle.fr/api/challenges';
-  static const String completionsUrl = 'https://blue-line-preprod.fisadle.fr/api/challenge-completions';
+  static const String baseUrl =
+      'https://blue-line-preprod.fisadle.fr/api/challenges';
+  static const String completionsUrl =
+      'https://blue-line-preprod.fisadle.fr/api/challenge-completions';
 
   // Récupérer les défis par état
-  static Future<List<Challenge>> fetchDefisByEtat(String etat) async {
-    final token = await AuthHelper.getToken();
+  static Future<List<Challenge>> fetchDefisByEtat(
+      BuildContext context, String etat) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
     if (token == null) {
       throw Exception('Token non disponible. Connectez-vous pour continuer.');
     }
@@ -38,8 +38,10 @@ class ChallengeService {
   }
 
   // Récupérer les détails d'un défi
-  static Future<Challenge> fetchDefiDetails(int id) async {
-    final token = await AuthHelper.getToken();
+  static Future<Challenge> fetchDefiDetails(
+      BuildContext context, int id) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
     if (token == null) {
       throw Exception('Token non disponible. Connectez-vous pour continuer.');
     }
@@ -60,8 +62,10 @@ class ChallengeService {
   }
 
   // Récupérer les participations d'un défi
-  static Future<List<dynamic>> fetchDefiParticipants(int challengeId) async {
-    final token = await AuthHelper.getToken();
+  static Future<List<dynamic>> fetchDefiParticipants(
+      BuildContext context, int challengeId) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
     if (token == null) {
       throw Exception('Token non disponible. Connectez-vous pour continuer.');
     }
@@ -82,8 +86,10 @@ class ChallengeService {
   }
 
   // Récupérer les défis pour un événement spécifique
-  static Future<List<Challenge>> fetchDefisByEvent(int eventId) async {
-    final token = await AuthHelper.getToken();
+  static Future<List<Challenge>> fetchDefisByEvent(
+      BuildContext context, int eventId) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
     if (token == null) {
       throw Exception('Token non disponible. Connectez-vous pour continuer.');
     }
@@ -105,8 +111,10 @@ class ChallengeService {
   }
 
   // Créer un nouveau défi
-  static Future<Challenge> createDefi(Challenge defi) async {
-    final token = await AuthHelper.getToken();
+  static Future<Challenge> createDefi(
+      BuildContext context, Challenge defi) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
     if (token == null) {
       throw Exception('Token non disponible. Connectez-vous pour continuer.');
     }
@@ -128,8 +136,10 @@ class ChallengeService {
   }
 
   // Mettre à jour un défi existant
-  static Future<Challenge> updateDefi(Challenge defi) async {
-    final token = await AuthHelper.getToken();
+  static Future<Challenge> updateDefi(
+      BuildContext context, Challenge defi) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
     if (token == null) {
       throw Exception('Token non disponible. Connectez-vous pour continuer.');
     }
@@ -151,8 +161,9 @@ class ChallengeService {
   }
 
   // Supprimer un défi
-  static Future<void> deleteDefi(int id) async {
-    final token = await AuthHelper.getToken();
+  static Future<void> deleteDefi(BuildContext context, int id) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
     if (token == null) {
       throw Exception('Token non disponible. Connectez-vous pour continuer.');
     }
@@ -170,5 +181,3 @@ class ChallengeService {
     }
   }
 }
-
-

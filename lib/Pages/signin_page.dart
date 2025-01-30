@@ -6,13 +6,12 @@ import 'package:myapp/Pages/register_page.dart' as register_page;
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/user_state.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
 
   @override
-  _SigninPageState createState() => _SigninPageState();
+  State<SigninPage> createState() => _SigninPageState();
 }
 
 class _SigninPageState extends State<SigninPage> {
@@ -56,17 +55,6 @@ class _SigninPageState extends State<SigninPage> {
 
   void _forgotPassword() {
     Navigator.pushNamed(context, '/forgotpassword');
-  }
-
-  Future<void> _saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('auth_token', token);
-    print("Token sauvegardé : $token");
-  }
-
-  Future<String?> _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token');
   }
 
   @override

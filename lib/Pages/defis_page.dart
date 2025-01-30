@@ -11,13 +11,12 @@ class DefisPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,  // Le nombre de tabs
+      length: 3, // Le nombre de tabs
       child: MainFrame(
-        leftIcon: Icons.notifications_outlined,
-        onLeftIconPressed: () {},
+        appBarVariant: AppBarVariant.notifAndProfile,
+        onActionButtonPressed: () {},
         title: 'Défis',
-        currentIndex: 0,
-        onTabSelected: (int value) {},
+        currentIndex: 1,
         bottom: const TabBar(
           indicatorColor: AppColors.textPrimary,
           labelColor: AppColors.textPrimary,
@@ -33,9 +32,9 @@ class DefisPage extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: TabBarView(
             children: [
-              _buildDefisTab('pending'),
-              _buildDefisTab('ongoing'),
-              _buildDefisTab('completed'),
+              _buildDefisTab(context, 'pending'),
+              _buildDefisTab(context, 'ongoing'),
+              _buildDefisTab(context, 'completed'),
             ],
           ),
         ),
@@ -43,16 +42,19 @@ class DefisPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDefisTab(String etat) {
+  Widget _buildDefisTab(BuildContext context, String etat) {
     return FutureBuilder<List<Challenge>>(
-      future: ChallengeService.fetchDefisByEtat(etat),
+      future: ChallengeService.fetchDefisByEtat(context, etat),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Erreur: ${snapshot.error}', style: AppTextStyles.hintText));
+          return Center(
+              child: Text('Erreur: ${snapshot.error}',
+                  style: AppTextStyles.hintText));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('Aucun défi trouvé', style: AppTextStyles.hintText));
+          return const Center(
+              child: Text('Aucun défi trouvé', style: AppTextStyles.hintText));
         } else {
           return ListView.builder(
             itemCount: snapshot.data!.length,
@@ -61,7 +63,8 @@ class DefisPage extends StatelessWidget {
               return Card(
                 color: AppColors.lightDark,
                 child: ListTile(
-                  leading: const Icon(Icons.directions_run, color: AppColors.textPrimary),
+                  leading: const Icon(Icons.directions_run,
+                      color: AppColors.textPrimary),
                   title: Text(
                     defi.titre,
                     style: AppTextStyles.bodyText1,
@@ -71,7 +74,8 @@ class DefisPage extends StatelessWidget {
                     style: AppTextStyles.bodyText2,
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, '/defi_details', arguments: defi.id);
+                    Navigator.pushNamed(context, '/defi_details',
+                        arguments: defi.id);
                   },
                 ),
               );

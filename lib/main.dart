@@ -42,19 +42,20 @@ class MyApp extends StatelessWidget {
           home: const AuthRedirectPage(), // Page de redirection initiale
           onGenerateRoute: (settings) {
             if (settings.name == '/home') {
-              return PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage());
+              return PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => const HomePage());
             }
             if (settings.name == '/register') {
               return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => RegisterPage());
+                  pageBuilder: (_, __, ___) => const RegisterPage());
             }
             if (settings.name == '/login') {
               return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => SigninPage());
+                  pageBuilder: (_, __, ___) => const SigninPage());
             }
             if (settings.name == '/profil') {
               return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => ProfileSetupPage());
+                  pageBuilder: (_, __, ___) => const ProfileSetupPage());
             }
             if (settings.name == '/forgotpassword') {
               return PageRouteBuilder(
@@ -62,15 +63,15 @@ class MyApp extends StatelessWidget {
             }
             if (settings.name == '/welcome') {
               return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => WelcomePage());
+                  pageBuilder: (_, __, ___) => const WelcomePage());
             }
             if (settings.name == '/notifications') {
               return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => NotificationsPage());
+                  pageBuilder: (_, __, ___) => const NotificationsPage());
             }
             if (settings.name == '/news') {
               return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => ActualitesPage());
+                  pageBuilder: (_, __, ___) => const ActualitesPage());
             }
             if (settings.name == '/blueline') {
               return PageRouteBuilder(
@@ -78,19 +79,20 @@ class MyApp extends StatelessWidget {
             }
             if (settings.name == '/settings') {
               return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => SettingsPage());
+                  pageBuilder: (_, __, ___) => const SettingsPage());
             }
             if (settings.name == '/settings/profile_edit') {
               return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => ProfileEditPage());
+                  pageBuilder: (_, __, ___) => const ProfileEditPage());
             }
             if (settings.name == '/settings/edit_password') {
               return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => EditPasswordPage());
+                  pageBuilder: (_, __, ___) => const EditPasswordPage());
             }
             if (settings.name == '/settings/notification_settings') {
               return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => NotificationSettingsPage());
+                  pageBuilder: (_, __, ___) =>
+                      const NotificationSettingsPage());
             }
             if (settings.name == '/defi_details') {
               final challengeId = settings.arguments as int;
@@ -100,8 +102,7 @@ class MyApp extends StatelessWidget {
               );
             }
             if (settings.name == '/defis') {
-              return MaterialPageRoute(
-                  builder: (context) => const DefisPage());
+              return MaterialPageRoute(builder: (context) => const DefisPage());
             }
 
             // Retourner null si aucune route correspondante n'est trouvée
@@ -167,4 +168,3 @@ class AuthRedirectPage extends StatelessWidget {
     );
   }
 }
-
