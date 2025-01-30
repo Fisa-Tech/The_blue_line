@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/Components/button_widget.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Components/setting_tile.dart';
 import 'package:myapp/Components/switch.dart';
@@ -47,8 +46,6 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return MainFrame(
       leftIcon: Icons.notifications_outlined,
       onActionButtonPressed: () {},

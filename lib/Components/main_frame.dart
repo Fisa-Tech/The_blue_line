@@ -46,7 +46,7 @@ class MainFrame extends StatelessWidget {
                 Navigator.pushNamed(context, '/home');
                 break;
               case 1:
-                Navigator.pushNamed(context, '/challenges');
+                Navigator.pushNamed(context, '/defis');
                 break;
               case 2:
                 Navigator.pushNamed(context, '/news');
@@ -101,7 +101,7 @@ class MainFrame extends StatelessWidget {
         bottom: bottom,
         elevation: 0, // Remove shadow
         leading: IconButton(
-          icon: Icon(Icons.notifications_none_outlined,
+          icon: const Icon(Icons.notifications_none_outlined,
               color: Colors.white, size: 26),
           onPressed: () {
             Navigator.pushNamed(context, '/notifications');
