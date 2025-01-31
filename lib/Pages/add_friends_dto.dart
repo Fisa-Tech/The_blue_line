@@ -1,7 +1,7 @@
 class AddFriendsDto {
   final int id;
-  final int idAsker;
-  final int idReceiver;
+  final String idAsker;
+  final String idReceiver;
   final String status;
 
   AddFriendsDto({

@@ -16,7 +16,7 @@ class AddFriendsPage extends StatefulWidget {
 class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProviderStateMixin {
   final TextEditingController _friendIdController = TextEditingController();
   late AddFriendsService _addFriendsService;
-
+  
   List<AddFriendsDto> sentFriends = [];
   List<AddFriendsDto> receivedFriends = [];
   late TabController _tabController;
@@ -24,7 +24,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _addFriendsService = AddFriendsService(baseUrl: 'https://example.com');
+    _addFriendsService = AddFriendsService(baseUrl: 'https://blue-line-preprod.fisadle.fr');
     _tabController = TabController(length: 2, vsync: this);
 
     _fetchFriends();
@@ -38,43 +38,49 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
 
   Future<void> _fetchFriends() async {
     try {
-      final sentList = await _addFriendsService.getPendingRelationships();
-      final receivedList = await _addFriendsService.getPendingRelationships();
+      final pendingList = await _addFriendsService.getPendingRelationships();
+      final friendsList = await _addFriendsService.getFriends();
       setState(() {
-        sentFriends = sentList;
-        receivedFriends = receivedList;
+        sentFriends = pendingList.where((friend) => friend.status == 'pending').toList();
+        receivedFriends = pendingList.where((friend) => friend.status == 'received').toList();
       });
     } catch (e) {
       print("Erreur lors du chargement des amis : $e");
     }
   }
 
-  Future<void> _addFriend(String friendId) async {
+    Future<void> _addFriend(String friendId) async {
     try {
-      await _addFriendsService.createRelationship(int.parse(friendId));
+      if (friendId.isEmpty) {
+        throw FormatException("L'ID de l'ami ne peut pas être vide.");
+      }
+
+      await _addFriendsService.createRelationship(friendId);
+
       setState(() {
         sentFriends.add(AddFriendsDto(
           id: DateTime.now().millisecondsSinceEpoch,
-          idAsker: int.parse(friendId),
-          idReceiver: 0, // À définir en fonction de votre logique
+          idAsker: friendId, // Laisse en String
+          idReceiver: "", // À définir selon ta logique
           status: 'En attente',
         ));
       });
+
       _friendIdController.clear();
     } catch (e) {
       print("Erreur lors de l'ajout de l'ami : $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("L'ami n'existe pas.")),
+        SnackBar(content: Text("L'ID de l'ami est invalide ou n'existe pas.")),
       );
     }
   }
 
+
+
   Future<void> _removeFriend(AddFriendsDto friend) async {
     try {
-      await _addFriendsService.deleteRelationship(friend.idReceiver);
-      setState(() {
-        sentFriends.remove(friend);
-      });
+      await _addFriendsService.deleteRelationship(friend.id);
+      _fetchFriends();
     } catch (e) {
       print("Erreur lors de la suppression de l'ami : $e");
     }
@@ -83,9 +89,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
   Future<void> _acceptFriend(AddFriendsDto friend) async {
     try {
       await _addFriendsService.updateRelationshipStatus(friend.id, 'accepted');
-      setState(() {
-        receivedFriends.remove(friend);
-      });
+      _fetchFriends();
     } catch (e) {
       print("Erreur lors de l'acceptation de l'ami : $e");
     }
@@ -94,9 +98,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
   Future<void> _rejectFriend(AddFriendsDto friend) async {
     try {
       await _addFriendsService.updateRelationshipStatus(friend.id, 'rejected');
-      setState(() {
-        receivedFriends.remove(friend);
-      });
+      _fetchFriends();
     } catch (e) {
       print("Erreur lors du rejet de l'ami : $e");
     }

@@ -8,7 +8,7 @@ class AddFriendsService {
   AddFriendsService({required this.baseUrl});
 
   // Créer une demande de relation
-  Future<void> createRelationship(int userReceiverId) async {
+  Future<void> createRelationship(String userReceiverId) async {
     final url = Uri.parse('$baseUrl/api/relationships/$userReceiverId');
     final response = await http.post(url);
 
