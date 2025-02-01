@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myapp/Pages/avatar_customing_page.dart';
 import 'package:myapp/Pages/edit_password_page.dart';
 import 'package:myapp/Pages/actualites_page.dart';
 import 'package:myapp/Pages/blue_line_page.dart';
@@ -103,6 +104,9 @@ class MyApp extends StatelessWidget {
             }
             if (settings.name == '/defis') {
               return MaterialPageRoute(builder: (context) => const DefisPage());
+            }
+            if (settings.name == '/avatar') {
+              return MaterialPageRoute(builder: (context) => AvatarCustomingPage());
             }
 
             // Retourner null si aucune route correspondante n'est trouvée

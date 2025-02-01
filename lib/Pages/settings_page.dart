@@ -1,4 +1,6 @@
+import 'package:avatar_maker/avatar_maker.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttermoji/fluttermojiCircleAvatar.dart';
 import 'package:myapp/Components/button_widget.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Components/setting_tile.dart';
@@ -65,16 +67,19 @@ class _SettingsPageState extends State<SettingsPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Section Profil
-              CircleAvatar(
-                radius: avatarRadius,
-                backgroundImage: const NetworkImage(
-                  'https://www.gravatar.com/avatar?s=2048',
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/avatar');
+                },
+                child: AvatarMakerAvatar(
+                  radius: avatarRadius,
+                  backgroundColor: AppColors.lightDark,
                 ),
               ),
               const SizedBox(height: 16),
-              Text(userState.currentUser!.firstname!,
+              Text(userState.currentUser?.firstname ?? 'Nom inconnu',
                   style: AppTextStyles.headline1),
-              Text(userState.currentUser!.email, style: AppTextStyles.hintText),
+              Text(userState.currentUser?.email ?? 'Email inconnu', style: AppTextStyles.hintText),
               const SizedBox(height: 16),
               Align(
                 alignment: Alignment.center,

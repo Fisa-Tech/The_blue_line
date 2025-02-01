@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               const SizedBox(height: 32.0),
               Text(
-                'Salut $firstName 👋',
+                'Salut ${utf8.decode(firstName.runes.toList())} 👋',
                 style: AppTextStyles.headline1,
               ),
               const SizedBox(height: 16.0),

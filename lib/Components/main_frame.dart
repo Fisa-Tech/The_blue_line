@@ -1,12 +1,24 @@
+import 'package:avatar_maker/avatar_maker.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttermoji/fluttermoji.dart';
+import 'package:fluttermoji/fluttermojiController.dart';
+import 'package:fluttermoji/fluttermojiSaveWidget.dart';
+import 'package:myapp/Models/user_dto.dart';
+import 'package:myapp/Pages/avatar_customing_page.dart';
+import 'package:myapp/Services/user_service.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
+import 'package:myapp/user_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+
 
 enum AppBarVariant {
   notifAndProfile,
   backAndProfile,
   backAndLogout,
-  backAndShare
+  backAndShare,
+  backAndSave,
 }
 
 class MainFrame extends StatelessWidget {
@@ -119,10 +131,9 @@ class MainFrame extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(context, '/settings');
               },
-              child: const CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://www.gravatar.com/avatar',
-                ),
+              child: AvatarMakerAvatar(
+                radius: 20,
+                backgroundColor: AppColors.lightDark,
               ),
             ),
           ),
@@ -151,10 +162,9 @@ class MainFrame extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(context, '/settings');
               },
-              child: const CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://www.gravatar.com/avatar',
-                ),
+              child: AvatarMakerAvatar(
+                radius: 20,
+                backgroundColor: AppColors.lightDark,
               ),
             ),
           ),
@@ -207,6 +217,61 @@ class MainFrame extends StatelessWidget {
               onPressed: () {},
               icon: const Icon(Icons.share, color: AppColors.textPrimary),
             ),
+          ),
+        ],
+      );
+    } else if (appBarVariant == AppBarVariant.backAndSave) {
+      return AppBar(
+        scrolledUnderElevation: 0.0,
+        backgroundColor: AppColors.dark,
+        bottom: bottom,
+        elevation: 0, // Remove shadow
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          title,
+          style: AppTextStyles.headline2,
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: AvatarMakerSaveWidget(
+              theme: AvatarMakerThemeData(
+                iconColor: AppColors.textPrimary
+              ),
+              onTap: () {
+                AvatarMakerController.getJsonOptions().then((value) {
+                  UserState userState = Provider.of<UserState>(context, listen: false);
+                  UserDto user = userState.currentUser!;
+                  UserDto updatedUser = UserDto(
+                    id: user.id,
+                    email: user.email,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    gender: user.gender,
+                    avatar: value,
+                    status: user.status,
+                  );
+                  userState.updateUser(updatedUser).then((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Avatar mis à jour avec succès')),
+                    );
+                    Navigator.pop(context);
+                  }).catchError((error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Erreur lors de la mise à jour')),
+                    );
+                  });
+                }).catchError((error) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Erreur lors de l\'encodage de l\'avatar')),
+                  );
+                });
+              }
+          ),
           ),
         ],
       );
