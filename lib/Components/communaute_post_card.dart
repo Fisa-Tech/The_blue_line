@@ -39,7 +39,8 @@ class CommunautePostCard extends StatelessWidget {
             ),
             title: Text(
               profileName,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
           // Image du post
@@ -47,7 +48,6 @@ class CommunautePostCard extends StatelessWidget {
             height: 150,
             width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
               color: Colors.grey[400], // Couleur de placeholder pour l'image
               image: DecorationImage(
                 image: NetworkImage(postImageUrl),
@@ -63,12 +63,14 @@ class CommunautePostCard extends StatelessWidget {
               children: [
                 Text(
                   postTitle,
-                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 4),
                 Text(
                   postSubtitle,
-                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -76,24 +78,6 @@ class CommunautePostCard extends StatelessWidget {
                   style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ],
-            ),
-          ),
-          // Bouton "like"
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Action pour le like
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  backgroundColor: Colors.blue,
-                  padding: const EdgeInsets.all(12),
-                ),
-                child: const Icon(Icons.favorite_border, color: Colors.white),
-              ),
             ),
           ),
         ],
@@ -113,7 +97,8 @@ class CommunautePage extends StatelessWidget {
         "profileName": "Ami $index",
         "postTitle": "Titre $index",
         "postSubtitle": "Sous-titre $index",
-        "postText": "Ceci est le contenu du post $index. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "postText":
+            "Ceci est le contenu du post $index. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         "postImageUrl": "https://via.placeholder.com/150", // Placeholder image
       };
     });

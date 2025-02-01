@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Components/main_frame.dart';
+import 'package:myapp/Services/toast_service.dart';
 import 'package:myapp/Theme/app_colors.dart';
-import 'package:myapp/Theme/app_text_styles.dart';
 import 'package:myapp/Components/friendCard.dart';
 import '../Services/friends_service.dart';
 import '../Models/add_friends_dto.dart';
@@ -10,13 +10,12 @@ class AddFriendsPage extends StatefulWidget {
   const AddFriendsPage({super.key});
 
   @override
-  _AddFriendsPageState createState() => _AddFriendsPageState();
+  State<AddFriendsPage> createState() => _AddFriendsPageState();
 }
 
 class _AddFriendsPageState extends State<AddFriendsPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController _friendIdController = TextEditingController();
-  late FriendsService _addFriendsService;
 
   List<AddFriendsDto> sentFriends = [];
   List<AddFriendsDto> receivedFriends = [];
@@ -25,8 +24,6 @@ class _AddFriendsPageState extends State<AddFriendsPage>
   @override
   void initState() {
     super.initState();
-    _addFriendsService =
-        FriendsService(baseUrl: 'https://blue-line-preprod.fisadle.fr');
     _tabController = TabController(length: 2, vsync: this);
 
     _fetchFriends();
@@ -40,8 +37,7 @@ class _AddFriendsPageState extends State<AddFriendsPage>
 
   Future<void> _fetchFriends() async {
     try {
-      final pendingList = await _addFriendsService.getPendingRelationships();
-      final friendsList = await _addFriendsService.getFriends();
+      final pendingList = await FriendsService.getPendingRelationships(context);
       setState(() {
         sentFriends =
             pendingList.where((friend) => friend.status == 'pending').toList();
@@ -49,17 +45,17 @@ class _AddFriendsPageState extends State<AddFriendsPage>
             pendingList.where((friend) => friend.status == 'received').toList();
       });
     } catch (e) {
-      print("Erreur lors du chargement des amis : $e");
+      ToastService.showError("Erreur lors du chargement des amis : $e");
     }
   }
 
   Future<void> _addFriend(String friendId) async {
     try {
       if (friendId.isEmpty) {
-        throw FormatException("L'ID de l'ami ne peut pas être vide.");
+        throw Exception("L'ID de l'ami ne peut pas être vide.");
       }
 
-      await _addFriendsService.createRelationship(friendId);
+      await FriendsService.createRelationship(context, friendId);
 
       setState(() {
         sentFriends.add(AddFriendsDto(
@@ -72,37 +68,36 @@ class _AddFriendsPageState extends State<AddFriendsPage>
 
       _friendIdController.clear();
     } catch (e) {
-      print("Erreur lors de l'ajout de l'ami : $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("L'ID de l'ami est invalide ou n'existe pas.")),
-      );
+      ToastService.showError("L'ID de l'ami est invalide ou n'existe pas.");
     }
   }
 
   Future<void> _removeFriend(AddFriendsDto friend) async {
     try {
-      await _addFriendsService.deleteRelationship(friend.id);
-      _fetchFriends();
+      await FriendsService.deleteRelationship(context, friend.id);
+      await _fetchFriends();
     } catch (e) {
-      print("Erreur lors de la suppression de l'ami : $e");
+      ToastService.showError("Erreur lors de la suppression de l'ami : $e");
     }
   }
 
   Future<void> _acceptFriend(AddFriendsDto friend) async {
     try {
-      await _addFriendsService.updateRelationshipStatus(friend.id, 'accepted');
-      _fetchFriends();
+      await FriendsService.updateRelationshipStatus(
+          context, friend.id, 'accepted');
+      await _fetchFriends();
     } catch (e) {
-      print("Erreur lors de l'acceptation de l'ami : $e");
+      ToastService.showError("Erreur lors de l'acceptation de l'ami : $e");
     }
   }
 
   Future<void> _rejectFriend(AddFriendsDto friend) async {
     try {
-      await _addFriendsService.updateRelationshipStatus(friend.id, 'rejected');
-      _fetchFriends();
+      await FriendsService.updateRelationshipStatus(
+          context, friend.id, 'rejected');
+      await _fetchFriends();
     } catch (e) {
-      print("Erreur lors du rejet de l'ami : $e");
+      ToastService.showError("Erreur lors du rejet de l'ami : $e");
     }
   }
 
@@ -110,6 +105,8 @@ class _AddFriendsPageState extends State<AddFriendsPage>
   Widget build(BuildContext context) {
     return MainFrame(
       appBarVariant: AppBarVariant.backAndProfile,
+      currentIndex: 0,
+      title: 'Ajout d\'amis',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -120,7 +117,7 @@ class _AddFriendsPageState extends State<AddFriendsPage>
                 Expanded(
                   child: TextField(
                     controller: _friendIdController,
-                    style: TextStyle(color: AppColors.textPrimary),
+                    style: const TextStyle(color: AppColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: 'Entrez le friendID',
                       border: OutlineInputBorder(
@@ -129,7 +126,7 @@ class _AddFriendsPageState extends State<AddFriendsPage>
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {
                     final friendId = _friendIdController.text;
@@ -137,7 +134,7 @@ class _AddFriendsPageState extends State<AddFriendsPage>
                       _addFriend(friendId);
                     }
                   },
-                  child: Text('Ajouter'),
+                  child: const Text('Ajouter'),
                 ),
               ],
             ),
@@ -164,8 +161,6 @@ class _AddFriendsPageState extends State<AddFriendsPage>
           ),
         ],
       ),
-      currentIndex: 0,
-      title: 'Ajout d\'amis',
     );
   }
 

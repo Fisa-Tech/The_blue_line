@@ -17,7 +17,7 @@ class CommunautePage extends StatelessWidget {
       child: MainFrame(
         title: 'Communauté',
         currentIndex: 3,
-        appBarVariant: AppBarVariant.notifAndProfile,
+        appBarVariant: AppBarVariant.friendAndProfile,
         bottom: const TabBar(
           indicatorColor: AppColors.textPrimary,
           labelColor: AppColors.textPrimary,

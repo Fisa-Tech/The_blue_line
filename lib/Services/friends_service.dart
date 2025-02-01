@@ -1,15 +1,15 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/Services/toast_service.dart';
 import '../Models/add_friends_dto.dart';
 
 class FriendsService {
-  final String baseUrl; // Base URL de l'API
-
-  FriendsService({required this.baseUrl});
+  static const String baseUrl = 'https://blue-line-preprod.fisadle.fr';
 
   // Créer une demande de relation
-  Future<void> createRelationship(String userReceiverId) async {
+  static Future<void> createRelationship(
+      BuildContext context, String userReceiverId) async {
     final url = Uri.parse('$baseUrl/api/relationships/$userReceiverId');
     final response = await http.post(url);
 
@@ -21,8 +21,8 @@ class FriendsService {
   }
 
   // Mettre à jour le statut d'une relation
-  Future<void> updateRelationshipStatus(
-      int relationshipId, String status) async {
+  static Future<void> updateRelationshipStatus(
+      BuildContext context, int relationshipId, String status) async {
     final url = Uri.parse('$baseUrl/api/relationships/$relationshipId/status');
     final body = jsonEncode({'status': status});
     final headers = {'Content-Type': 'application/json'};
@@ -37,7 +37,8 @@ class FriendsService {
   }
 
   // Obtenir les demandes de relations en attente
-  Future<List<AddFriendsDto>> getPendingRelationships() async {
+  static Future<List<AddFriendsDto>> getPendingRelationships(
+      BuildContext context) async {
     final url = Uri.parse('$baseUrl/api/relationships/pending');
     final response = await http.get(url);
 
@@ -51,7 +52,7 @@ class FriendsService {
   }
 
   // Obtenir la liste des amis
-  Future<List<AddFriendsDto>> getFriends() async {
+  static Future<List<AddFriendsDto>> getFriends(BuildContext context) async {
     final url = Uri.parse('$baseUrl/api/relationships/friends');
     final response = await http.get(url);
 
@@ -64,12 +65,13 @@ class FriendsService {
   }
 
   // Supprimer une relation
-  Future<void> deleteRelationship(int friendId) async {
+  static Future<void> deleteRelationship(
+      BuildContext context, int friendId) async {
     final url = Uri.parse('$baseUrl/api/relationships/$friendId');
     final response = await http.delete(url);
 
     if (response.statusCode == 204) {
-      print("Relationship deleted successfully.");
+      ToastService.showSuccess("Relationship deleted successfully.");
     } else {
       throw Exception("Failed to delete relationship: ${response.body}");
     }
