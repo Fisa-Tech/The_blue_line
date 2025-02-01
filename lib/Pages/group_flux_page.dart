@@ -16,16 +16,19 @@ class GroupFeedPage extends StatelessWidget {
         "profileName": "Ami $index",
         "postTitle": "Titre $index",
         "postSubtitle": "Sous-titre $index",
-        "postText": "Ceci est le contenu du post $index. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "postImageUrl": "https://as2.ftcdn.net/v2/jpg/01/30/27/55/1000_F_130275513_rISEfEpLEX5AGgUUBGbLsGMqgjL1JbP1.jpg", // Placeholder image
+        "postText":
+            "Ceci est le contenu du post $index. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "postImageUrl":
+            "https://as2.ftcdn.net/v2/jpg/01/30/27/55/1000_F_130275513_rISEfEpLEX5AGgUUBGbLsGMqgjL1JbP1.jpg", // Placeholder image
       };
     });
 
     return MainFrame(
       leftIcon: Icons.arrow_back,
-      onLeftIconPressed: () {
+      onActionButtonPressed: () {
         // Action lorsque l'icône "Ajouter une personne" est pressée
-        Navigator.pushNamed(context, '/home'); // Redirection vers la page ajout d'amis
+        Navigator.pushNamed(
+            context, '/home'); // Redirection vers la page ajout d'amis
       },
       child: ListView.builder(
         itemCount: posts.length,
@@ -41,9 +44,6 @@ class GroupFeedPage extends StatelessWidget {
         },
       ),
       currentIndex: 0,
-      onTabSelected: (index) {
-        // Gérer la sélection de l'onglet
-      },
       title: '$groupName',
       appBarVariant: AppBarVariant.backAndProfile,
     );

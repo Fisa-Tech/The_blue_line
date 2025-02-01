@@ -163,9 +163,6 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
         ],
       ),
       currentIndex: 0,
-      onTabSelected: (index) {
-        Navigator.pushNamed(context, index == 0 ? '/home' : '/defis');
-      },
       title: 'Ajout d\'amis',
     );
   }

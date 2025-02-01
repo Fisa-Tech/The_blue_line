@@ -46,33 +46,32 @@ class ApiService {
 
   // Méthode PUT
   Future<dynamic> put(String endpoint, Map<String, dynamic> data,
-    {Map<String, String>? headers}) async {
-  final url = Uri.parse('$_baseUrl/$endpoint');
-  
-  // Ajouter ou fusionner les headers
-  final updatedHeaders = {
-    'Content-Type': 'application/json', // Obligatoire pour JSON
-    ...?headers, // Fusionne les headers existants si fournis
-  };
+      {Map<String, String>? headers}) async {
+    final url = Uri.parse('$_baseUrl/$endpoint');
 
-  print('PUT URL: $url');
-  print('PUT Data: $data');
-  print('PUT Headers: $updatedHeaders');
+    // Ajouter ou fusionner les headers
+    final updatedHeaders = {
+      'Content-Type': 'application/json', // Obligatoire pour JSON
+      ...?headers, // Fusionne les headers existants si fournis
+    };
 
-  final response = await http.put(
-    url,
-    body: jsonEncode(data), // S'assurer que les données sont encodées en JSON
-    headers: updatedHeaders,
-  );
+    print('PUT URL: $url');
+    print('PUT Data: $data');
+    print('PUT Headers: $updatedHeaders');
 
-  print('PUT Response Code: ${response.statusCode}');
-  print('PUT Response Body: ${response.body}');
+    final response = await http.put(
+      url,
+      body: jsonEncode(data), // S'assurer que les données sont encodées en JSON
+      headers: updatedHeaders,
+    );
 
-  if (response.statusCode == 200 || response.statusCode == 204) {
-    return response.body.isNotEmpty ? jsonDecode(response.body) : null;
-  } else {
-    throw Exception('Erreur ${response.statusCode}: ${response.body}');
+    print('PUT Response Code: ${response.statusCode}');
+    print('PUT Response Body: ${response.body}');
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return response.body.isNotEmpty ? jsonDecode(response.body) : null;
+    } else {
+      throw Exception('Erreur ${response.statusCode}: ${response.body}');
+    }
   }
-}
-
 }

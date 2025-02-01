@@ -17,8 +17,7 @@ class CommunautePage extends StatelessWidget {
       child: MainFrame(
         title: 'Communauté',
         currentIndex: 0,
-        onTabSelected: (int value) {},
-        appBarVariant: AppBarVariant.friendsAndProfile,
+        appBarVariant: AppBarVariant.backAndProfile,
         bottom: const TabBar(
           indicatorColor: AppColors.textPrimary,
           labelColor: AppColors.textPrimary,
@@ -54,11 +53,13 @@ class CommunautePage extends StatelessWidget {
         children: [
           SvgPicture.asset(
             "assets/img/logo.svg",
-            height: MediaQuery.of(context).size.height * 0.12, // Ajustez la taille du logo
+            height: MediaQuery.of(context).size.height *
+                0.12, // Ajustez la taille du logo
           ),
           const SizedBox(height: 30), // Espacement entre le logo et le texte
           Container(
-            width: MediaQuery.of(context).size.width * 0.9, // Par exemple, 90% de la largeur de l'écran
+            width: MediaQuery.of(context).size.width *
+                0.9, // Par exemple, 90% de la largeur de l'écran
             child: const Text(
               'Abonnez-vous aux profils de vos amis pour voir leurs activités',
               style: AppTextStyles.bodyText1,
@@ -67,14 +68,16 @@ class CommunautePage extends StatelessWidget {
           ),
           const SizedBox(height: 60),
           Container(
-            width: MediaQuery.of(context).size.width * 0.6, // Par exemple, 60% de la largeur de l'écran
+            width: MediaQuery.of(context).size.width *
+                0.6, // Par exemple, 60% de la largeur de l'écran
             child: BLElevatedButton(
               onPressed: () {
                 // Naviguer vers la page pour ajouter des amis
                 Navigator.pushNamed(context, '/add-friends');
               },
               text: 'Ajouter des amis',
-              variant: ButtonVariant.primary, // Choisissez la variante souhaitée
+              variant:
+                  ButtonVariant.primary, // Choisissez la variante souhaitée
             ),
           ),
         ],
@@ -90,8 +93,10 @@ class CommunautePage extends StatelessWidget {
           "profileName": "Ami $index",
           "postTitle": "Titre du post $index",
           "postSubtitle": "Sous-titre du post $index",
-          "postText": "Ceci est le contenu du post $index. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-          "postImageUrl": "https://as2.ftcdn.net/v2/jpg/01/30/27/55/1000_F_130275513_rISEfEpLEX5AGgUUBGbLsGMqgjL1JbP1.jpg", // Image temporaire
+          "postText":
+              "Ceci est le contenu du post $index. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          "postImageUrl":
+              "https://as2.ftcdn.net/v2/jpg/01/30/27/55/1000_F_130275513_rISEfEpLEX5AGgUUBGbLsGMqgjL1JbP1.jpg", // Image temporaire
         };
 
         return CommunautePostCard(
@@ -105,7 +110,7 @@ class CommunautePage extends StatelessWidget {
     );
   }
 
-    // Widget pour afficher les groupes de l'utilisateur
+  // Widget pour afficher les groupes de l'utilisateur
   Widget _buildGroupesContent() {
     // Liste fictive des groupes (remplace par les données réelles)
     final groupes = [
@@ -134,14 +139,13 @@ class CommunautePage extends StatelessWidget {
         final group = groupes[index];
         return GroupCard(
           groupName: group["name"]!,
-          groupSlogan: group["slogan"]!, 
-          onTap: () { 
+          groupSlogan: group["slogan"]!,
+          onTap: () {
             //naviguer à la page /login avec en parametre le nom de groupe
             Navigator.pushNamed(context, '/login', arguments: group["name"]);
-           },
+          },
         );
       },
     );
   }
-
 }
