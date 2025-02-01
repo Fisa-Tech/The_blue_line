@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/Components/form_text_field.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Services/toast_service.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Components/friendCard.dart';
+import 'package:myapp/Theme/app_text_styles.dart';
+import 'package:myapp/user_state.dart';
 import '../Services/friends_service.dart';
 import '../Models/add_friends_dto.dart';
+import 'package:provider/provider.dart';
 
 class AddFriendsPage extends StatefulWidget {
   const AddFriendsPage({super.key});
@@ -15,10 +19,11 @@ class AddFriendsPage extends StatefulWidget {
 
 class _AddFriendsPageState extends State<AddFriendsPage>
     with SingleTickerProviderStateMixin {
+  late UserState userState = Provider.of<UserState>(context, listen: false);
   final TextEditingController _friendIdController = TextEditingController();
 
-  List<AddFriendsDto> sentFriends = [];
-  List<AddFriendsDto> receivedFriends = [];
+  List<AddFriendsDto> friends = [];
+  List<AddFriendsDto> pendingFriends = [];
   late TabController _tabController;
 
   @override
@@ -38,11 +43,10 @@ class _AddFriendsPageState extends State<AddFriendsPage>
   Future<void> _fetchFriends() async {
     try {
       final pendingList = await FriendsService.getPendingRelationships(context);
+      final friendsList = await FriendsService.getFriends(context);
       setState(() {
-        sentFriends =
-            pendingList.where((friend) => friend.status == 'pending').toList();
-        receivedFriends =
-            pendingList.where((friend) => friend.status == 'received').toList();
+        friends = friendsList;
+        pendingFriends = pendingList;
       });
     } catch (e) {
       ToastService.showError("Erreur lors du chargement des amis : $e");
@@ -58,7 +62,7 @@ class _AddFriendsPageState extends State<AddFriendsPage>
       await FriendsService.createRelationship(context, friendId);
 
       setState(() {
-        sentFriends.add(AddFriendsDto(
+        friends.add(AddFriendsDto(
           id: DateTime.now().millisecondsSinceEpoch,
           idAsker: friendId, // Laisse en String
           idReceiver: "", // À définir selon ta logique
@@ -111,30 +115,59 @@ class _AddFriendsPageState extends State<AddFriendsPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
+                  child: BLFormTextField(
                     controller: _friendIdController,
-                    style: const TextStyle(color: AppColors.textPrimary),
-                    decoration: InputDecoration(
-                      hintText: 'Entrez le friendID',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
+                    hintText: 'ID de l\'ami',
                   ),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: () {
-                    final friendId = _friendIdController.text;
-                    if (friendId.isNotEmpty) {
-                      _addFriend(friendId);
-                    }
-                  },
-                  child: const Text('Ajouter'),
+                    onPressed: () {
+                      final friendId = _friendIdController.text;
+                      if (friendId.isNotEmpty) {
+                        _addFriend(friendId);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(34, 48),
+                      backgroundColor: AppColors.primary,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                    ),
+                    child: const Text(
+                      '+',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    )),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 14, horizontal: 12),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.lightDark,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      'Mon id: ${userState.currentUser?.friendId}',
+                      style: const TextStyle(
+                          color: AppColors.disabled, fontSize: 16),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -146,16 +179,16 @@ class _AddFriendsPageState extends State<AddFriendsPage>
             unselectedLabelColor: AppColors.lightGrey,
             dividerColor: AppColors.lightGrey,
             tabs: const [
-              Tab(text: 'Envoyé'),
-              Tab(text: 'Reçu'),
+              Tab(text: 'Amis'),
+              Tab(text: 'Invitations'),
             ],
           ),
           Expanded(
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildSentFriendsContent(),
-                _buildReceivedFriendsContent(),
+                _buildFriendsContent(),
+                _buildPendingFriendsContent(),
               ],
             ),
           ),
@@ -164,11 +197,15 @@ class _AddFriendsPageState extends State<AddFriendsPage>
     );
   }
 
-  Widget _buildSentFriendsContent() {
+  Widget _buildFriendsContent() {
+    if (friends.isEmpty) {
+      return const Center(
+          child: Text('Aucun ami', style: AppTextStyles.bodyText1));
+    }
     return ListView.builder(
-      itemCount: sentFriends.length,
+      itemCount: friends.length,
       itemBuilder: (context, index) {
-        final friend = sentFriends[index];
+        final friend = friends[index];
         return FriendCard(
           friend: {
             'first_name': friend.idAsker.toString(),
@@ -184,11 +221,15 @@ class _AddFriendsPageState extends State<AddFriendsPage>
     );
   }
 
-  Widget _buildReceivedFriendsContent() {
+  Widget _buildPendingFriendsContent() {
+    if (pendingFriends.isEmpty) {
+      return const Center(
+          child: Text('Aucune invitation', style: AppTextStyles.bodyText1));
+    }
     return ListView.builder(
-      itemCount: receivedFriends.length,
+      itemCount: pendingFriends.length,
       itemBuilder: (context, index) {
-        final friend = receivedFriends[index];
+        final friend = pendingFriends[index];
         return FriendCard(
           friend: {
             'first_name': friend.idAsker.toString(),

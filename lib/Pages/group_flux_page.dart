@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Components/communaute_post_card.dart';
 import 'package:myapp/Components/main_frame.dart';
-import 'package:myapp/Theme/app_colors.dart';
-import 'package:myapp/Theme/app_text_styles.dart';
 
 class GroupFeedPage extends StatelessWidget {
   final String groupName;
@@ -30,6 +28,9 @@ class GroupFeedPage extends StatelessWidget {
         Navigator.pushNamed(
             context, '/home'); // Redirection vers la page ajout d'amis
       },
+      currentIndex: 0,
+      title: '$groupName',
+      appBarVariant: AppBarVariant.backAndProfile,
       child: ListView.builder(
         itemCount: posts.length,
         itemBuilder: (context, index) {
@@ -43,9 +44,6 @@ class GroupFeedPage extends StatelessWidget {
           );
         },
       ),
-      currentIndex: 0,
-      title: '$groupName',
-      appBarVariant: AppBarVariant.backAndProfile,
     );
   }
 }
