@@ -76,12 +76,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   children: [
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Notification app 1',
+                      title: 'Activer les notifications',
                       trailing: BLSwitch(
-                        value: notifApp1,
+                        value: true,
                         onChanged: (value) {
                           setState(() {
-                            notifApp1 = value;
+                            notifApp1 = false;
                           });
                           _savePreference('notifApp1', value);
                         },
@@ -93,9 +93,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Notification app 2',
+                      title: 'Notification défis',
                       trailing: BLSwitch(
-                        value: notifApp2,
+                        value: true,
                         onChanged: (value) {
                           setState(() {
                             notifApp2 = value;
@@ -106,7 +106,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Notification app 3',
+                      title: 'Notification évenements',
                       trailing: BLSwitch(
                         value: notifApp3,
                         onChanged: (value) {
@@ -140,7 +140,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   children: [
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Notification amis 1',
+                      title: 'Activités d\'amis',
                       trailing: BLSwitch(
                         value: notifAmis1,
                         onChanged: (value) {
@@ -157,9 +157,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Notification amis 2',
+                      title: 'Défis d\amis',
                       trailing: BLSwitch(
-                        value: notifAmis2,
+                        value: true,
                         onChanged: (value) {
                           setState(() {
                             notifAmis2 = value;

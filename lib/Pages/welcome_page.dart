@@ -56,7 +56,7 @@ class WelcomePage extends StatelessWidget {
                       children: [
                         // Titres
                         Text(
-                          "Welcome BG",
+                          "Lancez-vous !",
                           style: TextStyle(
                             height: 1.2,
                             fontSize: width * 0.1, // 10% de la largeur de l'écran
@@ -66,7 +66,7 @@ class WelcomePage extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          "Ce soir c'est running tacos",
+                          "Rejoignez l'application sportive de l'UPHF",
                           style: TextStyle(
                             fontSize: width * 0.04, // 4% de la largeur de l'écran
                             fontWeight: FontWeight.w300,

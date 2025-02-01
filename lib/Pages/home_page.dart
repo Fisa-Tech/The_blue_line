@@ -46,15 +46,17 @@ class _HomePageState extends State<HomePage> {
                 style: AppTextStyles.headline1,
               ),
               const SizedBox(height: 16.0),
-              const SizedBox(
-                height: 150,
-                child: Center(
-                  child: Text(
-                    'Ici map',
-                    style: AppTextStyles.hintText,
-                  ),
+              SizedBox(
+              height: 150,
+              child: Center(
+                child: Image.network(
+                  'https://static.vecteezy.com/system/resources/thumbnails/022/966/737/small_2x/urban-city-map-town-streets-gps-navigation-downtown-map-with-roads-parks-and-river-abstract-roadmap-navigations-scheme-illustration-vector.jpg',
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
+            ),
+
               const SizedBox(height: 16.0),
               const Text(
                 'Performances',
@@ -103,19 +105,18 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(height: 16.0),
                       Container(
                         height: 150,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
                         decoration: BoxDecoration(
                           color: AppColors.lightDark, // Couleur de fond
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Center(
-                          child: Text(
-                            'Ici graphique',
-                            style: AppTextStyles.hintText,
+                        child: Center(
+                          child: Image.network(
+                            'https://datavizcatalogue.com/FR/methodes/images/top_images/PNG/multiset_barchart.png',
+                            fit: BoxFit.contain,
                           ),
                         ),
-                      ),
+                    ),
                     ],
                   )),
               const SizedBox(height: 16.0),
