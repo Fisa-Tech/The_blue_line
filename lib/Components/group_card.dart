@@ -15,7 +15,7 @@ class GroupCard extends StatefulWidget {
   });
 
   @override
-  _GroupCardState createState() => _GroupCardState();
+  State<GroupCard> createState() => _GroupCardState();
 }
 
 class _GroupCardState extends State<GroupCard> {
@@ -57,7 +57,9 @@ class _GroupCardState extends State<GroupCard> {
             color: AppColors.disabled,
           ),
         ),
-        onTap: isIntegrated ? widget.onTap : null, // Activer onTap seulement si intégré
+        onTap: isIntegrated
+            ? widget.onTap
+            : null, // Activer onTap seulement si intégré
         trailing: SizedBox(
           width: 120, // Limitez la largeur du bouton
           height: 30,

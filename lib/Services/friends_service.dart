@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:myapp/Services/toast_service.dart';
 import '../Models/add_friends_dto.dart';
 
-class AddFriendsService {
+class FriendsService {
   final String baseUrl; // Base URL de l'API
 
-  AddFriendsService({required this.baseUrl});
+  FriendsService({required this.baseUrl});
 
   // Créer une demande de relation
   Future<void> createRelationship(String userReceiverId) async {
@@ -13,14 +14,15 @@ class AddFriendsService {
     final response = await http.post(url);
 
     if (response.statusCode == 201) {
-      print("Relationship request created successfully.");
+      ToastService.showSuccess("Relationship request created successfully.");
     } else {
       throw Exception("Failed to create relationship: ${response.body}");
     }
   }
 
   // Mettre à jour le statut d'une relation
-  Future<void> updateRelationshipStatus(int relationshipId, String status) async {
+  Future<void> updateRelationshipStatus(
+      int relationshipId, String status) async {
     final url = Uri.parse('$baseUrl/api/relationships/$relationshipId/status');
     final body = jsonEncode({'status': status});
     final headers = {'Content-Type': 'application/json'};
@@ -28,7 +30,7 @@ class AddFriendsService {
     final response = await http.patch(url, body: body, headers: headers);
 
     if (response.statusCode == 200) {
-      print("Relationship status updated successfully.");
+      ToastService.showError("Relationship status updated successfully.");
     } else {
       throw Exception("Failed to update relationship status: ${response.body}");
     }
@@ -43,7 +45,8 @@ class AddFriendsService {
       final List<dynamic> jsonData = jsonDecode(response.body);
       return jsonData.map((json) => AddFriendsDto.fromJson(json)).toList();
     } else {
-      throw Exception("Failed to fetch pending relationships: ${response.body}");
+      throw Exception(
+          "Failed to fetch pending relationships: ${response.body}");
     }
   }
 

@@ -55,18 +55,11 @@ class ApiService {
       ...?headers, // Fusionne les headers existants si fournis
     };
 
-    print('PUT URL: $url');
-    print('PUT Data: $data');
-    print('PUT Headers: $updatedHeaders');
-
     final response = await http.put(
       url,
       body: jsonEncode(data), // S'assurer que les données sont encodées en JSON
       headers: updatedHeaders,
     );
-
-    print('PUT Response Code: ${response.statusCode}');
-    print('PUT Response Body: ${response.body}');
 
     if (response.statusCode == 200 || response.statusCode == 204) {
       return response.body.isNotEmpty ? jsonDecode(response.body) : null;

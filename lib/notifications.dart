@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
-  static final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin
+      _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  static late BuildContext _navigatorContext; // Stocker le contexte pour la navigation
+  static late BuildContext
+      _navigatorContext; // Stocker le contexte pour la navigation
 
   // Initialisation des notifications
   static Future<void> initialize(BuildContext context) async {
@@ -14,13 +15,15 @@ class NotificationService {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('image_cloche');
 
-    const InitializationSettings initializationSettings = InitializationSettings(
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
       android: initializationSettingsAndroid,
     );
 
     bool? initialized = await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) async {
         await onSelectNotification(notificationResponse.payload);
       },
     );
@@ -128,10 +131,10 @@ class NotificationService {
           // );
           break;
         default:
-          // Navigator.push(
-          //   _navigatorContext,
-          //   MaterialPageRoute(builder: (context) => const DefaultPage()),
-          // );
+        // Navigator.push(
+        //   _navigatorContext,
+        //   MaterialPageRoute(builder: (context) => const DefaultPage()),
+        // );
       }
     }
   }
@@ -140,7 +143,8 @@ class NotificationService {
 // Enum pour les types de notifications
 enum NotificationType {
   info('Information', 'Voici une notification informative.', 'info_payload'),
-  warning('Avertissement', 'Attention, une action est requise.', 'warning_payload'),
+  warning(
+      'Avertissement', 'Attention, une action est requise.', 'warning_payload'),
   success('Succès', 'Action effectuée avec succès.', 'success_payload'),
   error('Erreur', 'Une erreur est survenue.', 'error_payload');
 

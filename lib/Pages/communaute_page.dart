@@ -16,8 +16,8 @@ class CommunautePage extends StatelessWidget {
       length: 2, // Deux onglets : Flux et Groupes
       child: MainFrame(
         title: 'Communauté',
-        currentIndex: 0,
-        appBarVariant: AppBarVariant.backAndProfile,
+        currentIndex: 3,
+        appBarVariant: AppBarVariant.notifAndProfile,
         bottom: const TabBar(
           indicatorColor: AppColors.textPrimary,
           labelColor: AppColors.textPrimary,
@@ -73,7 +73,7 @@ class CommunautePage extends StatelessWidget {
             child: BLElevatedButton(
               onPressed: () {
                 // Naviguer vers la page pour ajouter des amis
-                Navigator.pushNamed(context, '/add-friends');
+                Navigator.pushNamed(context, '/add_friends');
               },
               text: 'Ajouter des amis',
               variant:

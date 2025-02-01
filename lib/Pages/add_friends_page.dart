@@ -3,7 +3,7 @@ import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
 import 'package:myapp/Components/friendCard.dart';
-import '../Services/add_friends_service.dart';
+import '../Services/friends_service.dart';
 import '../Models/add_friends_dto.dart';
 
 class AddFriendsPage extends StatefulWidget {
@@ -13,10 +13,11 @@ class AddFriendsPage extends StatefulWidget {
   _AddFriendsPageState createState() => _AddFriendsPageState();
 }
 
-class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProviderStateMixin {
+class _AddFriendsPageState extends State<AddFriendsPage>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _friendIdController = TextEditingController();
-  late AddFriendsService _addFriendsService;
-  
+  late FriendsService _addFriendsService;
+
   List<AddFriendsDto> sentFriends = [];
   List<AddFriendsDto> receivedFriends = [];
   late TabController _tabController;
@@ -24,7 +25,8 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _addFriendsService = AddFriendsService(baseUrl: 'https://blue-line-preprod.fisadle.fr');
+    _addFriendsService =
+        FriendsService(baseUrl: 'https://blue-line-preprod.fisadle.fr');
     _tabController = TabController(length: 2, vsync: this);
 
     _fetchFriends();
@@ -41,15 +43,17 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
       final pendingList = await _addFriendsService.getPendingRelationships();
       final friendsList = await _addFriendsService.getFriends();
       setState(() {
-        sentFriends = pendingList.where((friend) => friend.status == 'pending').toList();
-        receivedFriends = pendingList.where((friend) => friend.status == 'received').toList();
+        sentFriends =
+            pendingList.where((friend) => friend.status == 'pending').toList();
+        receivedFriends =
+            pendingList.where((friend) => friend.status == 'received').toList();
       });
     } catch (e) {
       print("Erreur lors du chargement des amis : $e");
     }
   }
 
-    Future<void> _addFriend(String friendId) async {
+  Future<void> _addFriend(String friendId) async {
     try {
       if (friendId.isEmpty) {
         throw FormatException("L'ID de l'ami ne peut pas être vide.");
@@ -74,8 +78,6 @@ class _AddFriendsPageState extends State<AddFriendsPage> with SingleTickerProvid
       );
     }
   }
-
-
 
   Future<void> _removeFriend(AddFriendsDto friend) async {
     try {
