@@ -3,8 +3,8 @@ import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
 import 'package:myapp/Components/friendCard.dart';
-import 'add_friends_service.dart';
-import 'add_friends_dto.dart';
+import '../Services/add_friends_service.dart';
+import '../Models/add_friends_dto.dart';
 
 class AddFriendsPage extends StatefulWidget {
   const AddFriendsPage({super.key});

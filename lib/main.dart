@@ -5,8 +5,7 @@ import 'package:myapp/Pages/actualites_page.dart';
 import 'package:myapp/Pages/blue_line_page.dart';
 import 'package:myapp/Pages/defi_details_page.dart';
 import 'package:myapp/Pages/defis_page.dart';
-import 'package:myapp/Components/friendCard.dart';
-import 'package:myapp/Pages/ajouter_amis_page.dart';
+import 'package:myapp/Pages/add_friends_page.dart';
 import 'package:myapp/Pages/communaute_page.dart';
 import 'package:myapp/Pages/group_flux_page.dart';
 import 'package:myapp/Pages/home_page.dart';
@@ -21,7 +20,6 @@ import '../Pages/register_page.dart';
 import '../Pages/signin_page.dart';
 import '../user_state.dart';
 import 'package:provider/provider.dart';
-import 'Pages/ajouter_amis_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -108,6 +106,20 @@ class MyApp extends StatelessWidget {
             }
             if (settings.name == '/defis') {
               return MaterialPageRoute(builder: (context) => const DefisPage());
+            }
+            if (settings.name == '/communaute') {
+              return MaterialPageRoute(
+                  builder: (context) => const CommunautePage());
+            }
+            if (settings.name == '/group_flux') {
+              final groupName = settings.arguments as String;
+              return MaterialPageRoute(
+                builder: (context) => GroupFeedPage(groupName: groupName),
+              );
+            }
+            if (settings.name == '/ajouter_amis') {
+              return MaterialPageRoute(
+                  builder: (context) => const AddFriendsPage());
             }
 
             // Retourner null si aucune route correspondante n'est trouvée

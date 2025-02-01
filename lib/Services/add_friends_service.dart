@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'add_friends_dto.dart';
+import '../Models/add_friends_dto.dart';
 
 class AddFriendsService {
   final String baseUrl; // Base URL de l'API
