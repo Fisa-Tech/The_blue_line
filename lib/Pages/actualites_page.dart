@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:myapp/Theme/app_text_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:strava_client/strava_client.dart';
 
@@ -178,22 +179,26 @@ class _ActualitesPageState extends State<ActualitesPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                const Text(
-                  'Fil d’actualité',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.refresh),
-                  onPressed: _refreshAll,
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  const Text(
+                    'Rafraîchir les actualités',
+                    style: AppTextStyles.bodyText1,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
+                    onPressed: _refreshAll,
+                  )
+                ],
+              ),
             ),
             Expanded(
               child: _feedItems.isEmpty
-                  ? const Center(child: Text('Aucune donnée'))
+                  ? const Center(child: Text('Aucune donnée', style: AppTextStyles.hintText))
                   : ListView.builder(
                       controller: _scrollController,
                       itemCount: _feedItems.length + 1,
