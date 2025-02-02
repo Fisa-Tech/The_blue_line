@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Components/button_widget.dart';
+import 'package:myapp/Models/user_dto.dart';
 import 'package:myapp/Theme/app_colors.dart';
 
 class FriendCard extends StatelessWidget {
-  final Map<String, String> friend;
+  final UserDto friend;
   final VoidCallback? onAddPressed;
   final VoidCallback? onAcceptPressed;
   final VoidCallback? onRejectPressed;
@@ -32,47 +33,46 @@ class FriendCard extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(friend['image_url']!),
-              radius: 30,
+              backgroundColor: Colors.grey,
+              child: Text(
+                friend.firstname![0].toUpperCase(),
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${friend['first_name']} ${friend['last_name']}',
-                    style: TextStyle(
+                    '${friend.firstname} ${friend.lastname}',
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 3),
+                  const SizedBox(height: 3),
                   Text(
-                    'Cliquez pour ajouter',
-                    style: TextStyle(color: AppColors.textPrimary),
+                    friend.status?.name ?? '',
+                    style: const TextStyle(color: AppColors.disabled),
                   ),
                 ],
               ),
             ),
             if (onAcceptPressed != null && onRejectPressed != null) ...[
               IconButton(
-                icon: Icon(Icons.check, color: Colors.green),
+                icon: const Icon(Icons.check, color: Colors.green),
                 onPressed: onAcceptPressed,
               ),
               IconButton(
-                icon: Icon(Icons.close, color: Colors.red),
+                icon: const Icon(Icons.close, color: Colors.red),
                 onPressed: onRejectPressed,
               ),
             ] else
-              Container(
-                width: MediaQuery.of(context).size.width * 0.29,
-                child: BLElevatedButton(
-                  onPressed: onAddPressed ?? () {},
-                  text: buttonText,
-                  variant: ButtonVariant.primary,
-                ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline, color: Colors.red),
+                onPressed: onAddPressed,
               ),
           ],
         ),

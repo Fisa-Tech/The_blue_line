@@ -60,15 +60,13 @@ class _GroupCardState extends State<GroupCard> {
         onTap: isIntegrated
             ? widget.onTap
             : null, // Activer onTap seulement si intégré
-        trailing: SizedBox(
-          width: 120, // Limitez la largeur du bouton
-          height: 30,
-          child: BLElevatedButton(
-            onPressed: toggleIntegration,
-            text: isIntegrated ? 'Intégré' : 'Intégrer',
-            variant: isIntegrated ? ButtonVariant.grey : ButtonVariant.primary,
-          ),
-        ),
+        trailing: !isIntegrated
+            ? IconButton(
+                icon:
+                    const Icon(Icons.login_outlined, color: AppColors.primary),
+                onPressed: toggleIntegration,
+              )
+            : null,
       ),
     );
   }

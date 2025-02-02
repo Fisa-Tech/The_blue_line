@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:myapp/Models/user_dto.dart';
 import 'package:myapp/Services/toast_service.dart';
 import 'package:myapp/user_state.dart';
 import '../Models/add_friends_dto.dart';
@@ -38,7 +39,7 @@ class FriendsService {
     final token = userState.token;
 
     final url = Uri.parse('$baseUrl/api/relationships/$relationshipId/status');
-    final body = jsonEncode({'status': status});
+    final body = jsonEncode({'requestStatus': status});
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
@@ -47,7 +48,7 @@ class FriendsService {
     final response = await http.patch(url, body: body, headers: headers);
 
     if (response.statusCode == 200) {
-      ToastService.showError("Relationship status updated successfully.");
+      ToastService.showSuccess("Relationship status updated successfully.");
     } else {
       throw Exception("Failed to update relationship status: ${response.body}");
     }
@@ -78,7 +79,7 @@ class FriendsService {
   }
 
   // Obtenir la liste des amis
-  static Future<List<AddFriendsDto>> getFriends(BuildContext context) async {
+  static Future<List<UserDto>> getFriends(BuildContext context) async {
     final userState = Provider.of<UserState>(context, listen: false);
     final token = userState.token;
 
@@ -93,7 +94,7 @@ class FriendsService {
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
-      return jsonData.map((json) => AddFriendsDto.fromJson(json)).toList();
+      return jsonData.map((json) => UserDto.fromJson(json)).toList();
     } else {
       throw Exception("Failed to fetch friends: ${response.body}");
     }

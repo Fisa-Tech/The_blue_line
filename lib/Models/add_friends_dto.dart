@@ -1,23 +1,25 @@
+import 'package:myapp/Models/user_dto.dart';
+
 class AddFriendsDto {
   final int id;
-  final String idAsker;
-  final String idReceiver;
-  final String status;
+  final UserDto userAsker;
+  final UserDto userReceiver;
+  final String requestStatus;
 
   AddFriendsDto({
     required this.id,
-    required this.idAsker,
-    required this.idReceiver,
-    required this.status,
+    required this.userAsker,
+    required this.userReceiver,
+    required this.requestStatus,
   });
 
   // Factory pour créer un UserDto à partir d'un JSON
   factory AddFriendsDto.fromJson(Map<String, dynamic> json) {
     return AddFriendsDto(
       id: json['id'],
-      idAsker: json['idAsker'],
-      idReceiver: json['idReceiver'],
-      status: json['status'],
+      userAsker: UserDto.fromJson(json['userAsker']),
+      userReceiver: UserDto.fromJson(json['userReceiver']),
+      requestStatus: json['requestStatus'],
     );
   }
 
@@ -25,9 +27,9 @@ class AddFriendsDto {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'idAsker': idAsker,
-      'idReceiver': idReceiver,
-      'status': status,
+      'userAsker': userAsker,
+      'userReceiver': userReceiver,
+      'requestStatus': requestStatus,
     };
   }
 }

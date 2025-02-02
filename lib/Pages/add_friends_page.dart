@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Components/form_text_field.dart';
 import 'package:myapp/Components/main_frame.dart';
+import 'package:myapp/Models/user_dto.dart';
 import 'package:myapp/Services/toast_service.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Components/friendCard.dart';
@@ -22,7 +23,7 @@ class _AddFriendsPageState extends State<AddFriendsPage>
   late UserState userState = Provider.of<UserState>(context, listen: false);
   final TextEditingController _friendIdController = TextEditingController();
 
-  List<AddFriendsDto> friends = [];
+  List<UserDto> friends = [];
   List<AddFriendsDto> pendingFriends = [];
   late TabController _tabController;
 
@@ -61,14 +62,7 @@ class _AddFriendsPageState extends State<AddFriendsPage>
 
       await FriendsService.createRelationship(context, friendId);
 
-      setState(() {
-        friends.add(AddFriendsDto(
-          id: DateTime.now().millisecondsSinceEpoch,
-          idAsker: friendId, // Laisse en String
-          idReceiver: "", // À définir selon ta logique
-          status: 'En attente',
-        ));
-      });
+      await _fetchFriends();
 
       _friendIdController.clear();
     } catch (e) {
@@ -76,9 +70,9 @@ class _AddFriendsPageState extends State<AddFriendsPage>
     }
   }
 
-  Future<void> _removeFriend(AddFriendsDto friend) async {
+  Future<void> _removeFriend(UserDto friend) async {
     try {
-      await FriendsService.deleteRelationship(context, friend.id);
+      await FriendsService.deleteRelationship(context, friend.id!);
       await _fetchFriends();
     } catch (e) {
       ToastService.showError("Erreur lors de la suppression de l'ami : $e");
@@ -88,7 +82,7 @@ class _AddFriendsPageState extends State<AddFriendsPage>
   Future<void> _acceptFriend(AddFriendsDto friend) async {
     try {
       await FriendsService.updateRelationshipStatus(
-          context, friend.id, 'accepted');
+          context, friend.id, 'ACCEPTED');
       await _fetchFriends();
     } catch (e) {
       ToastService.showError("Erreur lors de l'acceptation de l'ami : $e");
@@ -98,7 +92,7 @@ class _AddFriendsPageState extends State<AddFriendsPage>
   Future<void> _rejectFriend(AddFriendsDto friend) async {
     try {
       await FriendsService.updateRelationshipStatus(
-          context, friend.id, 'rejected');
+          context, friend.id, 'REFUSED');
       await _fetchFriends();
     } catch (e) {
       ToastService.showError("Erreur lors du rejet de l'ami : $e");
@@ -207,13 +201,9 @@ class _AddFriendsPageState extends State<AddFriendsPage>
       itemBuilder: (context, index) {
         final friend = friends[index];
         return FriendCard(
-          friend: {
-            'first_name': friend.idAsker.toString(),
-            'last_name': friend.idReceiver.toString(),
-            'image_url': '',
-          },
+          friend: friend,
           onAddPressed: () => _removeFriend(friend),
-          buttonText: 'Supprimer',
+          buttonText: '',
           onAcceptPressed: null,
           onRejectPressed: null,
         );
@@ -231,11 +221,7 @@ class _AddFriendsPageState extends State<AddFriendsPage>
       itemBuilder: (context, index) {
         final friend = pendingFriends[index];
         return FriendCard(
-          friend: {
-            'first_name': friend.idAsker.toString(),
-            'last_name': friend.idReceiver.toString(),
-            'image_url': '',
-          },
+          friend: friend.userAsker,
           onAddPressed: null,
           buttonText: '',
           onAcceptPressed: () => _acceptFriend(friend),
