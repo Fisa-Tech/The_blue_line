@@ -1,15 +1,9 @@
 import 'package:avatar_maker/avatar_maker.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttermoji/fluttermoji.dart';
-import 'package:fluttermoji/fluttermojiController.dart';
-import 'package:fluttermoji/fluttermojiSaveWidget.dart';
 import 'package:myapp/Models/user_dto.dart';
-import 'package:myapp/Pages/avatar_customing_page.dart';
-import 'package:myapp/Services/user_service.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
 import 'package:myapp/user_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 
@@ -19,6 +13,7 @@ enum AppBarVariant {
   backAndLogout,
   backAndShare,
   backAndSave,
+  friendAndProfile
 }
 
 class MainFrame extends StatelessWidget {
@@ -220,8 +215,9 @@ class MainFrame extends StatelessWidget {
           ),
         ],
       );
+
     } else if (appBarVariant == AppBarVariant.backAndSave) {
-      return AppBar(
+       return AppBar(
         scrolledUnderElevation: 0.0,
         backgroundColor: AppColors.dark,
         bottom: bottom,
@@ -276,6 +272,37 @@ class MainFrame extends StatelessWidget {
           ),
         ],
       );
-    }
+    } else if (appBarVariant == AppBarVariant.friendAndProfile) {
+
+      return AppBar(
+        scrolledUnderElevation: 0.0,
+        backgroundColor: AppColors.dark,
+        bottom: bottom,
+        elevation: 0, // Remove shadow
+        leading: IconButton(
+          icon: const Icon(Icons.person_add, color: AppColors.textPrimary),
+          onPressed: () => Navigator.pushNamed(context, '/add_friends'),
+        ),
+        title: Text(
+          title,
+          style: AppTextStyles.headline2,
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/settings');
+              },
+              child: AvatarMakerAvatar(
+                radius: 20,
+                backgroundColor: AppColors.lightDark,
+              ),
+            ),
+          ),
+        ],
+      );
+    } 
   }
 }

@@ -1,6 +1,5 @@
 import 'package:avatar_maker/avatar_maker.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttermoji/fluttermoji.dart';
 import 'package:get/get.dart';
 import 'package:myapp/Models/user_dto.dart';
 import 'dart:convert';

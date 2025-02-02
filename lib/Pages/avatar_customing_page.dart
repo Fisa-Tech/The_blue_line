@@ -1,9 +1,5 @@
 import 'package:avatar_maker/avatar_maker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttermoji/fluttermoji.dart';
-import 'package:fluttermoji/fluttermojiCircleAvatar.dart';
-import 'package:fluttermoji/fluttermojiCustomizer.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';

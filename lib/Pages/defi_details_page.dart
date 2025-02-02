@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Components/button_widget.dart';
 import 'package:myapp/Components/main_frame.dart';
+import 'package:myapp/Models/user_dto.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
+import 'package:myapp/user_state.dart';
 import '../Services/challenge_service.dart';
 import '../Services/challenge_completion_service.dart';
-import '../Services/user_service.dart';
+import 'package:provider/provider.dart';
 
 class DetailsDefisPage extends StatefulWidget {
   final int challengeId;
@@ -17,6 +19,8 @@ class DetailsDefisPage extends StatefulWidget {
 }
 
 class _DetailsDefisPageState extends State<DetailsDefisPage> {
+  late UserState userState = Provider.of<UserState>(context, listen: false);
+
   Map<String, dynamic>? challengeDetails;
   List<Map<String, dynamic>> participants = [];
   bool isLoading = true;
@@ -46,18 +50,18 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
 
   Future<void> fetchParticipants() async {
     try {
-      final challengeCompletions =
-          await ChallengeService.fetchDefiParticipants(context, widget.challengeId);
-      
+      final challengeCompletions = await ChallengeService.fetchDefiParticipants(
+          context, widget.challengeId);
+
       List<Map<String, dynamic>> updatedParticipants = [];
 
       for (var completion in challengeCompletions) {
         int userId = completion['userId'];
-        Map<String, dynamic> user = await UserService.getUserById(userId);
+        UserDto user = userState.currentUser!;
 
         updatedParticipants.add({
-          'firstname': user['firstname'] ?? 'Inconnu',
-          'lastname': user['lastname'] ?? '',
+          'firstname': user.firstname ?? 'Inconnu',
+          'lastname': user.lastname ?? '',
           'score': completion['time'] ?? completion['distance'] ?? 'N/A',
         });
       }
@@ -105,7 +109,7 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
             SizedBox(
               width: screenWidth,
               child: Image.network(
-                challengeDetails?['imageUrl'] ?? 'https://placehold.co/600x400.png',
+                challengeDetails?['imageUrl'] ?? 'https://contents.mediadecathlon.com/s885269/k\$7baab7fd8d7bb51d45ef4a9fadace27a/1200x0/1.91cr1/run.png?format=auto',
                 fit: BoxFit.cover,
               ),
             ),
@@ -124,7 +128,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
               child: TabBarView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -139,7 +144,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                         const SizedBox(height: 16),
                         Row(
                           children: [
-                            const Icon(Icons.directions_walk, color: Colors.white),
+                            const Icon(Icons.directions_walk,
+                                color: Colors.white),
                             const SizedBox(width: 8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,11 +156,13 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                                       : challengeDetails?['time'] != 0
                                           ? '${challengeDetails?['time']} heures'
                                           : 'Objectif inconnu',
-                                  style: const TextStyle(fontSize: 16, color: Colors.white),
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.white),
                                 ),
                                 Text(
                                   challengeDetails?['type'] ?? 'Type inconnu',
-                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.grey),
                                 ),
                               ],
                             ),
@@ -169,7 +177,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                               challengeDetails?['deadline'] != null
                                   ? 'Fin dans ${_calculateDaysLeft(challengeDetails?['deadline'])} jours'
                                   : 'Fin dans N/A jours',
-                              style: const TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                           ],
                         ),
@@ -180,7 +189,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                             const SizedBox(width: 8),
                             Text(
                               '${participants.length} participants actuellement',
-                              style: const TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                           ],
                         ),
@@ -194,20 +204,26 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                                 Map<String, dynamic> requestBody = {
                                   'distanceAchieved': 0,
                                   'timeAchieved': 0,
-                                  'completionDate': DateTime.now().toIso8601String(),
+                                  'completionDate':
+                                      DateTime.now().toIso8601String(),
                                 };
 
                                 await ChallengeCompletionService
-                                    .addCompletionForChallenge(widget.challengeId, requestBody);
+                                    .addCompletionForChallenge(
+                                        widget.challengeId, requestBody);
 
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Participation réussie au défi !')),
+                                  const SnackBar(
+                                      content: Text(
+                                          'Participation réussie au défi !')),
                                 );
 
                                 await fetchParticipants();
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Erreur : ${e.toString()}')),
+                                  SnackBar(
+                                      content:
+                                          Text('Erreur : ${e.toString()}')),
                                 );
                               }
                             },
@@ -235,7 +251,8 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                               Expanded(
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.person_2_outlined, color: AppColors.primary),
+                                    const Icon(Icons.person_2_outlined,
+                                        color: AppColors.primary),
                                     const SizedBox(width: 8),
                                     Text(
                                       '${participant['firstname']} ${participant['lastname']}',

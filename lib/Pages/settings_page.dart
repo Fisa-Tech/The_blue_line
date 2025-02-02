@@ -1,6 +1,5 @@
 import 'package:avatar_maker/avatar_maker.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttermoji/fluttermojiCircleAvatar.dart';
 import 'package:myapp/Components/button_widget.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Components/setting_tile.dart';
@@ -77,7 +76,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(userState.currentUser?.firstname ?? 'Nom inconnu',
+              Text(
+                  '${userState.currentUser?.firstname ?? 'Prénom inconnu'} ${userState.currentUser?.lastname ?? 'Nom inconnu'}',
                   style: AppTextStyles.headline1),
               Text(userState.currentUser?.email ?? 'Email inconnu', style: AppTextStyles.hintText),
               const SizedBox(height: 16),
@@ -113,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 1',
+                      title: 'Convertir en Mile',
                       trailing: BLSwitch(
                         value: switchValue1,
                         onChanged: (value) {
@@ -130,9 +130,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 2',
+                      title: 'Afficher l\'altitude',
                       trailing: BLSwitch(
-                        value: switchValue2,
+                        value: true,
                         onChanged: (value) {
                           setState(() {
                             switchValue2 = value;
@@ -143,9 +143,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 3',
+                      title: 'Thème clair',
                       trailing: BLSwitch(
-                        value: switchValue3,
+                        value: true,
                         onChanged: (value) {
                           setState(() {
                             switchValue3 = value;
