@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 import 'package:avatar_maker/avatar_maker.dart';
 import 'package:flutter/material.dart';
@@ -128,7 +127,8 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (context) => const DefisPage());
             }
             if (settings.name == '/avatar') {
-              return MaterialPageRoute(builder: (context) => AvatarCustomingPage());
+              return MaterialPageRoute(
+                  builder: (context) => AvatarCustomingPage());
             }
             if (settings.name == '/friends') {
               return MaterialPageRoute(

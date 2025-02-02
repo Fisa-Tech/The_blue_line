@@ -9,13 +9,13 @@ class CommunautePostCard extends StatelessWidget {
   final String postImageUrl;
 
   const CommunautePostCard({
-    Key? key,
+    super.key,
     required this.profileName,
     required this.postTitle,
     required this.postSubtitle,
     required this.postText,
     required this.postImageUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

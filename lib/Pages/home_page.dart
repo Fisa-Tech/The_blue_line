@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Components/main_frame.dart';
 import 'package:myapp/Models/event_dto.dart';
@@ -46,16 +46,17 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 16.0),
               SizedBox(
-              height: 150,
-              child: Center(
-                child: Image.network(
-                  'https://static.vecteezy.com/system/resources/thumbnails/022/966/737/small_2x/urban-city-map-town-streets-gps-navigation-downtown-map-with-roads-parks-and-river-abstract-roadmap-navigations-scheme-illustration-vector.jpg',
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                height: 150,
+                child: Center(
+                    child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12), // Rayon des coins
+                  child: Image.network(
+                    'https://static.vecteezy.com/system/resources/thumbnails/022/966/737/small_2x/urban-city-map-town-streets-gps-navigation-downtown-map-with-roads-parks-and-river-abstract-roadmap-navigations-scheme-illustration-vector.jpg',
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                )),
               ),
-            ),
-
               const SizedBox(height: 16.0),
               const Text(
                 'Performances',
@@ -104,18 +105,81 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(height: 16.0),
                       Container(
                         height: 150,
-                        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 2, vertical: 2),
                         decoration: BoxDecoration(
                           color: AppColors.lightDark, // Couleur de fond
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(
-                          child: Image.network(
-                            'https://datavizcatalogue.com/FR/methodes/images/top_images/PNG/multiset_barchart.png',
-                            fit: BoxFit.contain,
+                            child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: LineChart(
+                            LineChartData(
+                              gridData: const FlGridData(show: true),
+                              titlesData: FlTitlesData(
+                                rightTitles: const AxisTitles(
+                                  sideTitles: SideTitles(
+                                      showTitles: false, reservedSize: 40),
+                                ),
+                                topTitles: const AxisTitles(
+                                  sideTitles: SideTitles(
+                                      showTitles: false, reservedSize: 40),
+                                ),
+                                leftTitles: const AxisTitles(
+                                  sideTitles: SideTitles(
+                                      showTitles: false, reservedSize: 40),
+                                ),
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    getTitlesWidget: (value, meta) {
+                                      List<String> jours = [
+                                        "Lun",
+                                        "Mar",
+                                        "Mer",
+                                        "Jeu",
+                                        "Ven",
+                                        "Sam",
+                                        "Dim"
+                                      ];
+                                      return SideTitleWidget(
+                                        meta: meta,
+                                        child:
+                                            Text(jours[value.toInt()], // Jours
+                                                style: AppTextStyles.hintText),
+                                      );
+                                    },
+                                    reservedSize: 30,
+                                  ),
+                                ),
+                              ),
+                              borderData: FlBorderData(show: false),
+                              lineBarsData: [
+                                LineChartBarData(
+                                  spots: [
+                                    const FlSpot(0, 3.2), // Lundi : 3.2 km
+                                    const FlSpot(1, 5.1), // Mardi : 5.1 km
+                                    const FlSpot(2, 2.8), // Mercredi : 2.8 km
+                                    const FlSpot(3, 6.0), // Jeudi : 6.0 km
+                                    const FlSpot(4, 4.2), // Vendredi : 4.2 km
+                                    const FlSpot(5, 7.3), // Samedi : 7.3 km
+                                    const FlSpot(6, 5.8), // Dimanche : 5.8 km
+                                  ],
+                                  isCurved: true,
+                                  color: Colors.blueAccent,
+                                  barWidth: 4,
+                                  belowBarData: BarAreaData(
+                                    show: true,
+                                    color: Colors.blueAccent.withOpacity(0.3),
+                                  ),
+                                  dotData: const FlDotData(show: true),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                    ),
+                        )),
+                      ),
                     ],
                   )),
               const SizedBox(height: 16.0),
