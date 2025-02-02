@@ -109,8 +109,7 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
             SizedBox(
               width: screenWidth,
               child: Image.network(
-                challengeDetails?['imageUrl'] ??
-                    'https://placehold.co/600x400.png',
+                challengeDetails?['imageUrl'] ?? 'https://contents.mediadecathlon.com/s885269/k\$7baab7fd8d7bb51d45ef4a9fadace27a/1200x0/1.91cr1/run.png?format=auto',
                 fit: BoxFit.cover,
               ),
             ),

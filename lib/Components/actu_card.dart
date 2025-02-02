@@ -150,7 +150,7 @@ class _ActuCardState extends State<ActuCard> {
                         ),
                         onPressed: navigateToChallenges,
                         child: const Text(
-                          'Défis',
+                          'Détails',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

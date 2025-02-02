@@ -109,7 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 1',
+                      title: 'Convertir en Mile',
                       trailing: BLSwitch(
                         value: switchValue1,
                         onChanged: (value) {
@@ -126,9 +126,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 2',
+                      title: 'Afficher l\'altitude',
                       trailing: BLSwitch(
-                        value: switchValue2,
+                        value: true,
                         onChanged: (value) {
                           setState(() {
                             switchValue2 = value;
@@ -139,9 +139,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Paramètre 3',
+                      title: 'Thème clair',
                       trailing: BLSwitch(
-                        value: switchValue3,
+                        value: true,
                         onChanged: (value) {
                           setState(() {
                             switchValue3 = value;
