@@ -1,28 +1,21 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:myapp/user_state.dart';
+import 'package:provider/provider.dart';
 
-class AuthHelper {
-  static Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(
-        'auth_token'); // La clé doit correspondre à celle utilisée pour sauvegarder le token
-  }
-}
+
 
 class ChallengeCompletionService {
   static const String baseUrl = "https://blue-line-preprod.fisadle.fr";
 
   // Mettre à jour une participation existante
-  static Future<void> updateCompletion(
-      int completionId, Map<String, dynamic> data) async {
-    final token = await AuthHelper.getToken();
-    if (token == null) {
-      throw Exception('Token non disponible. Connectez-vous pour continuer.');
-    }
+  static Future<void> updateCompletion(BuildContext context, int completionId, Map<String, dynamic> data) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
 
     final response = await http.put(
-      Uri.parse('$baseUrl/$completionId'),
+      Uri.parse('$baseUrl/api/challenge-completions/$completionId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -36,14 +29,12 @@ class ChallengeCompletionService {
   }
 
   // Supprimer une participation
-  static Future<void> deleteCompletion(int completionId) async {
-    final token = await AuthHelper.getToken();
-    if (token == null) {
-      throw Exception('Token non disponible. Connectez-vous pour continuer.');
-    }
+  static Future<void> deleteCompletion(BuildContext context, int completionId) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
 
     final response = await http.delete(
-      Uri.parse('$baseUrl/$completionId'),
+      Uri.parse('$baseUrl/api/challenge-completions/$completionId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -56,21 +47,18 @@ class ChallengeCompletionService {
   }
 
   // Récupérer toutes les participations pour un défi donné
-  static Future<List<dynamic>> getCompletionsForChallenge(
-      int challengeId) async {
-    final token = await AuthHelper.getToken();
-    if (token == null) {
-      throw Exception('Token non disponible. Connectez-vous pour continuer.');
-    }
+  static Future<List<dynamic>> getCompletionsForChallenge(BuildContext context, int challengeId) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
+
 
     final response = await http.get(
-      Uri.parse('$baseUrl/challenge/$challengeId'),
+      Uri.parse('$baseUrl/api/challenge-completions/challenge/$challengeId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
     );
-
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
@@ -79,15 +67,12 @@ class ChallengeCompletionService {
   }
 
   // Ajouter une nouvelle participation pour un défi donné
-  static Future<void> addCompletionForChallenge(
-      int challengeId, Map<String, dynamic> data) async {
-    final token = await AuthHelper.getToken();
-    if (token == null) {
-      throw Exception('Token non disponible. Connectez-vous pour continuer.');
-    }
+  static Future<void> addCompletionForChallenge(BuildContext context, int challengeId, Map<String, dynamic> data) async {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final token = userState.token;
 
     final response = await http.post(
-      Uri.parse('$baseUrl/challenge/$challengeId'),
+      Uri.parse('$baseUrl/api/challenge-completions/challenge/$challengeId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

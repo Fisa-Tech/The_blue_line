@@ -209,7 +209,7 @@ class _DetailsDefisPageState extends State<DetailsDefisPage> {
                                 };
 
                                 await ChallengeCompletionService
-                                    .addCompletionForChallenge(
+                                    .addCompletionForChallenge(context,
                                         widget.challengeId, requestBody);
 
                                 ScaffoldMessenger.of(context).showSnackBar(
