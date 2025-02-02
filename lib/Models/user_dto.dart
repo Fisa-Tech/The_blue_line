@@ -8,6 +8,7 @@ class UserDto {
   final int? id; // Champ read-only
   final String? firstname;
   final String? lastname;
+  final String? friendId;
   final String email;
   final UserSex? gender;
   final String? avatar;
@@ -17,6 +18,7 @@ class UserDto {
     this.id,
     this.firstname,
     this.lastname,
+    this.friendId,
     required this.email,
     this.gender,
     this.avatar,
@@ -29,6 +31,7 @@ class UserDto {
       id: json['id'] as int?,
       firstname: json['firstname'] as String?,
       lastname: json['lastname'] as String?,
+      friendId: json['friendId'] as String?,
       email: json['email'] as String,
       gender:
           json['gender'] != null ? UserSex.values.byName(json['gender']) : null,
@@ -45,6 +48,7 @@ class UserDto {
       'id': id,
       'firstname': firstname,
       'lastname': lastname,
+      'friendId': friendId,
       'email': email,
       'gender': gender?.name,
       'avatar': avatar,

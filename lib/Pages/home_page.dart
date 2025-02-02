@@ -31,16 +31,15 @@ class _HomePageState extends State<HomePage> {
     final firstName = userState.currentUser?.firstname ?? 'toi';
 
     return MainFrame(
-      title: '',
+      title: 'Accueil',
       appBarVariant: AppBarVariant.notifAndProfile,
       currentIndex: 0,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 32.0),
               Text(
                 'Salut $firstName 👋',
                 style: AppTextStyles.headline1,

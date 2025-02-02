@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myapp/Pages/edit_password_page.dart';
@@ -5,6 +7,9 @@ import 'package:myapp/Pages/actualites_page.dart';
 import 'package:myapp/Pages/blue_line_page.dart';
 import 'package:myapp/Pages/defi_details_page.dart';
 import 'package:myapp/Pages/defis_page.dart';
+import 'package:myapp/Pages/add_friends_page.dart';
+import 'package:myapp/Pages/communaute_page.dart';
+import 'package:myapp/Pages/group_flux_page.dart';
 import 'package:myapp/Pages/home_page.dart';
 import 'package:myapp/Pages/notification_settings.dart';
 import 'package:myapp/Pages/profile_edit.dart';
@@ -13,6 +18,7 @@ import 'package:myapp/Pages/resetpassword_page.dart';
 import 'package:myapp/Pages/profile_setup_page.dart';
 import 'package:myapp/Pages/settings_page.dart';
 import 'package:myapp/Pages/welcome_page.dart';
+import 'package:myapp/Services/toast_service.dart';
 import '../Pages/register_page.dart';
 import '../Pages/signin_page.dart';
 import '../user_state.dart';
@@ -22,6 +28,18 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
+    // Capture les erreurs Flutter (UI)
+    FlutterError.onError = (FlutterErrorDetails details) {
+      FlutterError.dumpErrorToConsole(details);
+      ToastService.showError("Erreur : ${details.exception}");
+    };
+
+    // Capture les erreurs Dart (asynchrones)
+    PlatformDispatcher.instance.onError = (error, stack) {
+      debugPrint("Erreur détectée : $error");
+      ToastService.showError("Erreur : $error");
+      return true; // Empêche l'application de crasher
+    };
     runApp(const MyApp());
   });
 }
@@ -35,6 +53,7 @@ class MyApp extends StatelessWidget {
         create: (_) => UserState(), // Fournir l'état utilisateur
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
+          scaffoldMessengerKey: ToastService.scaffoldMessengerKey,
           title: 'BlueLine',
           theme: ThemeData(
             primarySwatch: Colors.blue,
@@ -103,6 +122,20 @@ class MyApp extends StatelessWidget {
             }
             if (settings.name == '/defis') {
               return MaterialPageRoute(builder: (context) => const DefisPage());
+            }
+            if (settings.name == '/friends') {
+              return MaterialPageRoute(
+                  builder: (context) => const CommunautePage());
+            }
+            if (settings.name == '/group_flux') {
+              final groupName = settings.arguments as String;
+              return MaterialPageRoute(
+                builder: (context) => GroupFeedPage(groupName: groupName),
+              );
+            }
+            if (settings.name == '/add_friends') {
+              return MaterialPageRoute(
+                  builder: (context) => const AddFriendsPage());
             }
 
             // Retourner null si aucune route correspondante n'est trouvée
