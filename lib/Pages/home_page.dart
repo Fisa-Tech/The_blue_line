@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Salut $firstName 👋',
+                'Salut ${utf8.decode(firstName.runes.toList())} 👋',
                 style: AppTextStyles.headline1,
               ),
               const SizedBox(height: 16.0),

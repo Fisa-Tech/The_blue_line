@@ -24,12 +24,10 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
 
   // Données utilisateur
   String? _gender;
-  String? _avatar;
   String? _status;
 
   // Options pour les champs de sélection
   final List<String> genders = UserSex.values.map((e) => e.name).toList();
-  final List<String> avatars = ["Avatar 1", "Avatar 2", "Avatar 3"];
   final List<String> statuses = UserStatus.values.map((e) => e.name).toList();
 
   @override
@@ -73,7 +71,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
         firstname: _firstnameController.text,
         lastname: _lastnameController.text,
         gender: UserSex.values.byName(_gender!),
-        avatar: _avatar,
+        avatar: '{"HairStyle":"Bald","HairColor":"Auburn","FacialHairType":"Hijab","FacialHairColor":"Auburn","EyeType":"Close","EyebrowType":"Default","Nose":"Default","MouthType":"Smile","SkinColor":"Brown","OutfitType":"Hoodie","OutfitColor":"Black","Accessory":"Nothing","Background":"Transparent"}',
         status: UserStatus.values.byName(_status!)));
     if (updated != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -248,18 +246,6 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                         });
                       },
                       itemToString: (gender) => gender,
-                    ),
-                    const SizedBox(height: 16),
-                    CustomDropdown<String>(
-                      labelText: "Avatar",
-                      value: _avatar,
-                      items: avatars,
-                      onChanged: (value) {
-                        setState(() {
-                          _avatar = value;
-                        });
-                      },
-                      itemToString: (avatar) => avatar,
                     ),
                     const SizedBox(height: 16),
                     CustomDropdown<String>(

@@ -1,7 +1,10 @@
-import 'dart:ui';
 
+import 'dart:ui';
+import 'package:avatar_maker/avatar_maker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:myapp/Pages/avatar_customing_page.dart';
 import 'package:myapp/Pages/edit_password_page.dart';
 import 'package:myapp/Pages/actualites_page.dart';
 import 'package:myapp/Pages/blue_line_page.dart';
@@ -25,6 +28,7 @@ import '../user_state.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  Get.lazyPut(() => AvatarMakerController(customizedPropertyCategories: []));
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
@@ -123,6 +127,9 @@ class MyApp extends StatelessWidget {
             if (settings.name == '/defis') {
               return MaterialPageRoute(builder: (context) => const DefisPage());
             }
+            if (settings.name == '/avatar') {
+              return MaterialPageRoute(builder: (context) => AvatarCustomingPage());
+            }
             if (settings.name == '/friends') {
               return MaterialPageRoute(
                   builder: (context) => const CommunautePage());
@@ -137,7 +144,6 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                   builder: (context) => const AddFriendsPage());
             }
-
             // Retourner null si aucune route correspondante n'est trouvée
             return null;
           },
