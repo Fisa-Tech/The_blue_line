@@ -7,8 +7,10 @@ import 'package:myapp/Components/switch.dart';
 import 'package:myapp/Theme/app_colors.dart';
 import 'package:myapp/Theme/app_text_styles.dart';
 import 'package:myapp/user_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Services/strava_service.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -22,18 +24,39 @@ class _SettingsPageState extends State<SettingsPage> {
   bool switchValue1 = false;
   bool switchValue2 = false;
   bool switchValue3 = false;
+  bool isStravaConnected = false;
 
   @override
   void initState() {
     super.initState();
     userState = Provider.of<UserState>(context, listen: false);
-    _loadParams(); // Charger les valeurs des switches au démarrage
+    _loadParams();
+    _checkStravaConnection();
+  }
+
+  Future<void> _checkStravaConnection() async {
+    final connected = await StravaService().hasSavedToken();
+    setState(() {
+      isStravaConnected = connected;
+    });
+  }
+
+  Future<void> _connectOrDisconnectStrava() async {
+    if (!isStravaConnected) {
+      final result = await StravaService().connectToStrava();
+      if (result) {
+        setState(() => isStravaConnected = true);
+      }
+    } else {
+      await StravaService().disconnectFromStrava();
+      setState(() => isStravaConnected = false);
+    }
   }
 
   Future<void> _loadParams() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      switchValue1 = prefs.getBool('param1') ?? false; // Par défaut : false
+      switchValue1 = prefs.getBool('param1') ?? false;
       switchValue2 = prefs.getBool('param2') ?? false;
       switchValue3 = prefs.getBool('param3') ?? false;
     });
@@ -47,8 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final avatarRadius =
-        screenWidth * 0.15; // Taille de l'avatar ajustée au mobile
+    final avatarRadius = screenWidth * 0.15;
 
     return MainFrame(
       leftIcon: Icons.notifications_outlined,
@@ -168,6 +190,16 @@ class _SettingsPageState extends State<SettingsPage> {
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(10),
                         bottomRight: Radius.circular(10),
+                      ),
+                    ),
+                    BLSettingTile(
+                      icon: Icons.directions_run,
+                      title: 'Synchronisation Strava',
+                      trailing: ElevatedButton(
+                        onPressed: _connectOrDisconnectStrava,
+                        child: Text(
+                          isStravaConnected ? 'Se déconnecter' : 'Se connecter',
+                        ),
                       ),
                     ),
                   ],
