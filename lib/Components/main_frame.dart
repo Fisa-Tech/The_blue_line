@@ -6,7 +6,8 @@ enum AppBarVariant {
   notifAndProfile,
   backAndProfile,
   backAndLogout,
-  backAndShare
+  backAndShare,
+  friendAndProfile
 }
 
 class MainFrame extends StatelessWidget {
@@ -206,6 +207,37 @@ class MainFrame extends StatelessWidget {
             child: IconButton(
               onPressed: () {},
               icon: const Icon(Icons.share, color: AppColors.textPrimary),
+            ),
+          ),
+        ],
+      );
+    } else if (appBarVariant == AppBarVariant.friendAndProfile) {
+      return AppBar(
+        scrolledUnderElevation: 0.0,
+        backgroundColor: AppColors.dark,
+        bottom: bottom,
+        elevation: 0, // Remove shadow
+        leading: IconButton(
+          icon: const Icon(Icons.person_add, color: AppColors.textPrimary),
+          onPressed: () => Navigator.pushNamed(context, '/add_friends'),
+        ),
+        title: Text(
+          title,
+          style: AppTextStyles.headline2,
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/settings');
+              },
+              child: const CircleAvatar(
+                backgroundImage: NetworkImage(
+                  'https://www.gravatar.com/avatar',
+                ),
+              ),
             ),
           ),
         ],

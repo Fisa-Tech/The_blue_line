@@ -72,7 +72,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(userState.currentUser!.firstname!,
+              Text(
+                  '${userState.currentUser!.firstname!} ${userState.currentUser!.lastname!}',
                   style: AppTextStyles.headline1),
               Text(userState.currentUser!.email, style: AppTextStyles.hintText),
               const SizedBox(height: 16),
