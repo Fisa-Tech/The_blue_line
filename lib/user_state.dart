@@ -1,6 +1,7 @@
 import 'package:avatar_maker/avatar_maker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttermoji/fluttermoji.dart';
+import 'package:get/get.dart';
 import 'package:myapp/Models/user_dto.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -108,9 +109,9 @@ class UserState extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       _currentUser = UserDto.fromJson(json.decode(response.body));
-      //TODO: Set default avatar
-      AvatarMakerController.setJsonOptions(_currentUser!.avatar ?? '');
+      AvatarMakerController.setJsonOptions(_currentUser!.avatar ?? '{"HairStyle":"Bald","HairColor":"Auburn","FacialHairType":"Nothing","FacialHairColor":"Auburn","EyeType":"Close","EyebrowType":"Default","Nose":"Default","MouthType":"Smile","SkinColor":"Brown","OutfitType":"Hoodie","OutfitColor":"Black","Accessory":"Nothing","Background":"Transparent"}');
       notifyListeners();
+
       return _currentUser;
     } else if (response.statusCode == 401) {
       logout();

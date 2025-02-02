@@ -1,5 +1,7 @@
+import 'package:avatar_maker/avatar_maker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:myapp/Pages/avatar_customing_page.dart';
 import 'package:myapp/Pages/edit_password_page.dart';
 import 'package:myapp/Pages/actualites_page.dart';
@@ -20,6 +22,7 @@ import '../user_state.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  Get.lazyPut(() => AvatarMakerController(customizedPropertyCategories: []));
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {

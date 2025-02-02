@@ -255,6 +255,7 @@ class MainFrame extends StatelessWidget {
                     avatar: value,
                     status: user.status,
                   );
+                  print(value);
                   userState.updateUser(updatedUser).then((_) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Avatar mis à jour avec succès')),

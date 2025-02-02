@@ -20,11 +20,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   late UserState userState;
   late UserDto user;
 
-  String? _avatar;
   String? _status;
 
   // Options pour les champs modifiables
-  final List<String> avatars = ["Avatar 1", "Avatar 2", "Avatar 3"];
   final List<String> statuses = UserStatus.values.map((e) => e.name).toList();
 
   @override
@@ -33,7 +31,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     userState = Provider.of<UserState>(context, listen: false);
     user = userState.currentUser!;
     _emailController.text = user.email;
-    _avatar = user.avatar;
     _status = user.status!.name;
   }
 
@@ -44,7 +41,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       firstname: user.firstname,
       lastname: user.lastname,
       gender: user.gender,
-      avatar: _avatar,
+      avatar: user.avatar,
       status: UserStatus.values.byName(_status!),
     );
 
@@ -114,19 +111,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               const Text(
                 "Avatar",
                 style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              CustomDropdown<String>(
-                labelText: "Avatar",
-                value: _avatar,
-                items: avatars,
-                onChanged: (value) {
-                  setState(() {
-                    _avatar = value;
-                  });
-                },
-                itemToString: (avatar) => avatar,
-              ),
+              ),              
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _submitData,
