@@ -165,7 +165,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     BLSettingTile(
                       icon: Icons.settings_outlined,
-                      title: 'Thème clair',
+                      title: 'Thème sombre',
                       trailing: BLSwitch(
                         value: true,
                         onChanged: (value) {
