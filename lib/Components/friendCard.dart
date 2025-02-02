@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:myapp/Components/button_widget.dart';
+import 'package:myapp/Components/other_user_avatar.dart';
 import 'package:myapp/Models/user_dto.dart';
 import 'package:myapp/Theme/app_colors.dart';
 
@@ -19,6 +22,29 @@ class FriendCard extends StatelessWidget {
     required this.buttonText,
   });
 
+  bool isValidJson(String jsonString) {
+    try {
+      jsonDecode(jsonString);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Widget getAvatar() {
+    if (isValidJson(friend.avatar!)) {
+      return OtherUserAvatarWidget(
+          jsonAvatarOptions: friend.avatar!, radius: 20);
+    }
+    return CircleAvatar(
+      backgroundColor: Colors.grey,
+      child: Text(
+        friend.firstname![0].toUpperCase(),
+        style: const TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -32,13 +58,7 @@ class FriendCard extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            CircleAvatar(
-              backgroundColor: Colors.grey,
-              child: Text(
-                friend.firstname![0].toUpperCase(),
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
+            getAvatar(),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

@@ -25,7 +25,7 @@ class FriendsService {
       },
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       ToastService.showSuccess("Relationship request created successfully.");
     } else {
       throw Exception("Failed to create relationship: ${response.body}");

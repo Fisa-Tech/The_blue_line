@@ -33,6 +33,7 @@ class UserState extends ChangeNotifier {
   void logout() {
     _token = null;
     _currentUser = null;
+    AvatarMakerController.clearAvatarMaker();
     _clearUserCredentials();
     notifyListeners();
   }
@@ -60,7 +61,7 @@ class UserState extends ChangeNotifier {
       notifyListeners();
       return true;
     } else {
-      throw Exception("Failed to login: ${response.body}");
+      throw Exception("Failed to login");
     }
   }
 
@@ -108,7 +109,14 @@ class UserState extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       _currentUser = UserDto.fromJson(json.decode(response.body));
-      AvatarMakerController.setJsonOptions(_currentUser!.avatar ?? '{"HairStyle":"Bald","HairColor":"Auburn","FacialHairType":"Nothing","FacialHairColor":"Auburn","EyeType":"Close","EyebrowType":"Default","Nose":"Default","MouthType":"Smile","SkinColor":"Brown","OutfitType":"Hoodie","OutfitColor":"Black","Accessory":"Nothing","Background":"Transparent"}');
+
+      if (isValidJson(_currentUser!.avatar!)) {
+        AvatarMakerController.setJsonOptions(_currentUser!.avatar!);
+      } else {
+        AvatarMakerController.setJsonOptions(
+            '{"HairStyle":"Bald","HairColor":"Auburn","FacialHairType":"Nothing","FacialHairColor":"Auburn","EyeType":"Close","EyebrowType":"Default","Nose":"Default","MouthType":"Smile","SkinColor":"Brown","OutfitType":"Hoodie","OutfitColor":"Black","Accessory":"Nothing","Background":"Transparent"}');
+      }
+
       notifyListeners();
 
       return _currentUser;
@@ -215,5 +223,14 @@ class UserState extends ChangeNotifier {
   void setRememberMe(bool value) {
     _rememberMe = value;
     notifyListeners();
+  }
+
+  bool isValidJson(String jsonString) {
+    try {
+      jsonDecode(jsonString);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
